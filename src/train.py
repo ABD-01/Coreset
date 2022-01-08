@@ -14,9 +14,15 @@ from torch.utils.data import DataLoader, Subset
 from torchsummary import summary
 
 from train_utils import *
-from utils import (AlexNet, create_config, get_dataset_with_indices,
-                   get_logger, get_optimizer, get_test_dataset,
-                   get_train_dataset)
+from utils import (
+    AlexNet,
+    create_config,
+    get_dataset_with_indices,
+    get_logger,
+    get_optimizer,
+    get_test_dataset,
+    get_train_dataset,
+)
 
 
 class EarlyStopping:
@@ -51,6 +57,8 @@ class EarlyStopping:
             if self.counter >= self.patience:
                 logger.info("Early stopping")
                 self.early_stop = True
+
+
 # ref : https://debuggercafe.com/using-learning-rate-scheduler-and-early-stopping-with-pytorch/
 
 
@@ -71,7 +79,6 @@ def validate(loader, model, criterion, device):
     model.eval()
     val_i, val_l = next(iter(loader))
     val_i, val_l = val_i.to(device), val_l.to(device)
-    model.eval()
     output = model(val_i)
     loss = criterion(output, val_l)
     acc = output.argmax(dim=1).eq(val_l).float().mean().item()
@@ -131,9 +138,17 @@ def main(args):
         plot_distribution(p.topn, train_labels[best_inds], data.classes, p.output_dir)
     best_inds = torch.from_numpy(best_inds)
 
-    val_size = int(best_inds.shape[0] * p.val_percent)
-    sections = (best_inds.shape[0] - val_size, val_size)
-    train_inds, val_inds = torch.split(best_inds, sections)
+    if not p.class_balanced:
+        val_size = int(best_inds.shape[0] * p.val_percent)
+        sections = (best_inds.shape[0] - val_size, val_size)
+        train_inds, val_inds = torch.split(best_inds, sections)
+    else:
+        topn_per_class = p.topn // num_classes
+        val_size = int(topn_per_class*p.val_percent)
+        val_inds = np.zeros(topn_per_class, dtype=bool)
+        val_inds[-val_size:] = True
+        val_inds = np.tile(val_inds, best_inds.shape[0]//topn_per_class)
+        train_inds = ~val_inds
 
     train_loader = DataLoader(
         Subset(data, train_inds), train_inds.shape[0], shuffle=True
@@ -182,13 +197,13 @@ def main(args):
 
     torch.save(
         model.state_dict(),
-        f"Greedy_Model_{p.topn}n_Epochs_{p.epochs}_Early_Stop_{epoch+1}_Test_Acc_{int(test_acc)}.pth",
+        f"Greedy_Model_{p.topn}n_Epochs_{p.epochs}_Early_Stop_{epoch+1}_Test_Acc_{int(test_acc)}_{'clsbalanced' if p.class_balanced else ''}.pth",
     )
     logger.info("Training Complete")
-    
+
     for handler in list(logger.handlers):
         handler.close()
-        logger.removeHandler(handler) 
+        logger.removeHandler(handler)
 
 
 if __name__ == "__main__":
