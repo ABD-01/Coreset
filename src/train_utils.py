@@ -1,4 +1,5 @@
 import logging
+
 import matplotlib.pyplot as plt
 
 plt.style.use("ggplot")
@@ -75,12 +76,12 @@ def get_cls_balanced_best_inds(
     return best_inds
 
 
-def plot_distribution(topn: int, best_labels: np.ndarray, classes:list, path) -> None:
+def plot_distribution(topn: int, best_labels: np.ndarray, classes: list, path) -> None:
     """Plots distirbution of classes in sampled coreset
 
     Args:
         topn (int): no. of best samples
-        best_labels (np.ndarray): true labels for coreset 
+        best_labels (np.ndarray): true labels for coreset
         classes (list): classes present in the dataset
         path (pathlib.Path): directory to save plots
     """

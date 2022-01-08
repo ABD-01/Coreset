@@ -89,7 +89,7 @@ def train_epoch(loader, model, criterion, optimizer, scheduler, device):
     return loss, acc
 
 
-def train_loop(p, best_inds: torch.Tensor, data, test_data)->None:
+def train_loop(p, best_inds: torch.Tensor, data, test_data) -> None:
     """Training Loop
 
     Args:
@@ -123,7 +123,9 @@ def train_loop(p, best_inds: torch.Tensor, data, test_data)->None:
     losses, accs, val_losses, val_accs = [], [], [], []
     for epoch in trange(p.epochs):
         model.train()
-        loss, acc = train_epoch(train_loader, model, criterion, optimizer, scheduler, device)
+        loss, acc = train_epoch(
+            train_loader, model, criterion, optimizer, scheduler, device
+        )
         losses.append(loss.item())
         accs.append(acc)
         val_loss, val_acc = validate(val_loader, model, criterion, device)
@@ -146,7 +148,14 @@ def train_loop(p, best_inds: torch.Tensor, data, test_data)->None:
             break
 
     suffix = "clsbalanced" if p.class_balanced else "perclass" if p.per_class else ""
-    plot_learning_curves(losses, accs, val_losses, val_accs, p.topn, p.output_dir / f"LearningCurve_greedy{p.topn}_{suffix}")
+    plot_learning_curves(
+        losses,
+        accs,
+        val_losses,
+        val_accs,
+        p.topn,
+        p.output_dir / f"LearningCurve_greedy{p.topn}_{suffix}",
+    )
 
     model.eval()
     _, train_acc = validate(train_loader, model, criterion, device)
@@ -207,8 +216,10 @@ def main(args):
     if p.use_saved_best_inds is not None:
         logger.info(f"Loading best_indices from {str(p.use_saved_best_inds)}")
         best_inds = np.load(p.use_saved_best_inds)
-        assert best_inds.shape[0] == p.topn, f"Given best indices shape {best_inds.shape[0]} and no. of best samples {p.topn} does not match."
-    
+        assert (
+            best_inds.shape[0] == p.topn
+        ), f"Given best indices shape {best_inds.shape[0]} and no. of best samples {p.topn} does not match."
+
     elif p.per_class:
         all_similarities = np.load(p.output_dir / f"all_similarities_perclass.npy")
         all_imginds = np.load(p.output_dir / f"all_imginds_perclass.npy").squeeze()
@@ -217,14 +228,19 @@ def main(args):
         )
         best_inds = []
         for i in range(all_similarities.shape[0]):
-            inds = get_best_inds(p.topn // p.num_classes, all_similarities[i], all_imginds[i])
+            inds = get_best_inds(
+                p.topn // p.num_classes, all_similarities[i], all_imginds[i]
+            )
             best_inds.append(inds)
         best_inds = np.concatenate(best_inds)
         logger.debug(f"best inds shape {best_inds}")
         np.save(p.output_dir / f"best_inds_{p.topn}_perclass.npy", best_inds)
         plot_distribution(
-                p.topn, train_labels[best_inds], data.classes, p.output_dir / f"freq_{p.topn}_perclass"
-            )
+            p.topn,
+            train_labels[best_inds],
+            data.classes,
+            p.output_dir / f"freq_{p.topn}_perclass",
+        )
 
     elif p.random:
         rand_iter = 10
@@ -233,21 +249,38 @@ def main(args):
         for i in range(rand_iter):
             np.random.seed(p.seed + i)
             if p.class_balanced:
-                best_inds = np.concatenate([np.random.choice(np.argwhere(train_labels==c), p.topn // p.num_classes) for c in data.class_to_idx.values()]) 
+                best_inds = np.concatenate(
+                    [
+                        np.random.choice(
+                            np.argwhere(train_labels == c), p.topn // p.num_classes
+                        )
+                        for c in data.class_to_idx.values()
+                    ]
+                )
                 plot_distribution(
-                    p.topn, train_labels[best_inds], data.classes, p.output_dir / f"freq_{p.topn}_random_clsbalanced"
+                    p.topn,
+                    train_labels[best_inds],
+                    data.classes,
+                    p.output_dir / f"freq_{p.topn}_random_clsbalanced",
                 )
             else:
                 best_inds = np.random.randint(0, len(data), p.topn)
                 plot_distribution(
-                    p.topn, train_labels[best_inds], data.classes, p.output_dir / f"freq_{p.topn}_random"
+                    p.topn,
+                    train_labels[best_inds],
+                    data.classes,
+                    p.output_dir / f"freq_{p.topn}_random",
                 )
             best_inds = torch.from_numpy(best_inds)
             train_acc, test_acc = train_loop(p, best_inds, data, test_data)
             rand_train_acc.append(train_acc)
             rand_test_acc.append(test_acc)
-        logger.info(f"Mean Train Accuracy on Random {p.topn} Train Samples is {np.mean(rand_train_acc):.3f}±{np.std(rand_train_acc):.2f}%")
-        logger.info(f"Mean Test Accuracy on Random {p.topn} Train Samples is {np.mean(rand_test_acc):.3f}±{np.std(rand_test_acc):.2f}%")
+        logger.info(
+            f"Mean Train Accuracy on Random {p.topn} Train Samples is {np.mean(rand_train_acc):.3f}±{np.std(rand_train_acc):.2f}%"
+        )
+        logger.info(
+            f"Mean Test Accuracy on Random {p.topn} Train Samples is {np.mean(rand_test_acc):.3f}±{np.std(rand_test_acc):.2f}%"
+        )
 
     else:
         all_similarities = np.load(p.output_dir / f"all_similarities.npy")
@@ -261,15 +294,21 @@ def main(args):
                 p.topn, p.num_classes, train_labels, all_similarities, all_imginds
             )
             plot_distribution(
-                p.topn, train_labels[best_inds], data.classes, p.output_dir / f"freq_{p.topn}_clsbalanced"
+                p.topn,
+                train_labels[best_inds],
+                data.classes,
+                p.output_dir / f"freq_{p.topn}_clsbalanced",
             )
         else:
             best_inds = get_best_inds(p.topn, all_similarities, all_imginds)
             plot_distribution(
-                p.topn, train_labels[best_inds], data.classes, p.output_dir / f"freq_{p.topn}"
+                p.topn,
+                train_labels[best_inds],
+                data.classes,
+                p.output_dir / f"freq_{p.topn}",
             )
         np.save(p.output_dir / f"best_inds_{p.topn}.npy", best_inds)
-    
+
     if not (p.dont_train or not p.random):
         best_inds = torch.from_numpy(best_inds)
         train_loop(p, best_inds, data, test_data)
@@ -295,7 +334,11 @@ if __name__ == "__main__":
         action="store_true",
         help="Specify to use class balanced distribution for training",
     )
-    parser.add_argument("--per_class", action="store_true", help="Specify whether to find Mean Gradients classwise")
+    parser.add_argument(
+        "--per_class",
+        action="store_true",
+        help="Specify whether to find Mean Gradients classwise",
+    )
     parser.add_argument(
         "-bi",
         "--use_saved_best_inds",
@@ -305,8 +348,16 @@ if __name__ == "__main__":
     parser.add_argument(
         "--test_model", default=None, help="Specify path of model which is to be tested"
     )
-    parser.add_argument("--random", action="store_true", help="Specify if randomly chosen coreset to be used for training")
-    parser.add_argument("--dont_train", action="store_true", help="Specify is model need not to be trained")
+    parser.add_argument(
+        "--random",
+        action="store_true",
+        help="Specify if randomly chosen coreset to be used for training",
+    )
+    parser.add_argument(
+        "--dont_train",
+        action="store_true",
+        help="Specify is model need not to be trained",
+    )
     parser.add_argument("-bs", "--batch_size", default=1000, type=int, help="BatchSize")
     parser.add_argument(
         "-v",
@@ -328,7 +379,10 @@ if __name__ == "__main__":
     if args.test_model is not None and not Path(args.test_model).is_file():
         raise ValueError("Provided path to model does not exists.")
 
-    if args.use_saved_best_inds is not None and not Path(args.use_saved_best_inds).is_file():
+    if (
+        args.use_saved_best_inds is not None
+        and not Path(args.use_saved_best_inds).is_file()
+    ):
         raise ValueError("Best indices file does not exist.")
 
     global logger

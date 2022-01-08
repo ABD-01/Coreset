@@ -16,7 +16,13 @@ from torchsummary import summary
 from tqdm import trange
 from tqdm.auto import tqdm
 
-from utils import AlexNet, create_config, get_dataset_with_indices, get_logger, seed_everything
+from utils import (
+    AlexNet,
+    create_config,
+    get_dataset_with_indices,
+    get_logger,
+    seed_everything,
+)
 
 
 def get_mean_gradients(model, loader, use_all_params=False):
@@ -159,21 +165,30 @@ def main(p, logger):
     if p.per_class:
         logger.info("Finding Mean Gradients for each class individually.")
         train_labels = torch.as_tensor(train_data.targets)
-        datasets = [Subset(train_data, torch.argwhere(train_labels==c)) for c in train_data.dataset.class_to_idx.values()]
+        datasets = [
+            Subset(train_data, torch.argwhere(train_labels == c))
+            for c in train_data.dataset.class_to_idx.values()
+        ]
         logger.debug(f"len datasets: {len(datasets)}")
         all_similarities, all_imginds = [], []
         for dataset in tqdm(datasets, desc="Per CLass Gradient Mathcing"):
             cls_all_sims, cls_all_inds = gradient_mathcing(p, dataset)
             all_similarities.append(cls_all_sims)
             all_imginds.append(cls_all_inds)
-        all_similarities, all_imginds = np.stack(all_similarities), np.stack(all_imginds)
-        logger.debug(f"All similarities shape: {all_similarities.shape}, All imgindices shape: {all_imginds.shape}")
+        all_similarities, all_imginds = np.stack(all_similarities), np.stack(
+            all_imginds
+        )
+        logger.debug(
+            f"All similarities shape: {all_similarities.shape}, All imgindices shape: {all_imginds.shape}"
+        )
         np.save(p.output_dir / "all_similarities_perclass.npy", all_similarities)
         np.save(p.output_dir / "all_imginds_perclass.npy", all_imginds)
     else:
         logger.info("Finding Mean Gradients for whole dataset at once.")
-        all_similarities, all_imginds = gradient_mathcing(p, train_data) 
-        logger.debug(f"All similarities shape: {all_similarities.shape}, All imgindices shape: {all_imginds.shape}")
+        all_similarities, all_imginds = gradient_mathcing(p, train_data)
+        logger.debug(
+            f"All similarities shape: {all_similarities.shape}, All imgindices shape: {all_imginds.shape}"
+        )
         np.save(p.output_dir / "all_similarities.npy", all_similarities)
         np.save(p.output_dir / "all_imginds.npy", all_imginds)
 
@@ -191,7 +206,11 @@ if __name__ == "__main__":
         "--iter", default=100, type=int, help="Number of iterations for finding coreset"
     )
     parser.add_argument("-bs", "--batch_size", default=1000, help="BatchSize", type=int)
-    parser.add_argument("--per_class", action="store_true", help="Specify whether to find Mean Gradients classwise")
+    parser.add_argument(
+        "--per_class",
+        action="store_true",
+        help="Specify whether to find Mean Gradients classwise",
+    )
     parser.add_argument(
         "--use_all_params",
         help="Specify if all model parameters' gradients to be used. Defaults: (FC layers only)",
