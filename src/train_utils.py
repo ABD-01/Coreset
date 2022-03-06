@@ -23,7 +23,7 @@ def get_best_inds(p,
     """
     # from utils import get_train_dataset
     # train_labels = np.array(get_train_dataset(p).targets)
-    logging.debug((topn, all_similarities.shape, all_imginds.shape))
+    # logging.debug((topn, all_similarities.shape, all_imginds.shape))
     # logging.debug("train labels for all_imginds")
     # logging.debug(np.unique(train_labels[all_imginds], return_counts=True))
     good_inds = []
