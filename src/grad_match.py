@@ -137,7 +137,7 @@ def get_sims(gradients):
 
 
 def get_mean_gradients(p, model, loader, criterion, optimizer):
-    num_params = len(list(model.fc.parameters()))
+    num_params = len(list(model.get_last_layer().parameters()))
     num_iter = len(loader)
     embedding_dim = model.get_last_layer().in_features
     sample_num = len(loader.dataset)
