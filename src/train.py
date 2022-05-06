@@ -84,8 +84,9 @@ def train_epoch(loader, model, criterion, optimizer, scheduler, device):
         loss.backward()
         optimizer.step()
         acc = output.argmax(dim=1).eq(labels).float().mean().item()
-    scheduler.step()
-    # scheduler.step(loss)
+    if scheduler is not None:
+        scheduler.step()
+        # scheduler.step(loss)
     return loss, acc
 
 
@@ -116,7 +117,7 @@ def train_loop(p, best_inds: torch.Tensor, data, test_data) -> None:
     criterion = nn.NLLLoss()
     optimizer = get_optimizer(p, model)
     scheduler = None
-    if p.sheduler:
+    if p.scheduler:
         scheduler = get_scheduler(p, optimizer)
 
     early_stopping = EarlyStopping(**p.early_stopping_kwargs, threshold=-2)
@@ -313,7 +314,7 @@ def main(args):
             )
         np.save(p.output_dir / f"best_inds_{p.topn}.npy", best_inds)
 
-    if not (p.dont_train or not p.random):
+    if not (p.dont_train or p.random):
         best_inds = torch.from_numpy(best_inds)
         train_loop(p, best_inds, data, test_data)
 
