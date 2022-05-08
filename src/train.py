@@ -392,7 +392,7 @@ if __name__ == "__main__":
     parser.add_argument("--wandb", default=False, type=bool, help="Log using wandb")
 
     args = parser.parse_args()
-    args.output_dir = Path(args.dataset)
+    args.output_dir = Path(args.dataset) / f"n{args.topn}"
     args.logdir = Path(args.dataset) / "logs"
     args.logdir.mkdir(parents=True, exist_ok=True)
 
