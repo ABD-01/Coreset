@@ -28,14 +28,13 @@ batch_size: 1000
 num_workers: 2
 
 # Scheduler
-scheduler: 
+scheduler: reduceonplateau 
 scheduler_kwargs:
   patience: 10
   factor: 0.2
-  min_lr: 0.001
-  max_lr: 0.09
-  len_loader: 50
+  min_lr: 0.0000001
+  threshold: 0.001
 
 early_stopping_kwargs:
-   patience: 10
+   patience: 12
    min_delta: 0.0001
