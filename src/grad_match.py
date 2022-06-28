@@ -33,7 +33,7 @@ def get_mean_gradients(model, loader, use_all_params=False):
         output = model(images)
         gradient = torch.autograd.grad(
             F.nll_loss(output, labels),
-            model.parameters() if use_all_params else model.classifier.parameters(),
+            model.parameters() if use_all_params else model.fc.parameters(),
         )
         if mean_gradients[0] is not None:
             for j in range(num_params):
@@ -48,19 +48,6 @@ def get_mean_gradients(model, loader, use_all_params=False):
     return mean_gradients
 
 
-@grad
-def loss_gradient(slmodel, params, buffers, x, y):
-    x = x.unsqueeze(0)
-    y = y.unsqueeze(0)
-    preds = slmodel(params, buffers, x)
-    return F.nll_loss(preds, y)
-
-
-batched_loss = vmap(
-    loss_gradient,
-    (None, None, None, 0, 0),
-)
-
 
 def get_similarities(model, dataset, batch_size, mean_gradients, use_all_params=False):
     slmodel, params, buffers = make_functional_with_buffers(
@@ -69,6 +56,19 @@ def get_similarities(model, dataset, batch_size, mean_gradients, use_all_params=
     loader = DataLoader(
         dataset, batch_size, shuffle=True, num_workers=2, pin_memory=True
     )
+    
+    def loss_function(params, buffers, x, y):
+        x = x.unsqueeze(0)
+        y = y.unsqueeze(0)
+        preds = slmodel(params, buffers, x)
+        return F.nll_loss(preds, y)
+
+
+    batched_loss = vmap(
+        grad(loss_function),
+        (None, None, 0, 0),
+    )
+
     similarities = []
     img_indices = []
     progress_bar = tqdm(
@@ -83,7 +83,7 @@ def get_similarities(model, dataset, batch_size, mean_gradients, use_all_params=
         imgs, labels, inds = imgs.to(device), labels.to(device), inds.numpy()
         with torch.no_grad():  ### TODO: Add if else for if use_all_params
             hidden_state = model.features(imgs)
-        gradient = batched_loss(slmodel, params, buffers, hidden_state, labels)
+        gradient = batched_loss(params, buffers, hidden_state, labels)
         gc.collect()
         torch.cuda.empty_cache()
         # gradient = torch.autograd.grad(F.nll_loss(model(imgs), labels), model.parameters())
@@ -141,7 +141,7 @@ def main(args):
             train_data, p.batch_size, shuffle=True, num_workers=2, pin_memory=True
         )
         model = AlexNet(100, False).to(device)
-        # slmodel, params, buffers = make_functional_with_buffers(model.classifier)
+        # slmodel, params, buffers = make_functional_with_buffers(model.fc)
         mean_gradients = get_mean_gradients(model, loader, p.use_all_params)
         similarities, img_indices = get_similarities(
             model, train_data, p.batch_size, mean_gradients, p.use_all_params
@@ -163,9 +163,9 @@ if __name__ == "__main__":
     parser.add_argument("--seed", default=0, help="Seed")
     parser.add_argument("--use_gpu", help="Specify to run on GPU", action="store_true")
     parser.add_argument("--dataset", default="cifar100", help="Dataset Location")
-    parser.add_argument("--topn", default=1000, help="Size of Coreset")
+    parser.add_argument("--topn", default=1000, type=int, help="Size of Coreset")
     parser.add_argument(
-        "--iter", default=100, help="Number of iterations for finding coreset"
+        "--iter", default=100, type=int, help="Number of iterations for finding coreset"
     )
     parser.add_argument("-bs", "--batch_size", default=1000, help="BatchSize", type=int)
     parser.add_argument(

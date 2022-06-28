@@ -1,4 +1,3 @@
-
 import argparse
 import pathlib
 
@@ -34,6 +33,41 @@ batched_loss = vmap(
     (None, None, None, 0, 0),
 )
 
+
+def get_best_inds(topn, all_similarities, all_imginds):
+    good_inds = []
+    for (sims, inds) in tqdm(zip(all_similarities, all_imginds)):
+        ind = np.argpartition(-sims, topn)[:topn]
+        good_inds.append(inds[ind])
+    good_inds = np.concatenate(good_inds)
+    values, counts = np.unique(good_inds, return_counts=True)
+    # ref:https://stackoverflow.com/a/28736715/13730689
+    best_inds = np.argpartition(-counts, kth=topn)[:topn]
+    return best_inds
+
+def get_cls_balanced_best_inds(topn_per_class, all_similarities, all_imginds):
+    good_inds = []
+    cls_good_inds = [[] for i in range(num_classes)]
+    for (sims, inds) in tqdm(zip(all_similarities, all_imginds)):
+        shuffled_labels = train_labels[inds]
+        for i in range(num_classes):
+            cls_mask = np.where(shuffled_labels == i)[0]
+            cls_sims = sims[cls_mask]
+            cls_inds = inds[cls_mask]
+
+            ind = np.argpartition(-cls_sims, topn_per_class)[:topn_per_class]
+            good_ind = cls_inds[ind]
+            cls_good_inds[i].append(good_ind)
+
+    cls_good_inds = [np.concatenate(x) for x in cls_good_inds]
+
+    best_inds = []
+    for cls_good_ind in cls_good_inds:
+        values, counts = np.unique(cls_good_ind, return_counts=True)
+        inds = np.argpartition(-counts, kth=topn_per_class)[:topn_per_class]
+        best_inds.append(cls_good_ind[inds])
+    best_inds = np.concatenate(best_inds)
+    return best_inds
 
 
 def main(args):
