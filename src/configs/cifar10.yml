@@ -27,11 +27,16 @@ epochs: 1000
 batch_size: 1000
 num_workers: 2
 
-# Scheduler
-scheduler: onecyclelr
-scheduler_kwargs:
-  patience: 10
-  factor: 0.2
-  min_lr: 0.001
-  max_lr: 0.09
-  len_loader: 50
+# # Scheduler
+# scheduler: onecyclelr
+# scheduler_kwargs:
+#   patience: 10
+#   factor: 0.2
+#   min_lr: 0.001
+#   max_lr: 0.09
+#   len_loader: 50
+
+early_stopping_kwargs:
+   patience: 10
+   min_delta: 0.0001
+   threshold: 0.3

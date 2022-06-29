@@ -11,26 +11,19 @@ from easydict import EasyDict
 from torch.utils.data import Dataset
 from torchvision.datasets import CIFAR10, CIFAR100, MNIST
 
+# def dataset_with_indices(cls):
 
-def dataset_with_indices(cls):
-    """
-    Modifies the given Dataset class to return a tuple data, target, index
-    instead of just data, target.
-    """
+#     def __getitem__(self, index):
+#         data, target = cls.__getitem__(self, index)
+#         return data, target, index
 
-    def __getitem__(self, index):
-        data, target = cls.__getitem__(self, index)
-        return data, target, index
-
-    return type(
-        cls.__name__,
-        (cls,),
-        {
-            "__getitem__": __getitem__,
-        },
-    )
-
-
+#     return type(
+#         cls.__name__,
+#         (cls,),
+#         {
+#             "__getitem__": __getitem__,
+#         },
+#     )
 # https://discuss.pytorch.org/t/how-to-retrieve-the-sample-indices-of-a-mini-batch/7948/19
 
 
@@ -46,42 +39,51 @@ def get_transform(p):
 def get_train_dataset(p):
     if p.dataset.lower() == "mnist":
         return MNIST(
-            p.output_dir, train=True, transform=get_transform(p), download=True
+            p.dataset_dir, train=True, transform=get_transform(p), download=True
         )
     elif p.dataset.lower() == "cifar10":
         return CIFAR10(
-            p.output_dir, train=True, transform=get_transform(p), download=True
+            p.dataset_dir, train=True, transform=get_transform(p), download=True
         )
     elif p.dataset.lower() == "cifar100":
         return CIFAR100(
-            p.output_dir, train=True, transform=get_transform(p), download=True
+            p.dataset_dir, train=True, transform=get_transform(p), download=True
         )
+    else:
+        msg = f"Unknown value '{p.dataset}' for argument dataset"
+        raise ValueError(msg)
 
 
 def get_test_dataset(p):
     if p.dataset.lower() == "mnist":
         return MNIST(
-            p.output_dir, train=False, transform=get_transform(p), download=True
+            p.dataset_dir, train=False, transform=get_transform(p), download=True
         )
     elif p.dataset.lower() == "cifar10":
         return CIFAR10(
-            p.output_dir, train=False, transform=get_transform(p), download=True
+            p.dataset_dir, train=False, transform=get_transform(p), download=True
         )
     elif p.dataset.lower() == "cifar100":
         return CIFAR100(
-            p.output_dir, train=False, transform=get_transform(p), download=True
+            p.dataset_dir, train=False, transform=get_transform(p), download=True
         )
+    else:
+        msg = f"Unknown value '{p.dataset}' for argument dataset"
+        raise ValueError(msg)
 
 
 class DatasetwithIndices(Dataset):
-    """
-    Modifies the given Dataset class to return a tuple data, target, index
-    instead of just data, target.
+    """Modifies the given Dataset class to return a tuple data, target, index instead of just data, target.
+
+    Args:
+        Dataset (_type_): _description_
     """
 
     def __init__(self, dataset):
         self.dataset = dataset
-        self.__dict__.update(self.dataset.__dict__)
+        # self.__dict__.update(self.dataset.__dict__)
+        self.classes = self.dataset.classes
+        self.targets = self.dataset.targets
 
     def __getitem__(self, index):
         data, target = self.dataset[index]
@@ -170,6 +172,9 @@ def get_optimizer(p, model):
         optimizer = optim.Adam(model.parameters(), lr=p.lr)
     elif p.optimizer == "adamw":
         optimizer = optim.AdamW(model.parameters(), lr=p.lr)
+    else:
+        msg = f"Unknown value '{p.optimizer}' for argument optimizer"
+        raise ValueError(msg)
 
     return optimizer
 
@@ -207,14 +212,14 @@ def get_scheduler(p, optimizer):
     return scheduler
 
 
-def get_logger(p):
+def get_logger(p, script="train"):
     logger = logging.getLogger()
-    logger.setLevel(logging.DEBUG)
+    logger.setLevel(logging.INFO)
 
     stdout_handler = logging.StreamHandler(sys.stdout)
-    stdout_handler.setLevel(logging.DEBUG)
+    stdout_handler.setLevel(logging.INFO)
     output_file_handler = logging.FileHandler(
-        pathlib.Path(p.logdir) / f"log_gradmatch_{get_time_str()}.txt"
+        pathlib.Path(p.logdir) / f"log_{script}_{get_time_str()}.txt"
     )
     output_file_handler.setLevel(logging.INFO)
     formatter = logging.Formatter("%(asctime)s: %(levelname)s: %(message)s")

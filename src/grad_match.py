@@ -48,7 +48,6 @@ def get_mean_gradients(model, loader, use_all_params=False):
     return mean_gradients
 
 
-
 def get_similarities(model, dataset, batch_size, mean_gradients, use_all_params=False):
     slmodel, params, buffers = make_functional_with_buffers(
         model if use_all_params else model.fc
@@ -56,13 +55,12 @@ def get_similarities(model, dataset, batch_size, mean_gradients, use_all_params=
     loader = DataLoader(
         dataset, batch_size, shuffle=True, num_workers=2, pin_memory=True
     )
-    
+
     def loss_function(params, buffers, x, y):
         x = x.unsqueeze(0)
         y = y.unsqueeze(0)
         preds = slmodel(params, buffers, x)
         return F.nll_loss(preds, y)
-
 
     batched_loss = vmap(
         grad(loss_function),
@@ -107,15 +105,14 @@ def get_similarities(model, dataset, batch_size, mean_gradients, use_all_params=
     return np.concatenate(similarities), np.concatenate(img_indices)
 
 
-def main(args):
+def main(p, logger):
 
-    p = create_config(args.config, args)
-    logger = get_logger(p)
+    # p = create_config(args.config, args)
 
-    logger.info("Hyperparameters\n" + pformat(p))
+    logger.info("Hyperparameters\n" + pformat(vars(p)))
 
     global device
-    if args.use_gpu and torch.cuda.is_available:
+    if torch.cuda.is_available:
         device = torch.device("cuda")
     else:
         device = torch.device("cpu")
@@ -159,10 +156,10 @@ if __name__ == "__main__":
     parser = argparse.ArgumentParser(
         description="Getting gradient similarity for each sample."
     )
-    parser.add_argument("--config", help="Location of config file", required=True)
+    # parser.add_argument("--config", help="Location of config file", required=True)
     parser.add_argument("--seed", default=0, help="Seed")
-    parser.add_argument("--use_gpu", help="Specify to run on GPU", action="store_true")
-    parser.add_argument("--dataset", default="cifar100", help="Dataset Location")
+    parser.add_argument("--dataset", default="cifar100", help="Dataset to use")
+    parser.add_argument("--dataset_dir", default="./data", help="Dataset directory")
     parser.add_argument("--topn", default=1000, type=int, help="Size of Coreset")
     parser.add_argument(
         "--iter", default=100, type=int, help="Number of iterations for finding coreset"
@@ -176,10 +173,14 @@ if __name__ == "__main__":
     parser.add_argument(
         "--resume", default=None, help="path to checkpoint from where to resume"
     )
-    parser.add_argument("--wandb", default=False, type=bool, help="Log using wandb")
 
     args = parser.parse_args()
     args.output_dir = pathlib.Path(args.dataset)
     args.logdir = pathlib.Path(args.dataset) / "logs"
     args.logdir.mkdir(parents=True, exist_ok=True)
-    main(args)
+
+    logger = get_logger(args, 'gradmatch')
+    try:
+        main(args, logger)
+    except Exception:
+        logger.exception("A Error Occurred")

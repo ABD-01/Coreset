@@ -2,7 +2,11 @@ all_similarities*
 all_imginds*
 
 # Dataset Direcory
-MNIST/
+data/
+
+# pytorch files
+*.pt
+*.pth
 
 # Byte-compiled / optimized / DLL files
 __pycache__/
