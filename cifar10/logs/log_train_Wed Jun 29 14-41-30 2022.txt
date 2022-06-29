@@ -1,0 +1,97 @@
+2022-06-29 14:41:30,820: INFO: Hyperparameters
+{'backbone': 'alexnet',
+ 'batch_size': 1000,
+ 'class_balanced': False,
+ 'config': 'src/configs/cifar10.yml',
+ 'criterion': 'NLLLoss',
+ 'criterion_kwargs': None,
+ 'dataset': 'cifar10',
+ 'dataset_dir': './data',
+ 'early_stopping_kwargs': {'min_delta': 0.0001,
+                           'patience': 10,
+                           'threshold': 0.3},
+ 'epochs': 1000,
+ 'logdir': PosixPath('cifar10/logs'),
+ 'lr': 0.01,
+ 'num_classes': 10,
+ 'num_workers': 2,
+ 'optimizer': 'sgd',
+ 'optimizer_kwargs': {'momentum': 0.9, 'weight_decay': 0.01},
+ 'output_dir': PosixPath('cifar10'),
+ 'resume': None,
+ 'seed': 0,
+ 'topn': 500,
+ 'transformation_kwargs': {'normalize': {'mean': [0.4914, 0.4822, 0.4465],
+                                         'std': [0.2023, 0.1994, 0.201]}},
+ 'val_percent': 0.1,
+ 'wandb': False}
+2022-06-29 14:41:36,171: INFO: Model Summary
+==========================================================================================
+Layer (type:depth-idx)                   Output Shape              Param #
+==========================================================================================
+├─Sequential: 1-1                        [-1, 1024]                --
+|    └─Conv2d: 2-1                       [-1, 64, 16, 16]          1,792
+|    └─MaxPool2d: 2-2                    [-1, 64, 8, 8]            --
+|    └─ReLU: 2-3                         [-1, 64, 8, 8]            --
+|    └─Conv2d: 2-4                       [-1, 192, 8, 8]           110,784
+|    └─MaxPool2d: 2-5                    [-1, 192, 4, 4]           --
+|    └─ReLU: 2-6                         [-1, 192, 4, 4]           --
+|    └─Conv2d: 2-7                       [-1, 384, 4, 4]           663,936
+|    └─ReLU: 2-8                         [-1, 384, 4, 4]           --
+|    └─Conv2d: 2-9                       [-1, 256, 4, 4]           884,992
+|    └─ReLU: 2-10                        [-1, 256, 4, 4]           --
+|    └─Conv2d: 2-11                      [-1, 256, 4, 4]           590,080
+|    └─MaxPool2d: 2-12                   [-1, 256, 2, 2]           --
+|    └─ReLU: 2-13                        [-1, 256, 2, 2]           --
+|    └─Flatten: 2-14                     [-1, 1024]                --
+├─Sequential: 1-2                        [-1, 10]                  --
+|    └─Dropout: 2-15                     [-1, 1024]                --
+|    └─Linear: 2-16                      [-1, 512]                 524,800
+|    └─ReLU: 2-17                        [-1, 512]                 --
+|    └─Dropout: 2-18                     [-1, 512]                 --
+|    └─Linear: 2-19                      [-1, 256]                 131,328
+|    └─ReLU: 2-20                        [-1, 256]                 --
+|    └─Linear: 2-21                      [-1, 10]                  2,570
+|    └─LogSoftmax: 2-22                  [-1, 10]                  --
+==========================================================================================
+Total params: 2,910,282
+Trainable params: 2,910,282
+Non-trainable params: 0
+Total mult-adds (M): 45.30
+==========================================================================================
+Input size (MB): 0.01
+Forward/backward pass size (MB): 0.33
+Params size (MB): 11.10
+Estimated Total Size (MB): 11.45
+==========================================================================================
+2022-06-29 14:41:36,191: INFO: all_similarities.shape: (100, 50000), all_imginds.shape: (100, 50000)
+2022-06-29 14:41:38,491: INFO: Epoch[   1] Loss: 11.69	Accuracy: 9.556	Val_Loss: 5.882	Val_Acc: 2.000
+2022-06-29 14:41:38,491: INFO: Epoch[   1] Test Accuracy: 10.040
+2022-06-29 14:41:50,432: INFO: Epoch[  51] Loss: 2.12	Accuracy: 22.667	Val_Loss: 2.183	Val_Acc: 16.000
+2022-06-29 14:41:50,433: INFO: Epoch[  51] Test Accuracy: 20.400
+2022-06-29 14:42:02,326: INFO: Epoch[ 101] Loss: 1.64	Accuracy: 40.222	Val_Loss: 1.899	Val_Acc: 30.000
+2022-06-29 14:42:02,326: INFO: Epoch[ 101] Test Accuracy: 27.490
+2022-06-29 14:42:04,470: INFO: Early stopping counter 1 of 10
+2022-06-29 14:42:05,441: INFO: Early stopping counter 2 of 10
+2022-06-29 14:42:06,042: INFO: Early stopping counter 3 of 10
+2022-06-29 14:42:06,848: INFO: Early stopping counter 1 of 10
+2022-06-29 14:42:07,237: INFO: Early stopping counter 1 of 10
+2022-06-29 14:42:07,441: INFO: Early stopping counter 2 of 10
+2022-06-29 14:42:07,842: INFO: Early stopping counter 3 of 10
+2022-06-29 14:42:08,043: INFO: Early stopping counter 4 of 10
+2022-06-29 14:42:08,248: INFO: Early stopping counter 5 of 10
+2022-06-29 14:42:08,449: INFO: Early stopping counter 6 of 10
+2022-06-29 14:42:08,841: INFO: Early stopping counter 7 of 10
+2022-06-29 14:42:09,037: INFO: Early stopping counter 8 of 10
+2022-06-29 14:42:09,234: INFO: Early stopping counter 9 of 10
+2022-06-29 14:42:09,426: INFO: Early stopping counter 10 of 10
+2022-06-29 14:42:09,426: INFO: Early stopping
+2022-06-29 14:42:09,479: INFO: Trained for 137 Epochs.
+2022-06-29 14:42:12,039: INFO: Training Complete
+2022-06-29 14:42:12,039: ERROR: A Error Occurred
+Traceback (most recent call last):
+  File "src/train.py", line 228, in <module>
+    main(args)
+  File "src/train.py", line 188, in main
+    logger.shutdown()
+AttributeError: 'RootLogger' object has no attribute 'shutdown'

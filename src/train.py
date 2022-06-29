@@ -116,8 +116,8 @@ def main(args):
         + str(summary(model, data[1][0].shape, verbose=0, device=device))
     )
 
-    all_similarities = np.load(p.output_dir / f"all_similarities_{p.topn}.npy")
-    all_imginds = np.load(p.output_dir / f"all_imginds_{p.topn}.npy")
+    all_similarities = np.load(p.output_dir / f"all_similarities.npy")
+    all_imginds = np.load(p.output_dir / f"all_imginds.npy")
     logger.info(
         f"all_similarities.shape: {all_similarities.shape}, all_imginds.shape: {all_imginds.shape}"
     )
@@ -131,9 +131,9 @@ def main(args):
         plot_distribution(p.topn, train_labels[best_inds], data.classes, p.output_dir)
     best_inds = torch.from_numpy(best_inds)
 
-    val_size = best_inds.shape[0] * p.val
+    val_size = int(best_inds.shape[0] * p.val_percent)
     sections = (best_inds.shape[0] - val_size, val_size)
-    train_inds, val_inds = torch.split(torch.from_numpy(best_inds), sections)
+    train_inds, val_inds = torch.split(best_inds, sections)
 
     train_loader = DataLoader(
         Subset(data, train_inds), train_inds.shape[0], shuffle=True
@@ -174,18 +174,21 @@ def main(args):
 
     model.eval()
     _, train_acc = validate(train_loader, model, criterion, device)
-    logger.info("Accuracy on Train Set", train_acc * 100)
-    correct = test(test_loader, model)
-    logger.info(correct, "correctly labeled out of", len(test_data))
+    logger.info(("Accuracy on Train Set", train_acc * 100))
+    correct = test(test_loader, model, device)
+    logger.info((correct, "correctly labeled out of", len(test_data)))
     test_acc = correct / len(test_data) * 100
-    logger.info("Accuracy on Test Set:", test_acc)
+    logger.info(("Accuracy on Test Set:", test_acc))
 
     torch.save(
         model.state_dict(),
         f"Greedy_Model_{p.topn}n_Epochs_{p.epochs}_Early_Stop_{epoch+1}_Test_Acc_{int(test_acc)}.pth",
     )
     logger.info("Training Complete")
-    logger.shutdown()
+    
+    for handler in list(logger.handlers):
+        handler.close()
+        logger.removeHandler(handler) 
 
 
 if __name__ == "__main__":
@@ -206,7 +209,7 @@ if __name__ == "__main__":
     )
     parser.add_argument("-bs", "--batch_size", default=1000, type=int, help="BatchSize")
     parser.add_argument(
-        "-val",
+        "-v",
         "--val_percent",
         default=0.1,
         type=float,
@@ -225,6 +228,6 @@ if __name__ == "__main__":
     global logger
     logger = get_logger(args, "train")
     try:
-        main(args, logger)
+        main(args)
     except Exception:
         logger.exception("A Error Occurred")
