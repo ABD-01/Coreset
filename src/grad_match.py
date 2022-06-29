@@ -148,8 +148,8 @@ def main(p, logger):
         all_imginds.append(img_indices)
 
     np.stack(all_similarities).shape, np.stack(all_imginds).shape
-    np.save(p.output_dir / f"all_similarities_{p.topn}.npy", all_similarities)
-    np.save(p.output_dir / f"all_imginds_{p.topn}.npy", all_imginds)
+    np.save(p.output_dir / "all_similarities.npy", all_similarities)
+    np.save(p.output_dir / "all_imginds.npy", all_imginds)
 
 
 if __name__ == "__main__":
