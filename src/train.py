@@ -1,5 +1,5 @@
 import argparse
-import pathlib
+from pathlib import Path
 
 import matplotlib.pyplot as plt
 
@@ -17,7 +17,6 @@ from train_utils import *
 from utils import (
     AlexNet,
     create_config,
-    get_dataset_with_indices,
     get_logger,
     get_optimizer,
     get_test_dataset,
@@ -25,41 +24,20 @@ from utils import (
 )
 
 
-class EarlyStopping:
-    """Early stopping to stop the training when the loss does not improve after certain epochs."""
-
-    def __init__(self, patience=10, min_delta=1e-4, threshold=0.3):
-        """
-        Args:
-            patience (int, optional): how many epochs to wait before stopping when loss is not improving. Defaults to 10.
-            min_delta (float, optional): minimum difference between new loss and old loss for new loss to be considered as an improvement. Defaults to 1e-4.
-            threshold (float, optional): minimum value to be attained before the counter starts. Defaults to 0.3.
-        """
-        self.patience = patience
-        self.min_delta = min_delta
-        self.threshold = threshold
-        self.counter = 0
-        self.best_acc = None
-        self.early_stop = False
-
-    def __call__(self, val_acc):
-        if val_acc < self.threshold:
-            return
-        if self.best_acc == None:
-            self.best_acc = val_acc
-        elif val_acc - self.best_acc > self.min_delta:
-            self.best_acc = val_acc
-            # reset counter if validation acc improves
-            self.counter = 0
-        elif val_acc - self.best_acc < self.min_delta:
-            self.counter += 1
-            logger.info(f"Early stopping counter {self.counter} of {self.patience}")
-            if self.counter >= self.patience:
-                logger.info("Early stopping")
-                self.early_stop = True
-
-
-# ref : https://debuggercafe.com/using-learning-rate-scheduler-and-early-stopping-with-pytorch/
+def get_train_val_inds(p, best_inds):
+    if not p.class_balanced:
+        val_size = int(best_inds.shape[0] * p.val_percent)
+        sections = (best_inds.shape[0] - val_size, val_size)
+        train_inds, val_inds = torch.split(best_inds, sections)
+    else:
+        topn_per_class = p.topn // p.num_classes
+        val_size = int(topn_per_class * p.val_percent)
+        val_inds = np.zeros(topn_per_class, dtype=bool)
+        val_inds[-val_size:] = True
+        val_inds = np.tile(val_inds, best_inds.shape[0] // topn_per_class)
+        train_inds = ~val_inds
+        train_inds, val_inds = best_inds[train_inds], best_inds[val_inds]
+    return train_inds, val_inds
 
 
 @torch.inference_mode()
@@ -97,65 +75,21 @@ def train_epoch(loader, model, criterion, optimizer, device):
     return loss, acc
 
 
-def main(args):
-
-    p = create_config(args.config, args)
-
-    logger.info("Hyperparameters\n" + pformat(p))
-
-    global device
-    if torch.cuda.is_available:
-        device = torch.device("cuda")
-    else:
-        device = torch.device("cpu")
-        logger.warning("Using CPU to run the program.")
-
-    # dataset
-    data = get_train_dataset(p)
-    test_data = get_test_dataset(p)
-    num_classes = len(data.classes)
-    train_labels = np.array(data.targets)
-
-    # model
-    model = AlexNet(output_dim=num_classes, dropout=True).to(device)
-    logger.info(
-        "Model Summary\n"
-        + str(summary(model, data[1][0].shape, verbose=0, device=device))
-    )
-
-    all_similarities = np.load(p.output_dir / f"all_similarities.npy")
-    all_imginds = np.load(p.output_dir / f"all_imginds.npy")
-    logger.info(
-        f"all_similarities.shape: {all_similarities.shape}, all_imginds.shape: {all_imginds.shape}"
-    )
-
-    if p.class_balanced:
-        best_inds = get_cls_balanced_best_inds(
-            p.topn, num_classes, train_labels, all_similarities, all_imginds
-        )
-    else:
-        best_inds = get_best_inds(p.topn, all_similarities, all_imginds)
-        plot_distribution(p.topn, train_labels[best_inds], data.classes, p.output_dir)
-    best_inds = torch.from_numpy(best_inds)
-
-    if not p.class_balanced:
-        val_size = int(best_inds.shape[0] * p.val_percent)
-        sections = (best_inds.shape[0] - val_size, val_size)
-        train_inds, val_inds = torch.split(best_inds, sections)
-    else:
-        topn_per_class = p.topn // num_classes
-        val_size = int(topn_per_class*p.val_percent)
-        val_inds = np.zeros(topn_per_class, dtype=bool)
-        val_inds[-val_size:] = True
-        val_inds = np.tile(val_inds, best_inds.shape[0]//topn_per_class)
-        train_inds = ~val_inds
-        train_inds, val_inds = best_inds[train_inds], best_inds[val_inds]
+def train_loop(p, best_inds, data, test_data):
+    train_inds, val_inds = get_train_val_inds(p, best_inds)
 
     train_loader = DataLoader(
         Subset(data, train_inds), train_inds.shape[0], shuffle=True
     )
     val_loader = DataLoader(Subset(data, val_inds), val_inds.shape[0])
     test_loader = DataLoader(test_data, p.batch_size)
+
+    # model
+    model = AlexNet(output_dim=p.num_classes, dropout=True).to(device)
+    logger.info(
+        "Model Summary\n"
+        + str(summary(model, data[1][0].shape, verbose=0, device=device))
+    )
 
     criterion = nn.NLLLoss()
     optimizer = get_optimizer(p, model)
@@ -188,6 +122,12 @@ def main(args):
 
     plot_learning_curves(losses, accs, val_losses, val_accs, p.topn, p.output_dir)
 
+    torch.save(
+        model.state_dict(),
+        f"Greedy_Model_{p.topn}n_Epochs_{p.epochs}_Early_Stop_{epoch+1}_Test_Acc_{int(test_acc)}_{'clsbalanced' if p.class_balanced else ''}.pth",
+    )
+    logger.info("Training Complete")
+
     model.eval()
     _, train_acc = validate(train_loader, model, criterion, device)
     logger.info(("Accuracy on Train Set", train_acc * 100))
@@ -196,11 +136,60 @@ def main(args):
     test_acc = correct / len(test_data) * 100
     logger.info(("Accuracy on Test Set:", test_acc))
 
-    torch.save(
-        model.state_dict(),
-        f"Greedy_Model_{p.topn}n_Epochs_{p.epochs}_Early_Stop_{epoch+1}_Test_Acc_{int(test_acc)}_{'clsbalanced' if p.class_balanced else ''}.pth",
-    )
-    logger.info("Training Complete")
+
+def main(args):
+
+    p = create_config(args.config, args)
+
+    logger.info("Hyperparameters\n" + pformat(p))
+
+    global device
+    if torch.cuda.is_available:
+        device = torch.device("cuda")
+    else:
+        device = torch.device("cpu")
+        logger.warning("Using CPU to run the program.")
+
+    # dataset
+    data = get_train_dataset(p)
+    test_data = get_test_dataset(p)
+    p.num_classes = len(data.classes)
+    train_labels = np.array(data.targets)
+
+    if p.test_model is not None:
+        model = AlexNet(output_dim=p.num_classes, dropout=True).to(device)
+        logger.info(f"Loading model from {p.test_model}")
+        model.load_state_dict(torch.load(p.test_model, map_location=device))
+        model.eval()
+        test_loader = DataLoader(test_data, p.batch_size)
+        correct = test(test_loader, model, device)
+        logger.info((correct, "correctly labeled out of", len(test_data)))
+        test_acc = correct / len(test_data) * 100
+        logger.info(("Accuracy on Test Set:", test_acc))
+        return
+
+    if not p.use_saved_best_inds:
+        all_similarities = np.load(p.output_dir / f"all_similarities.npy")
+        all_imginds = np.load(p.output_dir / f"all_imginds.npy")
+        logger.info(
+            f"all_similarities.shape: {all_similarities.shape}, all_imginds.shape: {all_imginds.shape}"
+        )
+
+        if p.class_balanced:
+            best_inds = get_cls_balanced_best_inds(
+                p.topn, p.num_classes, train_labels, all_similarities, all_imginds
+            )
+        else:
+            best_inds = get_best_inds(p.topn, all_similarities, all_imginds)
+            plot_distribution(
+                p.topn, train_labels[best_inds], data.classes, p.output_dir
+            )
+        best_inds = torch.from_numpy(best_inds)
+        np.save(p.output_dir / f"best_inds_{p.topn}.npy")
+    else:
+        best_inds = np.load(p.output_dir / f"best_inds_{p.topn}.npy")
+
+    train_loop(p, best_inds, data, test_data)
 
     for handler in list(logger.handlers):
         handler.close()
@@ -220,8 +209,17 @@ if __name__ == "__main__":
     parser.add_argument("--topn", default=1000, type=int, help="Size of Coreset")
     parser.add_argument(
         "--class_balanced",
-        help="Specify to use class balanced distribution for training",
         action="store_true",
+        help="Specify to use class balanced distribution for training",
+    )
+    parser.add_argument(
+        "-bi",
+        "--use_saved_best_inds",
+        action="store_true",
+        help="Specify whether to use already retreived best indices",
+    )
+    parser.add_argument(
+        "--test_model", default=None, help="Specify path of model which is to be tested"
     )
     parser.add_argument("-bs", "--batch_size", default=1000, type=int, help="BatchSize")
     parser.add_argument(
@@ -237,13 +235,20 @@ if __name__ == "__main__":
     parser.add_argument("--wandb", default=False, type=bool, help="Log using wandb")
 
     args = parser.parse_args()
-    args.output_dir = pathlib.Path(args.dataset)
-    args.logdir = pathlib.Path(args.dataset) / "logs"
+    args.output_dir = Path(args.dataset)
+    args.logdir = Path(args.dataset) / "logs"
     args.logdir.mkdir(parents=True, exist_ok=True)
+
+    if args.test_model is not None and not Path(args.test_model).is_file():
+        raise ValueError("Provided path to model does not exists.")
+
+    if args.use_saved_best_inds:
+        if not Path(args.output_dir / f"best_inds_{args.topn}.npy").is_file():
+            raise ValueError("Best indices file does not exist.")
 
     global logger
     logger = get_logger(args, "train")
     try:
         main(args)
     except Exception:
-        logger.exception("A Error Occurred")
+        logger.exception("An Error Occurred")

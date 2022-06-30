@@ -120,10 +120,10 @@ def main(p, logger):
 
     # dataset
     train_data = get_dataset_with_indices(p)
-    num_classes = len(train_data.classes)
+    p.num_classes = len(train_data.classes)
 
     # model
-    model = AlexNet(output_dim=num_classes, dropout=False).to(device)
+    model = AlexNet(output_dim=p.num_classes, dropout=False).to(device)
     logger.info(
         "Model Summary\n"
         + str(summary(model, train_data[1][0].shape, verbose=0, device=device))
@@ -179,7 +179,7 @@ if __name__ == "__main__":
     args.logdir = pathlib.Path(args.dataset) / "logs"
     args.logdir.mkdir(parents=True, exist_ok=True)
 
-    logger = get_logger(args, 'gradmatch')
+    logger = get_logger(args, "gradmatch")
     try:
         main(args, logger)
     except Exception:

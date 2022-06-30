@@ -1,3 +1,4 @@
+import logging
 import matplotlib.pyplot as plt
 
 plt.style.use("ggplot")
@@ -91,7 +92,45 @@ def plot_distribution(topn: int, best_labels, classes, path) -> None:
     # plt.show()
 
 
-def plot_learning_curves(losses: list, accs: list, val_losses: list, val_accs: list, topn:int, path)->None:
+class EarlyStopping:
+    """Early stopping to stop the training when the loss does not improve after certain epochs."""
+
+    def __init__(self, patience=10, min_delta=1e-4, threshold=0.3):
+        """
+        Args:
+            patience (int, optional): how many epochs to wait before stopping when loss is not improving. Defaults to 10.
+            min_delta (float, optional): minimum difference between new loss and old loss for new loss to be considered as an improvement. Defaults to 1e-4.
+            threshold (float, optional): minimum value to be attained before the counter starts. Defaults to 0.3.
+        """
+        self.patience = patience
+        self.min_delta = min_delta
+        self.threshold = threshold
+        self.counter = 0
+        self.best_acc = None
+        self.early_stop = False
+
+    def __call__(self, val_acc):
+        if val_acc < self.threshold:
+            return
+        if self.best_acc == None:
+            self.best_acc = val_acc
+        elif val_acc - self.best_acc > self.min_delta:
+            self.best_acc = val_acc
+            # reset counter if validation acc improves
+            self.counter = 0
+        elif val_acc - self.best_acc < self.min_delta:
+            self.counter += 1
+            logging.info(f"Early stopping counter {self.counter} of {self.patience}")
+            if self.counter >= self.patience:
+                logging.info("Early stopping")
+                self.early_stop = True
+
+    # ref : https://debuggercafe.com/using-learning-rate-scheduler-and-early-stopping-with-pytorch/
+
+
+def plot_learning_curves(
+    losses: list, accs: list, val_losses: list, val_accs: list, topn: int, path
+) -> None:
     """Plots Learning Curves
 
     Args:
@@ -102,14 +141,14 @@ def plot_learning_curves(losses: list, accs: list, val_losses: list, val_accs: l
         topn (int): no. of best samples
         path (_type_): directory to save plots
     """
-    fig, (ax1, ax2) = plt.subplots(2, figsize=(8,5*2))
+    fig, (ax1, ax2) = plt.subplots(2, figsize=(8, 5 * 2))
     ax1.plot(losses, label="Train Loss")
     ax1.plot(val_losses, label="Val Loss")
     ax1.set_title(f"LossCurve_greedy{topn}")
     ax2.plot(accs, label="Train Acc")
     ax2.plot(val_accs, label="Val Acc")
     ax2.set_title(f"AccCurve_greedy{topn}")
-    ax1.legend()     
+    ax1.legend()
     ax2.legend()
     plt.savefig(path / f"LearningCurve_greedy{topn}")
     plt.show()
