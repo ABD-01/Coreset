@@ -130,7 +130,10 @@ def train_loop(p, best_inds, data, test_data):
     test_acc = correct / len(test_data) * 100
     logger.info(("Accuracy on Test Set:", test_acc))
 
-    model_path = p.output_dir / f"Greedy_Model_{p.topn}n_Epochs_{p.epochs}_Early_Stop_{epoch+1}_Test_Acc_{int(test_acc)}_{'clsbalanced' if p.class_balanced else ''}.pth"
+    model_path = (
+        p.output_dir
+        / f"Greedy_Model_{p.topn}n_Epochs_{p.epochs}_Early_Stop_{epoch+1}_Test_Acc_{int(test_acc)}_{'clsbalanced' if p.class_balanced else ''}.pth"
+    )
     torch.save(
         model.state_dict(),
         model_path,
@@ -225,6 +228,7 @@ if __name__ == "__main__":
     parser.add_argument(
         "--test_model", default=None, help="Specify path of model which is to be tested"
     )
+    parser.add_argument("--dont_train", action="stores_true", help="Specify is model need not to be trained")
     parser.add_argument("-bs", "--batch_size", default=1000, type=int, help="BatchSize")
     parser.add_argument(
         "-v",
