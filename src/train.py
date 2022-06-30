@@ -65,13 +65,13 @@ def validate(loader, model, criterion, device):
 
 def train_epoch(loader, model, criterion, optimizer, device):
     optimizer.zero_grad(set_to_none=True)
-    images, labels = next(iter(loader))
-    images, labels = images.to(device), labels.to(device)
-    output = model(images)
-    loss = criterion(output, labels)
-    loss.backward()
-    optimizer.step()
-    acc = output.argmax(dim=1).eq(labels).float().mean().item()
+    for (images, labels) in loader:
+        images, labels = images.to(device), labels.to(device)
+        output = model(images)
+        loss = criterion(output, labels)
+        loss.backward()
+        optimizer.step()
+        acc = output.argmax(dim=1).eq(labels).float().mean().item()
     return loss, acc
 
 
@@ -94,7 +94,7 @@ def train_loop(p, best_inds, data, test_data):
     criterion = nn.NLLLoss()
     optimizer = get_optimizer(p, model)
 
-    early_stopping = EarlyStopping(**p.early_stopping_kwargs)
+    early_stopping = EarlyStopping(**p.early_stopping_kwargs, threshold=-2)
     losses, accs, val_losses, val_accs = [], [], [], []
     for epoch in trange(p.epochs):
         model.train()
@@ -104,7 +104,7 @@ def train_loop(p, best_inds, data, test_data):
         val_loss, val_acc = validate(val_loader, model, criterion, device)
         val_losses.append(val_loss.item())
         val_accs.append(val_acc)
-        early_stopping(val_acc)
+        early_stopping(-val_loss)
         # logger.info(f"Epoch[{epoch+1:4}] Val_Loss: {val_loss:.3f}\tVal_Acc: {val_acc:.3f}")
         gc.collect()
         torch.cuda.empty_cache()
@@ -122,12 +122,6 @@ def train_loop(p, best_inds, data, test_data):
 
     plot_learning_curves(losses, accs, val_losses, val_accs, p.topn, p.output_dir)
 
-    torch.save(
-        model.state_dict(),
-        f"Greedy_Model_{p.topn}n_Epochs_{p.epochs}_Early_Stop_{epoch+1}_Test_Acc_{int(test_acc)}_{'clsbalanced' if p.class_balanced else ''}.pth",
-    )
-    logger.info("Training Complete")
-
     model.eval()
     _, train_acc = validate(train_loader, model, criterion, device)
     logger.info(("Accuracy on Train Set", train_acc * 100))
@@ -135,6 +129,14 @@ def train_loop(p, best_inds, data, test_data):
     logger.info((correct, "correctly labeled out of", len(test_data)))
     test_acc = correct / len(test_data) * 100
     logger.info(("Accuracy on Test Set:", test_acc))
+
+    model_path = p.output_dir / f"Greedy_Model_{p.topn}n_Epochs_{p.epochs}_Early_Stop_{epoch+1}_Test_Acc_{int(test_acc)}_{'clsbalanced' if p.class_balanced else ''}.pth"
+    torch.save(
+        model.state_dict(),
+        model_path,
+    )
+    logger.info(f"Saved model at {str(model_path)}")
+    logger.info("Training Complete")
 
 
 def main(args):
@@ -185,9 +187,11 @@ def main(args):
                 p.topn, train_labels[best_inds], data.classes, p.output_dir
             )
         best_inds = torch.from_numpy(best_inds)
-        np.save(p.output_dir / f"best_inds_{p.topn}.npy")
+        np.save(p.output_dir / f"best_inds_{p.topn}.npy", best_inds)
     else:
-        best_inds = np.load(p.output_dir / f"best_inds_{p.topn}.npy")
+        best_inds_path = p.output_dir / f"best_inds_{p.topn}.npy"
+        logger.info(f"Loading best_indices from {str(best_inds_path)}")
+        best_inds = np.load(best_inds_path)
 
     train_loop(p, best_inds, data, test_data)
 
