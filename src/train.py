@@ -149,6 +149,7 @@ def main(args):
         val_inds[-val_size:] = True
         val_inds = np.tile(val_inds, best_inds.shape[0]//topn_per_class)
         train_inds = ~val_inds
+        train_inds, val_inds = best_inds[train_inds], best_inds[val_inds]
 
     train_loader = DataLoader(
         Subset(data, train_inds), train_inds.shape[0], shuffle=True
