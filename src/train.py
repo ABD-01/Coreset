@@ -166,6 +166,7 @@ def train_loop(p, best_inds: torch.Tensor, data, test_data)->None:
     )
     logger.info(f"Saved model at {str(model_path)}")
     logger.info("Training Complete")
+    return train_acc, test_acc
 
 
 def main(args):
@@ -226,17 +227,27 @@ def main(args):
             )
 
     elif p.random:
-        logger.info("Using randomly chosen Coreset")
-        if p.class_balanced:
-            best_inds = np.concatenate([np.random.choice(np.argwhere(train_labels==c), p.topn // p.num_classes) for c in data.class_to_idx.values()]) 
-            plot_distribution(
-                p.topn, train_labels[best_inds], data.classes, p.output_dir / f"freq_{p.topn}_random_clsbalanced"
-            )
-        else:
-            best_inds = np.random.randint(0, len(data), p.topn)
-            plot_distribution(
-                p.topn, train_labels[best_inds], data.classes, p.output_dir / f"freq_{p.topn}_random"
-            )
+        rand_iter = 10
+        logger.info(f"Training on randomly chosen Coreset for {rand_iter} iterations.")
+        rand_train_acc, rand_test_acc = [], []
+        for i in range(rand_iter):
+            np.random.seed(p.seed + i)
+            if p.class_balanced:
+                best_inds = np.concatenate([np.random.choice(np.argwhere(train_labels==c), p.topn // p.num_classes) for c in data.class_to_idx.values()]) 
+                plot_distribution(
+                    p.topn, train_labels[best_inds], data.classes, p.output_dir / f"freq_{p.topn}_random_clsbalanced"
+                )
+            else:
+                best_inds = np.random.randint(0, len(data), p.topn)
+                plot_distribution(
+                    p.topn, train_labels[best_inds], data.classes, p.output_dir / f"freq_{p.topn}_random"
+                )
+            best_inds = torch.from_numpy(best_inds)
+            train_acc, test_acc = train_loop(p, best_inds, data, test_data)
+            rand_train_acc.append(train_acc)
+            rand_test_acc.append(test_acc)
+        logger.info(f"Mean Train Accuracy on Random {p.topn} Train Samples is {np.mean(rand_train_acc):.3f}±{np.std(rand_train_acc):.2f}%")
+        logger.info(f"Mean Test Accuracy on Random {p.topn} Train Samples is {np.mean(rand_test_acc):.3f}±{np.std(rand_test_acc):.2f}%")
 
     else:
         all_similarities = np.load(p.output_dir / f"all_similarities.npy")
@@ -259,7 +270,7 @@ def main(args):
             )
         np.save(p.output_dir / f"best_inds_{p.topn}.npy", best_inds)
     
-    if not p.dont_train:
+    if not (p.dont_train or not p.random):
         best_inds = torch.from_numpy(best_inds)
         train_loop(p, best_inds, data, test_data)
 
