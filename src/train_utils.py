@@ -96,7 +96,7 @@ def plot_distribution(topn: int, best_labels: np.ndarray, classes:list, path) ->
     plt.grid(linestyle="--")
     for i, v in enumerate(unique_and_counts[1]):
         plt.text(i - 0.2, v + 1, str(v))
-    plt.savefig(path / f"freq_{topn}.png")
+    plt.savefig(path)
     # plt.show()
 
 
@@ -158,5 +158,5 @@ def plot_learning_curves(
     ax2.set_title(f"AccCurve_greedy{topn}")
     ax1.legend()
     ax2.legend()
-    plt.savefig(path / f"LearningCurve_greedy{topn}")
+    plt.savefig(path)
     plt.show()

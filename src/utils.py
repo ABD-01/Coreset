@@ -2,7 +2,10 @@ import logging
 import pathlib
 import sys
 import time
-
+import os
+import random
+import numpy as np
+import torch
 import torch.nn as nn
 import torch.optim as optim
 import torchvision.transforms as transforms
@@ -10,6 +13,16 @@ import yaml
 from easydict import EasyDict
 from torch.utils.data import Dataset
 from torchvision.datasets import CIFAR10, CIFAR100, MNIST
+
+def seed_everything(seed: int):    
+    random.seed(seed)
+    # os.environ['PYTHONHASHSEED'] = str(seed)
+    np.random.seed(seed)
+    torch.manual_seed(seed)
+    torch.cuda.manual_seed(seed)
+    torch.cuda.manual_seed_all(seed) # compared to manual seed, it works for all GPUS
+    torch.backends.cudnn.deterministic = True
+    torch.backends.cudnn.benchmark = True
 
 # def dataset_with_indices(cls):
 

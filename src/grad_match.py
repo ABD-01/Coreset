@@ -16,7 +16,7 @@ from torchsummary import summary
 from tqdm import trange
 from tqdm.auto import tqdm
 
-from utils import AlexNet, create_config, get_dataset_with_indices, get_logger
+from utils import AlexNet, create_config, get_dataset_with_indices, get_logger, seed_everything
 
 
 def get_mean_gradients(model, loader, use_all_params=False):
@@ -118,8 +118,6 @@ def gradient_mathcing(p, train_data):
     iterations = p.iter
     all_similarities, all_imginds = [], []
     for k in trange(iterations, desc="Iterations"):
-        torch.manual_seed(k)
-        torch.cuda.manual_seed(k)
         loader = DataLoader(
             train_data, p.batch_size, shuffle=True, num_workers=2, pin_memory=True
         )
@@ -150,8 +148,11 @@ def main(p, logger):
         device = torch.device("cpu")
         logger.warning("Using CPU to run the program.")
 
+    seed_everything(p.seed)
+
     # dataset
     train_data = get_dataset_with_indices(p)
+    logger.info(f"Dataset\n{str(train_data)}")
     p.num_classes = len(train_data.classes)
     logger.debug(f"Num Classes: {p.num_classes}")
 

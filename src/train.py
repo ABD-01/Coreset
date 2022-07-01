@@ -19,8 +19,10 @@ from utils import (
     create_config,
     get_logger,
     get_optimizer,
+    get_scheduler,
     get_test_dataset,
     get_train_dataset,
+    seed_everything,
 )
 
 
@@ -73,7 +75,7 @@ def validate(loader, model, criterion, device):
     return loss, acc
 
 
-def train_epoch(loader, model, criterion, optimizer, device):
+def train_epoch(loader, model, criterion, optimizer, scheduler, device):
     optimizer.zero_grad(set_to_none=True)
     for (images, labels) in loader:
         images, labels = images.to(device), labels.to(device)
@@ -82,6 +84,8 @@ def train_epoch(loader, model, criterion, optimizer, device):
         loss.backward()
         optimizer.step()
         acc = output.argmax(dim=1).eq(labels).float().mean().item()
+    scheduler.step()
+    # scheduler.step(loss)
     return loss, acc
 
 
@@ -111,12 +115,15 @@ def train_loop(p, best_inds: torch.Tensor, data, test_data)->None:
 
     criterion = nn.NLLLoss()
     optimizer = get_optimizer(p, model)
+    scheduler = None
+    if p.sheduler:
+        scheduler = get_scheduler(p, optimizer)
 
     early_stopping = EarlyStopping(**p.early_stopping_kwargs, threshold=-2)
     losses, accs, val_losses, val_accs = [], [], [], []
     for epoch in trange(p.epochs):
         model.train()
-        loss, acc = train_epoch(train_loader, model, criterion, optimizer, device)
+        loss, acc = train_epoch(train_loader, model, criterion, optimizer, scheduler, device)
         losses.append(loss.item())
         accs.append(acc)
         val_loss, val_acc = validate(val_loader, model, criterion, device)
@@ -138,7 +145,8 @@ def train_loop(p, best_inds: torch.Tensor, data, test_data)->None:
             logger.info(f"Trained for {epoch+1} Epochs.")
             break
 
-    plot_learning_curves(losses, accs, val_losses, val_accs, p.topn, p.output_dir)
+    suffix = "clsbalanced" if p.class_balanced else "perclass" if p.per_class else ""
+    plot_learning_curves(losses, accs, val_losses, val_accs, p.topn, p.output_dir / f"LearningCurve_greedy{p.topn}_{suffix}")
 
     model.eval()
     _, train_acc = validate(train_loader, model, criterion, device)
@@ -150,7 +158,7 @@ def train_loop(p, best_inds: torch.Tensor, data, test_data)->None:
 
     model_path = (
         p.output_dir
-        / f"Greedy_Model_{p.topn}n_Epochs_{p.epochs}_Early_Stop_{epoch+1}_Test_Acc_{int(test_acc)}_{'clsbalanced' if p.class_balanced else ''}.pth"
+        / f"Greedy_Model_{p.topn}n_Epochs_{p.epochs}_Early_Stop_{epoch+1}_Test_Acc_{int(test_acc)}_{suffix}.pth"
     )
     torch.save(
         model.state_dict(),
@@ -173,9 +181,13 @@ def main(args):
         device = torch.device("cpu")
         logger.warning("Using CPU to run the program.")
 
+    seed_everything(p.seed)
+
     # dataset
     data = get_train_dataset(p)
+    logger.info(f"Dataset\n{str(data)}")
     test_data = get_test_dataset(p)
+    logger.info(f"Test Dataset\n{str(test_data)}")
     p.num_classes = len(data.classes)
     train_labels = np.array(data.targets)
 
@@ -207,7 +219,24 @@ def main(args):
             inds = get_best_inds(p.topn // p.num_classes, all_similarities[i], all_imginds[i])
             best_inds.append(inds)
         best_inds = np.concatenate(best_inds)
+        logger.debug(f"best inds shape {best_inds}")
         np.save(p.output_dir / f"best_inds_{p.topn}_perclass.npy", best_inds)
+        plot_distribution(
+                p.topn, train_labels[best_inds], data.classes, p.output_dir / f"freq_{p.topn}_perclass"
+            )
+
+    elif p.random:
+        logger.info("Using randomly chosen Coreset")
+        if p.class_balanced:
+            best_inds = np.concatenate([np.random.choice(np.argwhere(train_labels==c), p.topn // p.num_classes) for c in data.class_to_idx.values()]) 
+            plot_distribution(
+                p.topn, train_labels[best_inds], data.classes, p.output_dir / f"freq_{p.topn}_random_clsbalanced"
+            )
+        else:
+            best_inds = np.random.randint(0, len(data), p.topn)
+            plot_distribution(
+                p.topn, train_labels[best_inds], data.classes, p.output_dir / f"freq_{p.topn}_random"
+            )
 
     else:
         all_similarities = np.load(p.output_dir / f"all_similarities.npy")
@@ -220,10 +249,13 @@ def main(args):
             best_inds = get_cls_balanced_best_inds(
                 p.topn, p.num_classes, train_labels, all_similarities, all_imginds
             )
+            plot_distribution(
+                p.topn, train_labels[best_inds], data.classes, p.output_dir / f"freq_{p.topn}_clsbalanced"
+            )
         else:
             best_inds = get_best_inds(p.topn, all_similarities, all_imginds)
             plot_distribution(
-                p.topn, train_labels[best_inds], data.classes, p.output_dir
+                p.topn, train_labels[best_inds], data.classes, p.output_dir / f"freq_{p.topn}"
             )
         np.save(p.output_dir / f"best_inds_{p.topn}.npy", best_inds)
     
@@ -262,6 +294,7 @@ if __name__ == "__main__":
     parser.add_argument(
         "--test_model", default=None, help="Specify path of model which is to be tested"
     )
+    parser.add_argument("--random", action="store_true", help="Specify if randomly chosen coreset to be used for training")
     parser.add_argument("--dont_train", action="store_true", help="Specify is model need not to be trained")
     parser.add_argument("-bs", "--batch_size", default=1000, type=int, help="BatchSize")
     parser.add_argument(
