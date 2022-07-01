@@ -105,7 +105,7 @@ def get_similarities(model, dataset, batch_size, mean_gradients, use_all_params=
     return np.concatenate(similarities), np.concatenate(img_indices)
 
 
-def gradient_mathcing(p, train_data)->tuple[np.ndarray, np.ndarray]:
+def gradient_mathcing(p, train_data):
     """Calculated mean gradient for the given dataset and find per sample similarity with mean gradients
 
     Args:

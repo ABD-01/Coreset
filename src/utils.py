@@ -214,14 +214,16 @@ def get_scheduler(p, optimizer):
 
 def get_logger(p, script="train"):
     logger = logging.getLogger()
-    logger.setLevel(logging.INFO)
+    logger.setLevel(logging.DEBUG)
+    logging.getLogger('matplotlib.font_manager').disabled = True
+    logging.getLogger('matplotlib.pyplot').disabled = True
 
     stdout_handler = logging.StreamHandler(sys.stdout)
-    stdout_handler.setLevel(logging.INFO)
+    stdout_handler.setLevel(logging.DEBUG)
     output_file_handler = logging.FileHandler(
         pathlib.Path(p.logdir) / f"log_{script}_{get_time_str()}.txt"
     )
-    output_file_handler.setLevel(logging.INFO)
+    output_file_handler.setLevel(logging.DEBUG)
     formatter = logging.Formatter("%(asctime)s: %(levelname)s: %(message)s")
     stdout_handler.setFormatter(formatter)
     output_file_handler.setFormatter(formatter)

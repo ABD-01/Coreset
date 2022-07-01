@@ -24,7 +24,7 @@ from utils import (
 )
 
 
-def get_train_val_inds(p, best_inds: torch.Tensor)->tuple[torch.Tensor, torch.Tensor]:
+def get_train_val_inds(p, best_inds: torch.Tensor):
     """Get train and validation split for coreset
 
     Args:
@@ -198,13 +198,13 @@ def main(args):
     
     elif p.per_class:
         all_similarities = np.load(p.output_dir / f"all_similarities_perclass.npy")
-        all_imginds = np.load(p.output_dir / f"all_imginds_perclass.npy")
+        all_imginds = np.load(p.output_dir / f"all_imginds_perclass.npy").squeeze()
         logger.info(
             f"all_similarities_perclass.shape: {all_similarities.shape}, all_imginds_perclass.shape: {all_imginds.shape}"
         )
         best_inds = []
         for i in range(all_similarities.shape[0]):
-            inds = get_best_inds(p.topn // p.num_classes, all_similarities, all_imginds)
+            inds = get_best_inds(p.topn // p.num_classes, all_similarities[i], all_imginds[i])
             best_inds.append(inds)
         best_inds = np.concatenate(best_inds)
         np.save(p.output_dir / f"best_inds_{p.topn}_perclass.npy", best_inds)
