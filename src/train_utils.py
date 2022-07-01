@@ -15,11 +15,11 @@ def get_best_inds(
 
     Args:
         topn (int): no. of best samples
-        all_similarities (np.ndarray): _description_
-        all_imginds (np.ndarray): _description_
+        all_similarities (np.ndarray): Array of shape (iter, len(dataset)) for similarities calculated for each sample for every iteration
+        all_imginds (np.ndarray): Array of shape (iter, len(dataset)) of corresponding indicies of similarities array
 
     Returns:
-        np.ndarray: _description_
+        np.ndarray: indices for images in the coreset
     """
     good_inds = []
     for (sims, inds) in tqdm(zip(all_similarities, all_imginds)):
@@ -44,12 +44,12 @@ def get_cls_balanced_best_inds(
     Args:
         topn (int): no. of best samples
         num_classes (int): no. of classes in the dataset
-        labels (np.ndarray): _description_
-        all_similarities (np.ndarray): _description_
-        all_imginds (np.ndarray): _description_
+        labels (np.ndarray): true labels of the dataset
+        all_similarities (np.ndarray): Array of shape (iter, len(dataset)) for similarities calculated for each sample for every iteration
+        all_imginds (np.ndarray): Array of shape (iter, len(dataset)) of corresponding indicies of similarities array
 
     Returns:
-        np.ndarray: _description_
+        np.ndarray: indices for images in the coreset
     """
     topn_per_class = topn // num_classes
     cls_good_inds = [[] for i in range(num_classes)]
@@ -75,7 +75,15 @@ def get_cls_balanced_best_inds(
     return best_inds
 
 
-def plot_distribution(topn: int, best_labels, classes, path) -> None:
+def plot_distribution(topn: int, best_labels: np.ndarray, classes:list, path) -> None:
+    """Plots distirbution of classes in sampled coreset
+
+    Args:
+        topn (int): no. of best samples
+        best_labels (np.ndarray): true labels for coreset 
+        classes (list): classes present in the dataset
+        path (pathlib.Path): directory to save plots
+    """
     width = max(5, len(classes) * 0.5)
     height = max(5, width // 5)
     fig = plt.figure(figsize=(width, height))
@@ -139,7 +147,7 @@ def plot_learning_curves(
         val_losses (list): Validation Losses
         val_accs (list): Validation Accuracies
         topn (int): no. of best samples
-        path (_type_): directory to save plots
+        path (pathlib.Path): directory to save plots
     """
     fig, (ax1, ax2) = plt.subplots(2, figsize=(8, 5 * 2))
     ax1.plot(losses, label="Train Loss")

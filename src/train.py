@@ -24,8 +24,18 @@ from utils import (
 )
 
 
-def get_train_val_inds(p, best_inds):
-    if not p.class_balanced:
+def get_train_val_inds(p, best_inds: torch.Tensor)->tuple[torch.Tensor, torch.Tensor]:
+    """Get train and validation split for coreset
+
+    Args:
+        p (EasyDict): Hyperparameters
+        best_inds (torch.Tensor): indices for images in the coreset
+
+    Returns:
+        tuple[torch.Tensor, torch.Tensor]: indices for train and val split
+    """
+
+    if not (p.class_balanced or p.per_class):
         val_size = int(best_inds.shape[0] * p.val_percent)
         sections = (best_inds.shape[0] - val_size, val_size)
         train_inds, val_inds = torch.split(best_inds, sections)
@@ -75,7 +85,15 @@ def train_epoch(loader, model, criterion, optimizer, device):
     return loss, acc
 
 
-def train_loop(p, best_inds, data, test_data):
+def train_loop(p, best_inds: torch.Tensor, data, test_data)->None:
+    """Training Loop
+
+    Args:
+        p (EasyDict): Hyperparameters
+        best_inds (torch.Tensor): indices for images in the coreset
+        data (torch.utils.data.Dataset): Train Dataset
+        test_data (torch.utils.data.Dataset): Test Dataset
+    """
     train_inds, val_inds = get_train_val_inds(p, best_inds)
 
     train_loader = DataLoader(
@@ -173,7 +191,25 @@ def main(args):
         logger.info(("Accuracy on Test Set:", test_acc))
         return
 
-    if not p.use_saved_best_inds:
+    if p.use_saved_best_inds is not None:
+        logger.info(f"Loading best_indices from {str(p.use_saved_best_inds)}")
+        best_inds = np.load(p.use_saved_best_inds)
+        assert best_inds.shape[0] == p.topn, f"Given best indices shape {best_inds.shape[0]} and no. of best samples {p.topn} does not match."
+    
+    elif p.per_class:
+        all_similarities = np.load(p.output_dir / f"all_similarities_perclass.npy")
+        all_imginds = np.load(p.output_dir / f"all_imginds_perclass.npy")
+        logger.info(
+            f"all_similarities_perclass.shape: {all_similarities.shape}, all_imginds_perclass.shape: {all_imginds.shape}"
+        )
+        best_inds = []
+        for i in range(all_similarities.shape[0]):
+            inds = get_best_inds(p.topn // p.num_classes, all_similarities, all_imginds)
+            best_inds.append(inds)
+        best_inds = np.concatenate(best_inds)
+        np.save(p.output_dir / f"best_inds_{p.topn}_perclass.npy", best_inds)
+
+    else:
         all_similarities = np.load(p.output_dir / f"all_similarities.npy")
         all_imginds = np.load(p.output_dir / f"all_imginds.npy")
         logger.info(
@@ -189,14 +225,11 @@ def main(args):
             plot_distribution(
                 p.topn, train_labels[best_inds], data.classes, p.output_dir
             )
-        best_inds = torch.from_numpy(best_inds)
         np.save(p.output_dir / f"best_inds_{p.topn}.npy", best_inds)
-    else:
-        best_inds_path = p.output_dir / f"best_inds_{p.topn}.npy"
-        logger.info(f"Loading best_indices from {str(best_inds_path)}")
-        best_inds = np.load(best_inds_path)
-
-    train_loop(p, best_inds, data, test_data)
+    
+    if not p.dont_train:
+        best_inds = torch.from_numpy(best_inds)
+        train_loop(p, best_inds, data, test_data)
 
     for handler in list(logger.handlers):
         handler.close()
@@ -219,16 +252,17 @@ if __name__ == "__main__":
         action="store_true",
         help="Specify to use class balanced distribution for training",
     )
+    parser.add_argument("--per_class", action="store_true", help="Specify whether to find Mean Gradients classwise")
     parser.add_argument(
         "-bi",
         "--use_saved_best_inds",
-        action="store_true",
-        help="Specify whether to use already retreived best indices",
+        default=None,
+        help="Specify path of already retreived best indices",
     )
     parser.add_argument(
         "--test_model", default=None, help="Specify path of model which is to be tested"
     )
-    parser.add_argument("--dont_train", action="stores_true", help="Specify is model need not to be trained")
+    parser.add_argument("--dont_train", action="store_true", help="Specify is model need not to be trained")
     parser.add_argument("-bs", "--batch_size", default=1000, type=int, help="BatchSize")
     parser.add_argument(
         "-v",
@@ -250,9 +284,8 @@ if __name__ == "__main__":
     if args.test_model is not None and not Path(args.test_model).is_file():
         raise ValueError("Provided path to model does not exists.")
 
-    if args.use_saved_best_inds:
-        if not Path(args.output_dir / f"best_inds_{args.topn}.npy").is_file():
-            raise ValueError("Best indices file does not exist.")
+    if args.use_saved_best_inds is not None and not Path(args.use_saved_best_inds).is_file():
+        raise ValueError("Best indices file does not exist.")
 
     global logger
     logger = get_logger(args, "train")
