@@ -23,19 +23,19 @@ optimizer_kwargs:
    momentum: 0.9
    weight_decay: 0.01
 
-epochs: 100
+epochs: 1000
 batch_size: 500
 num_workers: 2
 
 # Scheduler
 scheduler: reduceonplateau
 scheduler_kwargs:
-  patience: 2
+  patience: 10
   factor: 0.2
   min_lr: 0.0000001
-  threshold: 0.001
+  threshold: 0.01
 
 
 early_stopping_kwargs:
-   patience: 10
-   min_delta: 0.0001
+   patience: 12
+   min_delta: 0.01

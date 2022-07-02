@@ -118,7 +118,7 @@ def train_loop(p, best_inds: torch.Tensor, data, test_data) -> None:
     if p.scheduler:
         scheduler = get_scheduler(p, optimizer)
 
-    early_stopping = EarlyStopping(**p.early_stopping_kwargs, threshold=-4)
+    early_stopping = EarlyStopping(**p.early_stopping_kwargs, threshold=-5)
     losses, accs, val_losses, val_accs = [], [], [], []
     lrs = []
     for epoch in trange(p.epochs):
@@ -165,6 +165,7 @@ def train_loop(p, best_inds: torch.Tensor, data, test_data) -> None:
         p.output_dir / f"LearningCurve_{prefix}_n{p.topn}{suffix}",
     )
     if lrs:
+        logger.debug(lrs)
         plt.figure()
         plt.plot(lrs, label="learning rate")
         plt.savefig(p.output_dir / f"Learningrate_{p.scheduler}_{prefix}_n{p.topn}{suffix}")
