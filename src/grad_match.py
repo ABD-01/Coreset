@@ -13,7 +13,7 @@ import torch.nn.functional as F
 from functorch import grad, make_functional_with_buffers, vmap
 from torch.utils.data import DataLoader, Subset
 from torchsummary import summary
-from tqdm import trange
+from tqdm.auto import trange
 from tqdm.auto import tqdm
 
 from utils import (
@@ -31,7 +31,7 @@ def get_mean_gradients(model, loader, use_all_params=False):
     )
     mean_gradients = [None for i in range(num_params)]
     num_iter = len(loader)
-    progress_bar = tqdm(loader, total=num_iter, desc="Mean Gradients", leave=False)
+    progress_bar = tqdm(loader, total=num_iter, desc="Mean Gradients", leave=False, position=1)
     for batch in progress_bar:
         images, labels, _ = batch
         torch.cuda.empty_cache()
@@ -80,6 +80,7 @@ def get_similarities(model, dataset, batch_size, mean_gradients, use_all_params=
         total=len(loader),
         desc="Per Sample Gradient Similarity",
         leave=False,
+        position=1
     )
     for i, batch in progress_bar:
         imgs, labels, inds = batch
@@ -123,7 +124,7 @@ def gradient_mathcing(p, train_data):
     """
     iterations = p.iter
     all_similarities, all_imginds = [], []
-    for k in trange(iterations, desc="Iterations"):
+    for k in trange(iterations, desc="Iterations", position=0, leave=True):
         loader = DataLoader(
             train_data, p.batch_size, shuffle=True, num_workers=2, pin_memory=True
         )
@@ -143,7 +144,7 @@ def gradient_mathcing(p, train_data):
 
 def main(p, logger):
 
-    # p = create_config(args.config, args)
+    p = create_config(args.config, args)
 
     logger.info("Hyperparameters\n" + pformat(vars(p)))
 
@@ -171,7 +172,7 @@ def main(p, logger):
         ]
         logger.debug(f"len datasets: {len(datasets)}")
         all_similarities, all_imginds = [], []
-        for dataset in tqdm(datasets, desc="Per CLass Gradient Mathcing"):
+        for dataset in tqdm(datasets, desc="Per CLass Gradient Mathcing",  position=2, leave=True):
             cls_all_sims, cls_all_inds = gradient_mathcing(p, dataset)
             all_similarities.append(cls_all_sims)
             all_imginds.append(cls_all_inds)
@@ -197,7 +198,7 @@ if __name__ == "__main__":
     parser = argparse.ArgumentParser(
         description="Getting gradient similarity for each sample."
     )
-    # parser.add_argument("--config", help="Location of config file", required=True)
+    parser.add_argument("--config", help="Location of config file", required=True)
     parser.add_argument("--seed", default=0, help="Seed")
     parser.add_argument("--dataset", default="cifar100", help="Dataset to use")
     parser.add_argument("--dataset_dir", default="./data", help="Dataset directory")

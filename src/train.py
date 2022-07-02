@@ -86,8 +86,8 @@ def train_epoch(loader, model, criterion, optimizer, scheduler, device):
         optimizer.step()
         acc = output.argmax(dim=1).eq(labels).float().mean().item()
     if scheduler is not None:
-        scheduler.step()
-        # scheduler.step(loss)
+        # scheduler.step()
+        scheduler.step(loss)
     return loss, acc
 
 
