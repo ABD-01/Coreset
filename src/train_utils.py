@@ -5,7 +5,6 @@ import matplotlib.pyplot as plt
 plt.style.use("ggplot")
 
 import numpy as np
-from tqdm import trange
 from tqdm.auto import tqdm
 
 

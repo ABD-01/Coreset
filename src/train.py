@@ -2,6 +2,7 @@ import argparse
 from pathlib import Path
 
 import matplotlib.pyplot as plt
+from tqdm.auto import trange
 
 plt.style.use("ggplot")
 import gc
@@ -148,10 +149,10 @@ def train_loop(p, best_inds: torch.Tensor, data, test_data) -> None:
             logger.info(f"Trained for {epoch+1} Epochs.")
             break
 
-    suffix = "clsbalanced" if p.class_balanced else "perclass" if p.per_class else ""
+    suffix = "_clsbalanced" if p.class_balanced else "_perclass" if p.per_class else ""
     prefix = "greedy"
     if p.random:
-        prefix = "random" + train_loop.counter
+        prefix = "random" + str(train_loop.counter)
         train_loop.counter += 1
     plot_learning_curves(
         losses,
@@ -159,7 +160,7 @@ def train_loop(p, best_inds: torch.Tensor, data, test_data) -> None:
         val_losses,
         val_accs,
         p.topn,
-        p.output_dir / f"LearningCurve_{prefix}{p.topn}_{suffix}",
+        p.output_dir / f"LearningCurve_{prefix}_n{p.topn}{suffix}",
     )
 
     model.eval()
@@ -180,7 +181,7 @@ def train_loop(p, best_inds: torch.Tensor, data, test_data) -> None:
     )
     logger.info(f"Saved model at {str(model_path)}")
     logger.info("Training Complete")
-    return train_acc, test_acc
+    return train_acc * 100, test_acc
 
 
 def main(args):
@@ -250,6 +251,7 @@ def main(args):
     elif p.random:
         rand_iter = 10
         logger.info(f"Training on randomly chosen Coreset for {rand_iter} iterations.")
+        train_loop.counter = 0
         rand_train_acc, rand_test_acc = [], []
         for i in range(rand_iter):
             np.random.seed(p.seed + i)
@@ -257,7 +259,7 @@ def main(args):
                 best_inds = np.concatenate(
                     [
                         np.random.choice(
-                            np.argwhere(train_labels == c), p.topn // p.num_classes
+                            np.argwhere(train_labels == c).squeeze(), p.topn // p.num_classes
                         )
                         for c in data.class_to_idx.values()
                     ]
