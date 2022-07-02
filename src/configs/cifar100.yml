@@ -30,9 +30,10 @@ num_workers: 2
 # Scheduler
 scheduler: reduceonplateau
 scheduler_kwargs:
-  patience: 10
+  patience: 2
   factor: 0.2
   min_lr: 0.0000001
+  threshold: 0.001
 
 
 early_stopping_kwargs:
