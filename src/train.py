@@ -148,13 +148,17 @@ def train_loop(p, best_inds: torch.Tensor, data, test_data) -> None:
             break
 
     suffix = "clsbalanced" if p.class_balanced else "perclass" if p.per_class else ""
+    prefix = "greedy"
+    if p.random:
+        prefix = "random" + train_loop.counter
+        train_loop.counter += 1
     plot_learning_curves(
         losses,
         accs,
         val_losses,
         val_accs,
         p.topn,
-        p.output_dir / f"LearningCurve_greedy{p.topn}_{suffix}",
+        p.output_dir / f"LearningCurve_{prefix}{p.topn}_{suffix}",
     )
 
     model.eval()
