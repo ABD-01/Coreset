@@ -8,6 +8,9 @@ data/
 *.pt
 *.pth
 
+# numpy files
+*.npy
+
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]
