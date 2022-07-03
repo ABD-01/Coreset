@@ -241,7 +241,7 @@ def main(args):
         best_inds = []
         for i in range(all_similarities.shape[0]):
             logger.debug(np.unique(train_labels[all_imginds[i]], return_counts=True))
-            inds = get_best_inds(p,
+            inds = get_best_inds(
                 p.topn // p.num_classes, all_similarities[i], all_imginds[i]
             )
             best_inds.append(inds)
@@ -338,7 +338,7 @@ if __name__ == "__main__":
         description="Getting gradient similarity for each sample."
     )
     parser.add_argument("--config", required=True, help="Location of config file")
-    parser.add_argument("--seed", default=0, help="Seed")
+    parser.add_argument("--seed", default=0, type=int, help="Seed")
     parser.add_argument(
         "--dataset", default="cifar100", required=True, help="Dataset Location"
     )

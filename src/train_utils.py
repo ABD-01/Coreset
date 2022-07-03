@@ -8,7 +8,7 @@ import numpy as np
 from tqdm.auto import tqdm
 
 
-def get_best_inds(p,
+def get_best_inds(
     topn: int, all_similarities: np.ndarray, all_imginds: np.ndarray
 ) -> np.ndarray:
     """Return n samples having maximum gradient similarity
