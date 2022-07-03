@@ -244,6 +244,7 @@ def main(args):
                 p.topn // p.num_classes, all_similarities[i], all_imginds[i]
             )
             best_inds.append(inds)
+            logger.debug(np.unique(train_labels[inds], return_counts=True))
         best_inds = np.concatenate(best_inds)
         logger.debug(f"best inds shape {best_inds}")
         np.save(p.output_dir / f"best_inds_{p.topn}_perclass.npy", best_inds)
@@ -253,6 +254,7 @@ def main(args):
             data.classes,
             p.output_dir / f"freq_{p.topn}_perclass",
         )
+        exit(1)
 
     elif p.random:
         rand_iter = 10

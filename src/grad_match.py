@@ -112,12 +112,12 @@ def get_similarities(model, dataset, batch_size, mean_gradients, use_all_params=
     return np.concatenate(similarities), np.concatenate(img_indices)
 
 
-def gradient_mathcing(p, train_data):
+def gradient_mathcing(p, data):
     """Calculated mean gradient for the given dataset and find per sample similarity with mean gradients
 
     Args:
         p (EasyDict): Hyperparameters
-        train_data (Dataset): Dataset
+        data (Dataset): Dataset
 
     Returns:
         tuple[np.ndarray, np.ndarray]: Arrays of shape (iter, len(dataset)) for similarities calculated for each sample for every iteration and corresponding indices
@@ -126,13 +126,13 @@ def gradient_mathcing(p, train_data):
     all_similarities, all_imginds = [], []
     for k in trange(iterations, desc="Iterations", position=0, leave=True):
         loader = DataLoader(
-            train_data, p.batch_size, shuffle=True, num_workers=2, pin_memory=True
+            data, p.batch_size, shuffle=True, num_workers=2, pin_memory=True
         )
         model = AlexNet(p.num_classes, False).to(device)
         # slmodel, params, buffers = make_functional_with_buffers(model.fc)
         mean_gradients = get_mean_gradients(model, loader, p.use_all_params)
         similarities, img_indices = get_similarities(
-            model, train_data, p.batch_size, mean_gradients, p.use_all_params
+            model, data, p.batch_size, mean_gradients, p.use_all_params
         )
 
         all_similarities.append(similarities)
@@ -149,11 +149,11 @@ def main(p, logger):
     logger.info("Hyperparameters\n" + pformat(vars(p)))
 
     global device
-    if torch.cuda.is_available:
-        device = torch.device("cuda")
-    else:
-        device = torch.device("cpu")
-        logger.warning("Using CPU to run the program.")
+    # if torch.cuda.is_available:
+    #     device = torch.device("cuda")
+    # else:
+    device = torch.device("cpu")
+    logger.warning("Using CPU to run the program.")
 
     seed_everything(p.seed)
 
@@ -173,6 +173,7 @@ def main(p, logger):
         logger.debug(f"len datasets: {len(datasets)}")
         all_similarities, all_imginds = [], []
         for dataset in tqdm(datasets, desc="Per CLass Gradient Mathcing",  position=2, leave=True):
+            logger.debug(torch.unique(train_labels[dataset.indices], return_counts=True))
             cls_all_sims, cls_all_inds = gradient_mathcing(p, dataset)
             all_similarities.append(cls_all_sims)
             all_imginds.append(cls_all_inds)
