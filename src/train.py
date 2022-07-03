@@ -234,19 +234,20 @@ def main(args):
 
     elif p.per_class:
         all_similarities = np.load(p.output_dir / f"all_similarities_perclass.npy")
-        all_imginds = np.load(p.output_dir / f"all_imginds_perclass.npy").squeeze()
+        all_imginds = np.load(p.output_dir / f"all_imginds_perclass.npy").squeeze(axis=-1)
         logger.info(
             f"all_similarities_perclass.shape: {all_similarities.shape}, all_imginds_perclass.shape: {all_imginds.shape}"
         )
         best_inds = []
         for i in range(all_similarities.shape[0]):
-            inds = get_best_inds(
+            logger.debug(np.unique(train_labels[all_imginds[i]], return_counts=True))
+            inds = get_best_inds(p,
                 p.topn // p.num_classes, all_similarities[i], all_imginds[i]
             )
             best_inds.append(inds)
-            logger.debug(np.unique(train_labels[inds], return_counts=True))
+            # logger.debug(np.unique(train_labels[inds], return_counts=True))
         best_inds = np.concatenate(best_inds)
-        logger.debug(f"best inds shape {best_inds}")
+        logger.debug(f"best inds shape {best_inds.shape}")
         np.save(p.output_dir / f"best_inds_{p.topn}_perclass.npy", best_inds)
         plot_distribution(
             p.topn,
@@ -254,7 +255,6 @@ def main(args):
             data.classes,
             p.output_dir / f"freq_{p.topn}_perclass",
         )
-        exit(1)
 
     elif p.random:
         rand_iter = 10

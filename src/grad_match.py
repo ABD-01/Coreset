@@ -123,6 +123,8 @@ def gradient_mathcing(p, data):
         tuple[np.ndarray, np.ndarray]: Arrays of shape (iter, len(dataset)) for similarities calculated for each sample for every iteration and corresponding indices
     """
     iterations = p.iter
+    logger.debug(len(data))
+    assert len(data) % p.batch_size == 0, "All batches are not of same shape"
     all_similarities, all_imginds = [], []
     for k in trange(iterations, desc="Iterations", position=0, leave=True):
         loader = DataLoader(
@@ -149,11 +151,11 @@ def main(p, logger):
     logger.info("Hyperparameters\n" + pformat(vars(p)))
 
     global device
-    # if torch.cuda.is_available:
-    #     device = torch.device("cuda")
-    # else:
-    device = torch.device("cpu")
-    logger.warning("Using CPU to run the program.")
+    if torch.cuda.is_available:
+        device = torch.device("cuda")
+    else:
+        device = torch.device("cpu")
+        logger.warning("Using CPU to run the program.")
 
     seed_everything(p.seed)
 

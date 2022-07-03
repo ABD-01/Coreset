@@ -8,7 +8,7 @@ import numpy as np
 from tqdm.auto import tqdm
 
 
-def get_best_inds(
+def get_best_inds(p,
     topn: int, all_similarities: np.ndarray, all_imginds: np.ndarray
 ) -> np.ndarray:
     """Return n samples having maximum gradient similarity
@@ -21,15 +21,31 @@ def get_best_inds(
     Returns:
         np.ndarray: indices for images in the coreset
     """
+    # from utils import get_train_dataset
+    # train_labels = np.array(get_train_dataset(p).targets)
+    logging.debug((topn, all_similarities.shape, all_imginds.shape))
+    # logging.debug("train labels for all_imginds")
+    # logging.debug(np.unique(train_labels[all_imginds], return_counts=True))
     good_inds = []
     for (sims, inds) in tqdm(zip(all_similarities, all_imginds)):
+        # logging.debug(sims.shape)
         ind = np.argpartition(-sims, topn)[:topn]
         good_inds.append(inds[ind])
+        # logging.debug("train labels for ind")
+        # logging.debug(np.unique(train_labels[inds[ind]], return_counts=True))
     good_inds = np.concatenate(good_inds)
+    # logging.debug("train labels for good_inds")
+    # logging.debug(np.unique(train_labels[good_inds], return_counts=True))
     values, counts = np.unique(good_inds, return_counts=True)
+    # logging.debug((values, counts))
     # ref:https://stackoverflow.com/a/28736715/13730689
     best_inds = np.argpartition(-counts, kth=topn)[:topn]
-    return best_inds
+    # logging.debug("train labels for best_inds")
+    # logging.debug(np.unique(train_labels[best_inds], return_counts=True))
+    # logging.debug("train labels for good_inds[best_inds]")
+    # logging.debug(np.unique(train_labels[good_inds[best_inds]], return_counts=True))
+    # logging.debug(best_inds)
+    return good_inds[best_inds]
 
 
 def get_cls_balanced_best_inds(
