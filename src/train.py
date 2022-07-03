@@ -85,9 +85,6 @@ def train_epoch(loader, model, criterion, optimizer, scheduler, device):
         loss.backward()
         optimizer.step()
         acc = output.argmax(dim=1).eq(labels).float().mean().item()
-    if scheduler is not None:
-        # scheduler.step()
-        scheduler.step(loss)
     return loss, acc
 
 
@@ -121,8 +118,9 @@ def train_loop(p, best_inds: torch.Tensor, data, test_data) -> None:
     if p.scheduler:
         scheduler = get_scheduler(p, optimizer)
 
-    early_stopping = EarlyStopping(**p.early_stopping_kwargs, threshold=-2)
+    early_stopping = EarlyStopping(**p.early_stopping_kwargs, threshold=-5)
     losses, accs, val_losses, val_accs = [], [], [], []
+    lrs = []
     for epoch in trange(p.epochs):
         model.train()
         loss, acc = train_epoch(
@@ -134,6 +132,10 @@ def train_loop(p, best_inds: torch.Tensor, data, test_data) -> None:
         val_losses.append(val_loss.item())
         val_accs.append(val_acc)
         early_stopping(-val_loss)
+        if scheduler is not None:
+            # scheduler.step()
+            scheduler.step(val_loss.item())
+            lrs.append(optimizer.param_groups[0]['lr'])
         # logger.info(f"Epoch[{epoch+1:4}] Val_Loss: {val_loss:.3f}\tVal_Acc: {val_acc:.3f}")
         gc.collect()
         torch.cuda.empty_cache()
@@ -162,6 +164,10 @@ def train_loop(p, best_inds: torch.Tensor, data, test_data) -> None:
         p.topn,
         p.output_dir / f"LearningCurve_{prefix}_n{p.topn}{suffix}",
     )
+    if lrs:
+        plt.figure()
+        plt.plot(lrs, label="learning rate")
+        plt.savefig(p.output_dir / f"Learningrate_{p.scheduler}_{prefix}_n{p.topn}{suffix}")
 
     model.eval()
     _, train_acc = validate(train_loader, model, criterion, device)
