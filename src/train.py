@@ -162,13 +162,15 @@ def train_loop(p, best_inds: torch.Tensor, data, test_data) -> None:
         val_losses,
         val_accs,
         p.topn,
-        p.output_dir / f"{'random/' if p.random else ''}LearningCurve_{prefix}_n{p.topn}{suffix}",
+        p.output_dir
+        / f"{'random/' if p.random else ''}LearningCurve_{prefix}_n{p.topn}{suffix}",
     )
     if lrs:
         plt.figure()
         plt.plot(lrs, label="learning rate")
         plt.savefig(
-            p.output_dir / f"{'random/' if p.random else ''}Learningrate_{p.scheduler}_{prefix}_n{p.topn}{suffix}"
+            p.output_dir
+            / f"{'random/' if p.random else ''}Learningrate_{p.scheduler}_{prefix}_n{p.topn}{suffix}"
         )
 
     model.eval()

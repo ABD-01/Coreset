@@ -146,7 +146,9 @@ class EarlyStopping:
             self.counter = 0
         elif val_acc - self.best_acc < self.min_delta:
             self.counter += 1
-            logging.info(f"Epoch: {self.epoch_counter} Early stopping counter {self.counter} of {self.patience}")
+            logging.info(
+                f"Epoch: {self.epoch_counter} Early stopping counter {self.counter} of {self.patience}"
+            )
             if self.counter >= self.patience:
                 logging.info("Early stopping")
                 self.early_stop = True
