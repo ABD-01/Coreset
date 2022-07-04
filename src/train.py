@@ -135,7 +135,7 @@ def train_loop(p, best_inds: torch.Tensor, data, test_data) -> None:
         if scheduler is not None:
             # scheduler.step()
             scheduler.step(val_loss.item())
-            lrs.append(optimizer.param_groups[0]['lr'])
+            lrs.append(optimizer.param_groups[0]["lr"])
         # logger.info(f"Epoch[{epoch+1:4}] Val_Loss: {val_loss:.3f}\tVal_Acc: {val_acc:.3f}")
         gc.collect()
         torch.cuda.empty_cache()
@@ -167,7 +167,9 @@ def train_loop(p, best_inds: torch.Tensor, data, test_data) -> None:
     if lrs:
         plt.figure()
         plt.plot(lrs, label="learning rate")
-        plt.savefig(p.output_dir / f"Learningrate_{p.scheduler}_{prefix}_n{p.topn}{suffix}")
+        plt.savefig(
+            p.output_dir / f"Learningrate_{p.scheduler}_{prefix}_n{p.topn}{suffix}"
+        )
 
     model.eval()
     _, train_acc = validate(train_loader, model, criterion, device)
@@ -265,7 +267,8 @@ def main(args):
                 best_inds = np.concatenate(
                     [
                         np.random.choice(
-                            np.argwhere(train_labels == c).squeeze(), p.topn // p.num_classes
+                            np.argwhere(train_labels == c).squeeze(),
+                            p.topn // p.num_classes,
                         )
                         for c in data.class_to_idx.values()
                     ]
