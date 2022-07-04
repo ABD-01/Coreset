@@ -31,7 +31,9 @@ def get_mean_gradients(model, loader, use_all_params=False):
     )
     mean_gradients = [None for i in range(num_params)]
     num_iter = len(loader)
-    progress_bar = tqdm(loader, total=num_iter, desc="Mean Gradients", leave=False, position=1)
+    progress_bar = tqdm(
+        loader, total=num_iter, desc="Mean Gradients", leave=False, position=1
+    )
     for batch in progress_bar:
         images, labels, _ = batch
         torch.cuda.empty_cache()
@@ -80,7 +82,7 @@ def get_similarities(model, dataset, batch_size, mean_gradients, use_all_params=
         total=len(loader),
         desc="Per Sample Gradient Similarity",
         leave=False,
-        position=1
+        position=1,
     )
     for i, batch in progress_bar:
         imgs, labels, inds = batch
@@ -112,27 +114,29 @@ def get_similarities(model, dataset, batch_size, mean_gradients, use_all_params=
     return np.concatenate(similarities), np.concatenate(img_indices)
 
 
-def gradient_mathcing(p, train_data):
+def gradient_mathcing(p, data):
     """Calculated mean gradient for the given dataset and find per sample similarity with mean gradients
 
     Args:
         p (EasyDict): Hyperparameters
-        train_data (Dataset): Dataset
+        data (Dataset): Dataset
 
     Returns:
         tuple[np.ndarray, np.ndarray]: Arrays of shape (iter, len(dataset)) for similarities calculated for each sample for every iteration and corresponding indices
     """
     iterations = p.iter
+    logger.debug(len(data))
+    assert len(data) % p.batch_size == 0, "All batches are not of same shape"
     all_similarities, all_imginds = [], []
     for k in trange(iterations, desc="Iterations", position=0, leave=True):
         loader = DataLoader(
-            train_data, p.batch_size, shuffle=True, num_workers=2, pin_memory=True
+            data, p.batch_size, shuffle=True, num_workers=2, pin_memory=True
         )
         model = AlexNet(p.num_classes, False).to(device)
         # slmodel, params, buffers = make_functional_with_buffers(model.fc)
         mean_gradients = get_mean_gradients(model, loader, p.use_all_params)
         similarities, img_indices = get_similarities(
-            model, train_data, p.batch_size, mean_gradients, p.use_all_params
+            model, data, p.batch_size, mean_gradients, p.use_all_params
         )
 
         all_similarities.append(similarities)
@@ -172,7 +176,12 @@ def main(p, logger):
         ]
         logger.debug(f"len datasets: {len(datasets)}")
         all_similarities, all_imginds = [], []
-        for dataset in tqdm(datasets, desc="Per CLass Gradient Mathcing",  position=2, leave=True):
+        for dataset in tqdm(
+            datasets, desc="Per CLass Gradient Mathcing", position=2, leave=True
+        ):
+            logger.debug(
+                torch.unique(train_labels[dataset.indices], return_counts=True)
+            )
             cls_all_sims, cls_all_inds = gradient_mathcing(p, dataset)
             all_similarities.append(cls_all_sims)
             all_imginds.append(cls_all_inds)

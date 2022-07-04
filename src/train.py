@@ -118,10 +118,10 @@ def train_loop(p, best_inds: torch.Tensor, data, test_data) -> None:
     if p.scheduler:
         scheduler = get_scheduler(p, optimizer)
 
-    early_stopping = EarlyStopping(**p.early_stopping_kwargs, threshold=-5)
+    early_stopping = EarlyStopping(**p.early_stopping_kwargs)
     losses, accs, val_losses, val_accs = [], [], [], []
     lrs = []
-    for epoch in trange(p.epochs):
+    for epoch in trange(p.epochs, position=0, leave=True):
         model.train()
         loss, acc = train_epoch(
             train_loader, model, criterion, optimizer, scheduler, device
@@ -135,7 +135,7 @@ def train_loop(p, best_inds: torch.Tensor, data, test_data) -> None:
         if scheduler is not None:
             # scheduler.step()
             scheduler.step(val_loss.item())
-            lrs.append(optimizer.param_groups[0]['lr'])
+            lrs.append(optimizer.param_groups[0]["lr"])
         # logger.info(f"Epoch[{epoch+1:4}] Val_Loss: {val_loss:.3f}\tVal_Acc: {val_acc:.3f}")
         gc.collect()
         torch.cuda.empty_cache()
@@ -162,12 +162,16 @@ def train_loop(p, best_inds: torch.Tensor, data, test_data) -> None:
         val_losses,
         val_accs,
         p.topn,
-        p.output_dir / f"LearningCurve_{prefix}_n{p.topn}{suffix}",
+        p.output_dir
+        / f"{'random/' if p.random else ''}LearningCurve_{prefix}_n{p.topn}{suffix}",
     )
     if lrs:
         plt.figure()
         plt.plot(lrs, label="learning rate")
-        plt.savefig(p.output_dir / f"Learningrate_{p.scheduler}_{prefix}_n{p.topn}{suffix}")
+        plt.savefig(
+            p.output_dir
+            / f"{'random/' if p.random else ''}Learningrate_{p.scheduler}_{prefix}_n{p.topn}{suffix}"
+        )
 
     model.eval()
     _, train_acc = validate(train_loader, model, criterion, device)
@@ -179,7 +183,7 @@ def train_loop(p, best_inds: torch.Tensor, data, test_data) -> None:
 
     model_path = (
         p.output_dir
-        / f"Greedy_Model_{p.topn}n_Epochs_{p.epochs}_Early_Stop_{epoch+1}_Test_Acc_{int(test_acc)}_{suffix}.pth"
+        / f"{'random/' if p.random else ''}Greedy_Model_{p.topn}n_Epochs_{p.epochs}_Early_Stop_{epoch+1}_Test_Acc_{int(test_acc)}{suffix}.pth"
     )
     torch.save(
         model.state_dict(),
@@ -233,19 +237,23 @@ def main(args):
         ), f"Given best indices shape {best_inds.shape[0]} and no. of best samples {p.topn} does not match."
 
     elif p.per_class:
-        all_similarities = np.load(p.output_dir / f"all_similarities_perclass.npy")
-        all_imginds = np.load(p.output_dir / f"all_imginds_perclass.npy").squeeze()
+        all_similarities = np.load(Path(p.dataset) / f"all_similarities_perclass.npy")
+        all_imginds = np.load(Path(p.dataset) / f"all_imginds_perclass.npy").squeeze(
+            axis=-1
+        )
         logger.info(
             f"all_similarities_perclass.shape: {all_similarities.shape}, all_imginds_perclass.shape: {all_imginds.shape}"
         )
         best_inds = []
         for i in range(all_similarities.shape[0]):
+            logger.debug(np.unique(train_labels[all_imginds[i]], return_counts=True))
             inds = get_best_inds(
                 p.topn // p.num_classes, all_similarities[i], all_imginds[i]
             )
             best_inds.append(inds)
+            # logger.debug(np.unique(train_labels[inds], return_counts=True))
         best_inds = np.concatenate(best_inds)
-        logger.debug(f"best inds shape {best_inds}")
+        logger.debug(f"best inds shape {best_inds.shape}")
         np.save(p.output_dir / f"best_inds_{p.topn}_perclass.npy", best_inds)
         plot_distribution(
             p.topn,
@@ -265,7 +273,8 @@ def main(args):
                 best_inds = np.concatenate(
                     [
                         np.random.choice(
-                            np.argwhere(train_labels == c).squeeze(), p.topn // p.num_classes
+                            np.argwhere(train_labels == c).squeeze(),
+                            p.topn // p.num_classes,
                         )
                         for c in data.class_to_idx.values()
                     ]
@@ -296,8 +305,8 @@ def main(args):
         )
 
     else:
-        all_similarities = np.load(p.output_dir / f"all_similarities.npy")
-        all_imginds = np.load(p.output_dir / f"all_imginds.npy")
+        all_similarities = np.load(Path(p.dataset) / f"all_similarities.npy")
+        all_imginds = np.load(Path(p.dataset) / f"all_imginds.npy")
         logger.info(
             f"all_similarities.shape: {all_similarities.shape}, all_imginds.shape: {all_imginds.shape}"
         )
@@ -336,7 +345,7 @@ if __name__ == "__main__":
         description="Getting gradient similarity for each sample."
     )
     parser.add_argument("--config", required=True, help="Location of config file")
-    parser.add_argument("--seed", default=0, help="Seed")
+    parser.add_argument("--seed", default=0, type=int, help="Seed")
     parser.add_argument(
         "--dataset", default="cifar100", required=True, help="Dataset Location"
     )
@@ -385,8 +394,8 @@ if __name__ == "__main__":
     parser.add_argument("--wandb", default=False, type=bool, help="Log using wandb")
 
     args = parser.parse_args()
-    args.output_dir = Path(args.dataset)
-    args.logdir = Path(args.dataset) / "logs"
+    args.output_dir = Path(args.dataset) / f"n{args.topn}"
+    args.logdir = args.output_dir / "logs"
     args.logdir.mkdir(parents=True, exist_ok=True)
 
     if args.test_model is not None and not Path(args.test_model).is_file():
@@ -397,6 +406,9 @@ if __name__ == "__main__":
         and not Path(args.use_saved_best_inds).is_file()
     ):
         raise ValueError("Best indices file does not exist.")
+
+    if args.random:
+        (args.output_dir / "random").mkdir(exist_ok=True)
 
     global logger
     logger = get_logger(args, "train")

@@ -21,15 +21,31 @@ def get_best_inds(
     Returns:
         np.ndarray: indices for images in the coreset
     """
+    # from utils import get_train_dataset
+    # train_labels = np.array(get_train_dataset(p).targets)
+    # logging.debug((topn, all_similarities.shape, all_imginds.shape))
+    # logging.debug("train labels for all_imginds")
+    # logging.debug(np.unique(train_labels[all_imginds], return_counts=True))
     good_inds = []
     for (sims, inds) in tqdm(zip(all_similarities, all_imginds)):
+        # logging.debug(sims.shape)
         ind = np.argpartition(-sims, topn)[:topn]
         good_inds.append(inds[ind])
+        # logging.debug("train labels for ind")
+        # logging.debug(np.unique(train_labels[inds[ind]], return_counts=True))
     good_inds = np.concatenate(good_inds)
+    # logging.debug("train labels for good_inds")
+    # logging.debug(np.unique(train_labels[good_inds], return_counts=True))
     values, counts = np.unique(good_inds, return_counts=True)
+    # logging.debug((values, counts))
     # ref:https://stackoverflow.com/a/28736715/13730689
     best_inds = np.argpartition(-counts, kth=topn)[:topn]
-    return best_inds
+    # logging.debug("train labels for best_inds")
+    # logging.debug(np.unique(train_labels[best_inds], return_counts=True))
+    # logging.debug("train labels for good_inds[best_inds]")
+    # logging.debug(np.unique(train_labels[good_inds[best_inds]], return_counts=True))
+    # logging.debug(best_inds)
+    return good_inds[best_inds]
 
 
 def get_cls_balanced_best_inds(
@@ -103,22 +119,24 @@ def plot_distribution(topn: int, best_labels: np.ndarray, classes: list, path) -
 class EarlyStopping:
     """Early stopping to stop the training when the loss does not improve after certain epochs."""
 
-    def __init__(self, patience=10, min_delta=1e-4, threshold=0.3):
+    def __init__(self, patience=10, min_delta=1e-4, min_epochs=200):
         """
         Args:
             patience (int, optional): how many epochs to wait before stopping when loss is not improving. Defaults to 10.
             min_delta (float, optional): minimum difference between new loss and old loss for new loss to be considered as an improvement. Defaults to 1e-4.
-            threshold (float, optional): minimum value to be attained before the counter starts. Defaults to 0.3.
+            min_epochs (int, optional): minimum number of epochs after which early stopping starts. Defaults to 200.
         """
         self.patience = patience
         self.min_delta = min_delta
-        self.threshold = threshold
+        self.min_epochs = min_epochs
         self.counter = 0
+        self.epoch_counter = 0
         self.best_acc = None
         self.early_stop = False
 
     def __call__(self, val_acc):
-        if val_acc < self.threshold:
+        self.epoch_counter += 1
+        if self.epoch_counter < self.min_epochs:
             return
         if self.best_acc == None:
             self.best_acc = val_acc
@@ -128,7 +146,9 @@ class EarlyStopping:
             self.counter = 0
         elif val_acc - self.best_acc < self.min_delta:
             self.counter += 1
-            logging.info(f"Early stopping counter {self.counter} of {self.patience}")
+            logging.info(
+                f"Epoch: {self.epoch_counter} Early stopping counter {self.counter} of {self.patience}"
+            )
             if self.counter >= self.patience:
                 logging.info("Early stopping")
                 self.early_stop = True
@@ -159,4 +179,4 @@ def plot_learning_curves(
     ax1.legend()
     ax2.legend()
     plt.savefig(path)
-    plt.show()
+    # plt.show()

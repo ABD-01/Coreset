@@ -233,6 +233,7 @@ def get_logger(p, script="train"):
     logger.setLevel(logging.DEBUG)
     logging.getLogger("matplotlib.font_manager").disabled = True
     logging.getLogger("matplotlib.pyplot").disabled = True
+    logging.getLogger("PIL").disabled = True
 
     stdout_handler = logging.StreamHandler(sys.stdout)
     stdout_handler.setLevel(logging.DEBUG)
