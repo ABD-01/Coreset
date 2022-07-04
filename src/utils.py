@@ -72,17 +72,11 @@ def get_train_dataset(p):
 
 def get_test_dataset(p):
     if p.dataset.lower() == "mnist":
-        return MNIST(
-            p.dataset_dir, train=False, transform=get_transform(p), download=True
-        )
+        return MNIST(p.dataset_dir, train=False, transform=get_transform(p), download=True        )
     elif p.dataset.lower() == "cifar10":
-        return CIFAR10(
-            p.dataset_dir, train=False, transform=get_transform(p), download=True
-        )
+        return CIFAR10(p.dataset_dir, train=False, transform=get_transform(p), download=True        )
     elif p.dataset.lower() == "cifar100":
-        return CIFAR100(
-            p.dataset_dir, train=False, transform=get_transform(p), download=True
-        )
+        return CIFAR100(p.dataset_dir, train=False, transform=get_transform(p), download=True)
     else:
         msg = f"Unknown value '{p.dataset}' for argument dataset"
         raise ValueError(msg)
@@ -140,13 +134,7 @@ class AlexNet(nn.Module):
             nn.Flatten(),
         )
 
-        self.fc = nn.Sequential(
-            nn.Dropout(0.5) if dropout else nn.Identity(),
-            nn.Linear(256 * 2 * 2, 512),
-            nn.ReLU(inplace=True),
-            nn.Dropout(0.5) if dropout else nn.Identity(),
-            nn.Linear(512, 256),
-            nn.ReLU(inplace=True),
+        self.fc = nn.Sequential(nn.Dropout(0.5) if dropout else nn.Identity(),nn.Linear(256 * 2 * 2, 512),nn.ReLU(inplace=True),nn.Dropout(0.5) if dropout else nn.Identity(),nn.Linear(512, 256),nn.ReLU(inplace=True),
             nn.Linear(256, output_dim),
             nn.LogSoftmax(dim=-1),
         )
