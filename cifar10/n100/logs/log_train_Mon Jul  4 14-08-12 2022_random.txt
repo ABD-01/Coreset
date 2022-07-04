@@ -1,0 +1,1750 @@
+2022-07-04 14:08:12,519: INFO: Hyperparameters
+{'backbone': 'alexnet',
+ 'batch_size': 1000,
+ 'class_balanced': False,
+ 'config': 'src/configs/cifar10.yml',
+ 'criterion': 'NLLLoss',
+ 'criterion_kwargs': None,
+ 'dataset': 'cifar10',
+ 'dataset_dir': './data',
+ 'dont_train': False,
+ 'early_stopping_kwargs': {'min_delta': 0.0001,
+                           'min_epochs': 100,
+                           'patience': 12},
+ 'epochs': 1000,
+ 'logdir': PosixPath('cifar10/n100/logs'),
+ 'lr': 0.01,
+ 'num_classes': 10,
+ 'num_workers': 2,
+ 'optimizer': 'sgd',
+ 'optimizer_kwargs': {'momentum': 0.9, 'weight_decay': 0.01},
+ 'output_dir': PosixPath('cifar10/n100'),
+ 'per_class': False,
+ 'random': True,
+ 'resume': None,
+ 'scheduler': 'reduceonplateau',
+ 'scheduler_kwargs': {'factor': 0.2,
+                      'min_lr': 1e-07,
+                      'patience': 10,
+                      'threshold': 0.001},
+ 'seed': 0,
+ 'test_model': None,
+ 'topn': 100,
+ 'transformation_kwargs': {'normalize': {'mean': [0.4914, 0.4822, 0.4465],
+                                         'std': [0.2023, 0.1994, 0.201]}},
+ 'use_saved_best_inds': None,
+ 'val_percent': 0.1,
+ 'wandb': False}
+2022-07-04 14:08:15,049: INFO: Dataset
+Dataset CIFAR10
+    Number of datapoints: 50000
+    Root location: ./data
+    Split: Train
+    StandardTransform
+Transform: Compose(
+               ToTensor()
+               Normalize(mean=[0.4914, 0.4822, 0.4465], std=[0.2023, 0.1994, 0.201])
+           )
+2022-07-04 14:08:16,771: INFO: Test Dataset
+Dataset CIFAR10
+    Number of datapoints: 10000
+    Root location: ./data
+    Split: Test
+    StandardTransform
+Transform: Compose(
+               ToTensor()
+               Normalize(mean=[0.4914, 0.4822, 0.4465], std=[0.2023, 0.1994, 0.201])
+           )
+2022-07-04 14:08:16,775: INFO: Training on randomly chosen Coreset for 10 iterations.
+2022-07-04 14:08:16,910: DEBUG: STREAM b'IHDR' 16 13
+2022-07-04 14:08:16,911: DEBUG: STREAM b'sBIT' 41 4
+2022-07-04 14:08:16,911: DEBUG: b'sBIT' 41 4 (unknown)
+2022-07-04 14:08:16,912: DEBUG: STREAM b'pHYs' 57 9
+2022-07-04 14:08:16,912: DEBUG: STREAM b'IDAT' 78 374
+2022-07-04 14:08:16,914: DEBUG: STREAM b'IHDR' 16 13
+2022-07-04 14:08:16,914: DEBUG: STREAM b'sBIT' 41 4
+2022-07-04 14:08:16,915: DEBUG: b'sBIT' 41 4 (unknown)
+2022-07-04 14:08:16,915: DEBUG: STREAM b'pHYs' 57 9
+2022-07-04 14:08:16,916: DEBUG: STREAM b'IDAT' 78 286
+2022-07-04 14:08:16,917: DEBUG: STREAM b'IHDR' 16 13
+2022-07-04 14:08:16,917: DEBUG: STREAM b'sBIT' 41 4
+2022-07-04 14:08:16,918: DEBUG: b'sBIT' 41 4 (unknown)
+2022-07-04 14:08:16,918: DEBUG: STREAM b'pHYs' 57 9
+2022-07-04 14:08:16,919: DEBUG: STREAM b'IDAT' 78 263
+2022-07-04 14:08:16,920: DEBUG: STREAM b'IHDR' 16 13
+2022-07-04 14:08:16,921: DEBUG: STREAM b'sBIT' 41 4
+2022-07-04 14:08:16,921: DEBUG: b'sBIT' 41 4 (unknown)
+2022-07-04 14:08:16,921: DEBUG: STREAM b'pHYs' 57 9
+2022-07-04 14:08:16,922: DEBUG: STREAM b'IDAT' 78 387
+2022-07-04 14:08:16,923: DEBUG: STREAM b'IHDR' 16 13
+2022-07-04 14:08:16,923: DEBUG: STREAM b'sBIT' 41 4
+2022-07-04 14:08:16,924: DEBUG: b'sBIT' 41 4 (unknown)
+2022-07-04 14:08:16,924: DEBUG: STREAM b'pHYs' 57 9
+2022-07-04 14:08:16,925: DEBUG: STREAM b'IDAT' 78 436
+2022-07-04 14:08:16,926: DEBUG: STREAM b'IHDR' 16 13
+2022-07-04 14:08:16,926: DEBUG: STREAM b'sBIT' 41 4
+2022-07-04 14:08:16,927: DEBUG: b'sBIT' 41 4 (unknown)
+2022-07-04 14:08:16,927: DEBUG: STREAM b'pHYs' 57 9
+2022-07-04 14:08:16,927: DEBUG: STREAM b'IDAT' 78 351
+2022-07-04 14:08:16,928: DEBUG: STREAM b'IHDR' 16 13
+2022-07-04 14:08:16,929: DEBUG: STREAM b'sBIT' 41 4
+2022-07-04 14:08:16,929: DEBUG: b'sBIT' 41 4 (unknown)
+2022-07-04 14:08:16,930: DEBUG: STREAM b'pHYs' 57 9
+2022-07-04 14:08:16,930: DEBUG: STREAM b'IDAT' 78 364
+2022-07-04 14:08:25,678: INFO: Model Summary
+==========================================================================================
+Layer (type:depth-idx)                   Output Shape              Param #
+==========================================================================================
+├─Sequential: 1-1                        [-1, 1024]                --
+|    └─Conv2d: 2-1                       [-1, 64, 16, 16]          1,792
+|    └─MaxPool2d: 2-2                    [-1, 64, 8, 8]            --
+|    └─ReLU: 2-3                         [-1, 64, 8, 8]            --
+|    └─Conv2d: 2-4                       [-1, 192, 8, 8]           110,784
+|    └─MaxPool2d: 2-5                    [-1, 192, 4, 4]           --
+|    └─ReLU: 2-6                         [-1, 192, 4, 4]           --
+|    └─Conv2d: 2-7                       [-1, 384, 4, 4]           663,936
+|    └─ReLU: 2-8                         [-1, 384, 4, 4]           --
+|    └─Conv2d: 2-9                       [-1, 256, 4, 4]           884,992
+|    └─ReLU: 2-10                        [-1, 256, 4, 4]           --
+|    └─Conv2d: 2-11                      [-1, 256, 4, 4]           590,080
+|    └─MaxPool2d: 2-12                   [-1, 256, 2, 2]           --
+|    └─ReLU: 2-13                        [-1, 256, 2, 2]           --
+|    └─Flatten: 2-14                     [-1, 1024]                --
+├─Sequential: 1-2                        [-1, 10]                  --
+|    └─Dropout: 2-15                     [-1, 1024]                --
+|    └─Linear: 2-16                      [-1, 512]                 524,800
+|    └─ReLU: 2-17                        [-1, 512]                 --
+|    └─Dropout: 2-18                     [-1, 512]                 --
+|    └─Linear: 2-19                      [-1, 256]                 131,328
+|    └─ReLU: 2-20                        [-1, 256]                 --
+|    └─Linear: 2-21                      [-1, 10]                  2,570
+|    └─LogSoftmax: 2-22                  [-1, 10]                  --
+==========================================================================================
+Total params: 2,910,282
+Trainable params: 2,910,282
+Non-trainable params: 0
+Total mult-adds (M): 45.30
+==========================================================================================
+Input size (MB): 0.01
+Forward/backward pass size (MB): 0.33
+Params size (MB): 11.10
+Estimated Total Size (MB): 11.45
+==========================================================================================
+2022-07-04 14:08:29,689: INFO: Epoch[   1] Loss: 9.56	Accuracy: 11.111	Val_Loss: 7.753	Val_Acc: 10.000
+2022-07-04 14:08:29,691: INFO: Epoch[   1] Test Accuracy: 12.080
+2022-07-04 14:08:35,092: INFO: Epoch[  51] Loss: 1.82	Accuracy: 36.667	Val_Loss: 2.267	Val_Acc: 20.000
+2022-07-04 14:08:35,094: INFO: Epoch[  51] Test Accuracy: 20.730
+2022-07-04 14:08:39,025: INFO: Epoch: 101 Early stopping counter 1 of 12
+2022-07-04 14:08:41,081: INFO: Epoch[ 101] Loss: 1.53	Accuracy: 44.444	Val_Loss: 2.289	Val_Acc: 20.000
+2022-07-04 14:08:41,083: INFO: Epoch[ 101] Test Accuracy: 22.740
+2022-07-04 14:08:41,123: INFO: Epoch: 102 Early stopping counter 2 of 12
+2022-07-04 14:08:41,207: INFO: Epoch: 103 Early stopping counter 3 of 12
+2022-07-04 14:08:41,300: INFO: Epoch: 104 Early stopping counter 4 of 12
+2022-07-04 14:08:41,388: INFO: Epoch: 105 Early stopping counter 5 of 12
+2022-07-04 14:08:41,472: INFO: Epoch: 106 Early stopping counter 6 of 12
+2022-07-04 14:08:41,556: INFO: Epoch: 107 Early stopping counter 7 of 12
+2022-07-04 14:08:41,633: INFO: Epoch: 108 Early stopping counter 8 of 12
+2022-07-04 14:08:41,716: INFO: Epoch: 109 Early stopping counter 9 of 12
+2022-07-04 14:08:41,786: INFO: Epoch: 110 Early stopping counter 10 of 12
+2022-07-04 14:08:41,856: INFO: Epoch: 111 Early stopping counter 11 of 12
+2022-07-04 14:08:41,926: INFO: Epoch: 112 Early stopping counter 12 of 12
+2022-07-04 14:08:41,928: INFO: Early stopping
+2022-07-04 14:08:41,969: INFO: Trained for 112 Epochs.
+2022-07-04 14:08:42,059: DEBUG: STREAM b'IHDR' 16 13
+2022-07-04 14:08:42,061: DEBUG: STREAM b'sBIT' 41 4
+2022-07-04 14:08:42,062: DEBUG: b'sBIT' 41 4 (unknown)
+2022-07-04 14:08:42,064: DEBUG: STREAM b'pHYs' 57 9
+2022-07-04 14:08:42,065: DEBUG: STREAM b'IDAT' 78 374
+2022-07-04 14:08:42,069: DEBUG: STREAM b'IHDR' 16 13
+2022-07-04 14:08:42,071: DEBUG: STREAM b'sBIT' 41 4
+2022-07-04 14:08:42,072: DEBUG: b'sBIT' 41 4 (unknown)
+2022-07-04 14:08:42,074: DEBUG: STREAM b'pHYs' 57 9
+2022-07-04 14:08:42,076: DEBUG: STREAM b'IDAT' 78 286
+2022-07-04 14:08:42,080: DEBUG: STREAM b'IHDR' 16 13
+2022-07-04 14:08:42,082: DEBUG: STREAM b'sBIT' 41 4
+2022-07-04 14:08:42,084: DEBUG: b'sBIT' 41 4 (unknown)
+2022-07-04 14:08:42,085: DEBUG: STREAM b'pHYs' 57 9
+2022-07-04 14:08:42,087: DEBUG: STREAM b'IDAT' 78 263
+2022-07-04 14:08:42,090: DEBUG: STREAM b'IHDR' 16 13
+2022-07-04 14:08:42,092: DEBUG: STREAM b'sBIT' 41 4
+2022-07-04 14:08:42,094: DEBUG: b'sBIT' 41 4 (unknown)
+2022-07-04 14:08:42,096: DEBUG: STREAM b'pHYs' 57 9
+2022-07-04 14:08:42,098: DEBUG: STREAM b'IDAT' 78 387
+2022-07-04 14:08:42,101: DEBUG: STREAM b'IHDR' 16 13
+2022-07-04 14:08:42,102: DEBUG: STREAM b'sBIT' 41 4
+2022-07-04 14:08:42,104: DEBUG: b'sBIT' 41 4 (unknown)
+2022-07-04 14:08:42,105: DEBUG: STREAM b'pHYs' 57 9
+2022-07-04 14:08:42,107: DEBUG: STREAM b'IDAT' 78 436
+2022-07-04 14:08:42,109: DEBUG: STREAM b'IHDR' 16 13
+2022-07-04 14:08:42,111: DEBUG: STREAM b'sBIT' 41 4
+2022-07-04 14:08:42,112: DEBUG: b'sBIT' 41 4 (unknown)
+2022-07-04 14:08:42,114: DEBUG: STREAM b'pHYs' 57 9
+2022-07-04 14:08:42,115: DEBUG: STREAM b'IDAT' 78 351
+2022-07-04 14:08:42,118: DEBUG: STREAM b'IHDR' 16 13
+2022-07-04 14:08:42,119: DEBUG: STREAM b'sBIT' 41 4
+2022-07-04 14:08:42,121: DEBUG: b'sBIT' 41 4 (unknown)
+2022-07-04 14:08:42,122: DEBUG: STREAM b'pHYs' 57 9
+2022-07-04 14:08:42,124: DEBUG: STREAM b'IDAT' 78 364
+2022-07-04 14:08:42,331: DEBUG: STREAM b'IHDR' 16 13
+2022-07-04 14:08:42,333: DEBUG: STREAM b'sBIT' 41 4
+2022-07-04 14:08:42,335: DEBUG: b'sBIT' 41 4 (unknown)
+2022-07-04 14:08:42,337: DEBUG: STREAM b'pHYs' 57 9
+2022-07-04 14:08:42,338: DEBUG: STREAM b'IDAT' 78 374
+2022-07-04 14:08:42,341: DEBUG: STREAM b'IHDR' 16 13
+2022-07-04 14:08:42,343: DEBUG: STREAM b'sBIT' 41 4
+2022-07-04 14:08:42,345: DEBUG: b'sBIT' 41 4 (unknown)
+2022-07-04 14:08:42,347: DEBUG: STREAM b'pHYs' 57 9
+2022-07-04 14:08:42,348: DEBUG: STREAM b'IDAT' 78 286
+2022-07-04 14:08:42,351: DEBUG: STREAM b'IHDR' 16 13
+2022-07-04 14:08:42,353: DEBUG: STREAM b'sBIT' 41 4
+2022-07-04 14:08:42,355: DEBUG: b'sBIT' 41 4 (unknown)
+2022-07-04 14:08:42,357: DEBUG: STREAM b'pHYs' 57 9
+2022-07-04 14:08:42,359: DEBUG: STREAM b'IDAT' 78 263
+2022-07-04 14:08:42,363: DEBUG: STREAM b'IHDR' 16 13
+2022-07-04 14:08:42,365: DEBUG: STREAM b'sBIT' 41 4
+2022-07-04 14:08:42,367: DEBUG: b'sBIT' 41 4 (unknown)
+2022-07-04 14:08:42,369: DEBUG: STREAM b'pHYs' 57 9
+2022-07-04 14:08:42,370: DEBUG: STREAM b'IDAT' 78 387
+2022-07-04 14:08:42,374: DEBUG: STREAM b'IHDR' 16 13
+2022-07-04 14:08:42,376: DEBUG: STREAM b'sBIT' 41 4
+2022-07-04 14:08:42,379: DEBUG: b'sBIT' 41 4 (unknown)
+2022-07-04 14:08:42,380: DEBUG: STREAM b'pHYs' 57 9
+2022-07-04 14:08:42,382: DEBUG: STREAM b'IDAT' 78 436
+2022-07-04 14:08:42,385: DEBUG: STREAM b'IHDR' 16 13
+2022-07-04 14:08:42,386: DEBUG: STREAM b'sBIT' 41 4
+2022-07-04 14:08:42,388: DEBUG: b'sBIT' 41 4 (unknown)
+2022-07-04 14:08:42,390: DEBUG: STREAM b'pHYs' 57 9
+2022-07-04 14:08:42,392: DEBUG: STREAM b'IDAT' 78 351
+2022-07-04 14:08:42,394: DEBUG: STREAM b'IHDR' 16 13
+2022-07-04 14:08:42,396: DEBUG: STREAM b'sBIT' 41 4
+2022-07-04 14:08:42,398: DEBUG: b'sBIT' 41 4 (unknown)
+2022-07-04 14:08:42,400: DEBUG: STREAM b'pHYs' 57 9
+2022-07-04 14:08:42,401: DEBUG: STREAM b'IDAT' 78 364
+2022-07-04 14:08:42,536: INFO: ('Accuracy on Train Set', 55.55555820465088)
+2022-07-04 14:08:44,375: INFO: (2271, 'correctly labeled out of', 10000)
+2022-07-04 14:08:44,377: INFO: ('Accuracy on Test Set:', 22.71)
+2022-07-04 14:08:44,540: INFO: Saved model at cifar10/n100/random/Greedy_Model_100n_Epochs_1000_Early_Stop_112_Test_Acc_22.pth
+2022-07-04 14:08:44,542: INFO: Training Complete
+2022-07-04 14:08:44,568: DEBUG: STREAM b'IHDR' 16 13
+2022-07-04 14:08:44,570: DEBUG: STREAM b'sBIT' 41 4
+2022-07-04 14:08:44,572: DEBUG: b'sBIT' 41 4 (unknown)
+2022-07-04 14:08:44,574: DEBUG: STREAM b'pHYs' 57 9
+2022-07-04 14:08:44,576: DEBUG: STREAM b'IDAT' 78 374
+2022-07-04 14:08:44,579: DEBUG: STREAM b'IHDR' 16 13
+2022-07-04 14:08:44,581: DEBUG: STREAM b'sBIT' 41 4
+2022-07-04 14:08:44,583: DEBUG: b'sBIT' 41 4 (unknown)
+2022-07-04 14:08:44,585: DEBUG: STREAM b'pHYs' 57 9
+2022-07-04 14:08:44,587: DEBUG: STREAM b'IDAT' 78 286
+2022-07-04 14:08:44,589: DEBUG: STREAM b'IHDR' 16 13
+2022-07-04 14:08:44,591: DEBUG: STREAM b'sBIT' 41 4
+2022-07-04 14:08:44,594: DEBUG: b'sBIT' 41 4 (unknown)
+2022-07-04 14:08:44,595: DEBUG: STREAM b'pHYs' 57 9
+2022-07-04 14:08:44,598: DEBUG: STREAM b'IDAT' 78 263
+2022-07-04 14:08:44,602: DEBUG: STREAM b'IHDR' 16 13
+2022-07-04 14:08:44,604: DEBUG: STREAM b'sBIT' 41 4
+2022-07-04 14:08:44,606: DEBUG: b'sBIT' 41 4 (unknown)
+2022-07-04 14:08:44,608: DEBUG: STREAM b'pHYs' 57 9
+2022-07-04 14:08:44,609: DEBUG: STREAM b'IDAT' 78 387
+2022-07-04 14:08:44,614: DEBUG: STREAM b'IHDR' 16 13
+2022-07-04 14:08:44,616: DEBUG: STREAM b'sBIT' 41 4
+2022-07-04 14:08:44,618: DEBUG: b'sBIT' 41 4 (unknown)
+2022-07-04 14:08:44,620: DEBUG: STREAM b'pHYs' 57 9
+2022-07-04 14:08:44,621: DEBUG: STREAM b'IDAT' 78 436
+2022-07-04 14:08:44,624: DEBUG: STREAM b'IHDR' 16 13
+2022-07-04 14:08:44,626: DEBUG: STREAM b'sBIT' 41 4
+2022-07-04 14:08:44,628: DEBUG: b'sBIT' 41 4 (unknown)
+2022-07-04 14:08:44,630: DEBUG: STREAM b'pHYs' 57 9
+2022-07-04 14:08:44,632: DEBUG: STREAM b'IDAT' 78 351
+2022-07-04 14:08:44,636: DEBUG: STREAM b'IHDR' 16 13
+2022-07-04 14:08:44,638: DEBUG: STREAM b'sBIT' 41 4
+2022-07-04 14:08:44,640: DEBUG: b'sBIT' 41 4 (unknown)
+2022-07-04 14:08:44,642: DEBUG: STREAM b'pHYs' 57 9
+2022-07-04 14:08:44,644: DEBUG: STREAM b'IDAT' 78 364
+2022-07-04 14:08:44,820: INFO: Model Summary
+==========================================================================================
+Layer (type:depth-idx)                   Output Shape              Param #
+==========================================================================================
+├─Sequential: 1-1                        [-1, 1024]                --
+|    └─Conv2d: 2-1                       [-1, 64, 16, 16]          1,792
+|    └─MaxPool2d: 2-2                    [-1, 64, 8, 8]            --
+|    └─ReLU: 2-3                         [-1, 64, 8, 8]            --
+|    └─Conv2d: 2-4                       [-1, 192, 8, 8]           110,784
+|    └─MaxPool2d: 2-5                    [-1, 192, 4, 4]           --
+|    └─ReLU: 2-6                         [-1, 192, 4, 4]           --
+|    └─Conv2d: 2-7                       [-1, 384, 4, 4]           663,936
+|    └─ReLU: 2-8                         [-1, 384, 4, 4]           --
+|    └─Conv2d: 2-9                       [-1, 256, 4, 4]           884,992
+|    └─ReLU: 2-10                        [-1, 256, 4, 4]           --
+|    └─Conv2d: 2-11                      [-1, 256, 4, 4]           590,080
+|    └─MaxPool2d: 2-12                   [-1, 256, 2, 2]           --
+|    └─ReLU: 2-13                        [-1, 256, 2, 2]           --
+|    └─Flatten: 2-14                     [-1, 1024]                --
+├─Sequential: 1-2                        [-1, 10]                  --
+|    └─Dropout: 2-15                     [-1, 1024]                --
+|    └─Linear: 2-16                      [-1, 512]                 524,800
+|    └─ReLU: 2-17                        [-1, 512]                 --
+|    └─Dropout: 2-18                     [-1, 512]                 --
+|    └─Linear: 2-19                      [-1, 256]                 131,328
+|    └─ReLU: 2-20                        [-1, 256]                 --
+|    └─Linear: 2-21                      [-1, 10]                  2,570
+|    └─LogSoftmax: 2-22                  [-1, 10]                  --
+==========================================================================================
+Total params: 2,910,282
+Trainable params: 2,910,282
+Non-trainable params: 0
+Total mult-adds (M): 45.30
+==========================================================================================
+Input size (MB): 0.01
+Forward/backward pass size (MB): 0.33
+Params size (MB): 11.10
+Estimated Total Size (MB): 11.45
+==========================================================================================
+2022-07-04 14:08:46,858: INFO: Epoch[   1] Loss: 10.51	Accuracy: 13.333	Val_Loss: 8.277	Val_Acc: 0.000
+2022-07-04 14:08:46,860: INFO: Epoch[   1] Test Accuracy: 9.600
+2022-07-04 14:08:52,376: INFO: Epoch[  51] Loss: 2.11	Accuracy: 18.889	Val_Loss: 2.519	Val_Acc: 20.000
+2022-07-04 14:08:52,378: INFO: Epoch[  51] Test Accuracy: 14.640
+2022-07-04 14:08:56,410: INFO: Epoch: 101 Early stopping counter 1 of 12
+2022-07-04 14:08:58,250: INFO: Epoch[ 101] Loss: 2.11	Accuracy: 26.667	Val_Loss: 2.518	Val_Acc: 20.000
+2022-07-04 14:08:58,251: INFO: Epoch[ 101] Test Accuracy: 14.640
+2022-07-04 14:08:58,284: INFO: Epoch: 102 Early stopping counter 2 of 12
+2022-07-04 14:08:58,367: INFO: Epoch: 103 Early stopping counter 3 of 12
+2022-07-04 14:08:58,443: INFO: Epoch: 104 Early stopping counter 4 of 12
+2022-07-04 14:08:58,520: INFO: Epoch: 105 Early stopping counter 5 of 12
+2022-07-04 14:08:58,600: INFO: Epoch: 106 Early stopping counter 6 of 12
+2022-07-04 14:08:58,677: INFO: Epoch: 107 Early stopping counter 7 of 12
+2022-07-04 14:08:58,756: INFO: Epoch: 108 Early stopping counter 8 of 12
+2022-07-04 14:08:58,831: INFO: Epoch: 109 Early stopping counter 9 of 12
+2022-07-04 14:08:58,905: INFO: Epoch: 110 Early stopping counter 10 of 12
+2022-07-04 14:08:58,978: INFO: Epoch: 111 Early stopping counter 11 of 12
+2022-07-04 14:08:59,053: INFO: Epoch: 112 Early stopping counter 12 of 12
+2022-07-04 14:08:59,053: INFO: Early stopping
+2022-07-04 14:08:59,099: INFO: Trained for 112 Epochs.
+2022-07-04 14:08:59,123: DEBUG: STREAM b'IHDR' 16 13
+2022-07-04 14:08:59,123: DEBUG: STREAM b'sBIT' 41 4
+2022-07-04 14:08:59,124: DEBUG: b'sBIT' 41 4 (unknown)
+2022-07-04 14:08:59,124: DEBUG: STREAM b'pHYs' 57 9
+2022-07-04 14:08:59,125: DEBUG: STREAM b'IDAT' 78 374
+2022-07-04 14:08:59,126: DEBUG: STREAM b'IHDR' 16 13
+2022-07-04 14:08:59,127: DEBUG: STREAM b'sBIT' 41 4
+2022-07-04 14:08:59,127: DEBUG: b'sBIT' 41 4 (unknown)
+2022-07-04 14:08:59,128: DEBUG: STREAM b'pHYs' 57 9
+2022-07-04 14:08:59,128: DEBUG: STREAM b'IDAT' 78 286
+2022-07-04 14:08:59,130: DEBUG: STREAM b'IHDR' 16 13
+2022-07-04 14:08:59,130: DEBUG: STREAM b'sBIT' 41 4
+2022-07-04 14:08:59,131: DEBUG: b'sBIT' 41 4 (unknown)
+2022-07-04 14:08:59,131: DEBUG: STREAM b'pHYs' 57 9
+2022-07-04 14:08:59,132: DEBUG: STREAM b'IDAT' 78 263
+2022-07-04 14:08:59,133: DEBUG: STREAM b'IHDR' 16 13
+2022-07-04 14:08:59,134: DEBUG: STREAM b'sBIT' 41 4
+2022-07-04 14:08:59,134: DEBUG: b'sBIT' 41 4 (unknown)
+2022-07-04 14:08:59,134: DEBUG: STREAM b'pHYs' 57 9
+2022-07-04 14:08:59,135: DEBUG: STREAM b'IDAT' 78 387
+2022-07-04 14:08:59,138: DEBUG: STREAM b'IHDR' 16 13
+2022-07-04 14:08:59,138: DEBUG: STREAM b'sBIT' 41 4
+2022-07-04 14:08:59,139: DEBUG: b'sBIT' 41 4 (unknown)
+2022-07-04 14:08:59,139: DEBUG: STREAM b'pHYs' 57 9
+2022-07-04 14:08:59,140: DEBUG: STREAM b'IDAT' 78 436
+2022-07-04 14:08:59,141: DEBUG: STREAM b'IHDR' 16 13
+2022-07-04 14:08:59,141: DEBUG: STREAM b'sBIT' 41 4
+2022-07-04 14:08:59,142: DEBUG: b'sBIT' 41 4 (unknown)
+2022-07-04 14:08:59,142: DEBUG: STREAM b'pHYs' 57 9
+2022-07-04 14:08:59,143: DEBUG: STREAM b'IDAT' 78 351
+2022-07-04 14:08:59,144: DEBUG: STREAM b'IHDR' 16 13
+2022-07-04 14:08:59,144: DEBUG: STREAM b'sBIT' 41 4
+2022-07-04 14:08:59,145: DEBUG: b'sBIT' 41 4 (unknown)
+2022-07-04 14:08:59,145: DEBUG: STREAM b'pHYs' 57 9
+2022-07-04 14:08:59,145: DEBUG: STREAM b'IDAT' 78 364
+2022-07-04 14:08:59,310: DEBUG: STREAM b'IHDR' 16 13
+2022-07-04 14:08:59,311: DEBUG: STREAM b'sBIT' 41 4
+2022-07-04 14:08:59,311: DEBUG: b'sBIT' 41 4 (unknown)
+2022-07-04 14:08:59,312: DEBUG: STREAM b'pHYs' 57 9
+2022-07-04 14:08:59,313: DEBUG: STREAM b'IDAT' 78 374
+2022-07-04 14:08:59,315: DEBUG: STREAM b'IHDR' 16 13
+2022-07-04 14:08:59,316: DEBUG: STREAM b'sBIT' 41 4
+2022-07-04 14:08:59,316: DEBUG: b'sBIT' 41 4 (unknown)
+2022-07-04 14:08:59,317: DEBUG: STREAM b'pHYs' 57 9
+2022-07-04 14:08:59,317: DEBUG: STREAM b'IDAT' 78 286
+2022-07-04 14:08:59,318: DEBUG: STREAM b'IHDR' 16 13
+2022-07-04 14:08:59,319: DEBUG: STREAM b'sBIT' 41 4
+2022-07-04 14:08:59,320: DEBUG: b'sBIT' 41 4 (unknown)
+2022-07-04 14:08:59,321: DEBUG: STREAM b'pHYs' 57 9
+2022-07-04 14:08:59,322: DEBUG: STREAM b'IDAT' 78 263
+2022-07-04 14:08:59,324: DEBUG: STREAM b'IHDR' 16 13
+2022-07-04 14:08:59,325: DEBUG: STREAM b'sBIT' 41 4
+2022-07-04 14:08:59,326: DEBUG: b'sBIT' 41 4 (unknown)
+2022-07-04 14:08:59,326: DEBUG: STREAM b'pHYs' 57 9
+2022-07-04 14:08:59,327: DEBUG: STREAM b'IDAT' 78 387
+2022-07-04 14:08:59,329: DEBUG: STREAM b'IHDR' 16 13
+2022-07-04 14:08:59,329: DEBUG: STREAM b'sBIT' 41 4
+2022-07-04 14:08:59,330: DEBUG: b'sBIT' 41 4 (unknown)
+2022-07-04 14:08:59,331: DEBUG: STREAM b'pHYs' 57 9
+2022-07-04 14:08:59,331: DEBUG: STREAM b'IDAT' 78 436
+2022-07-04 14:08:59,333: DEBUG: STREAM b'IHDR' 16 13
+2022-07-04 14:08:59,333: DEBUG: STREAM b'sBIT' 41 4
+2022-07-04 14:08:59,334: DEBUG: b'sBIT' 41 4 (unknown)
+2022-07-04 14:08:59,335: DEBUG: STREAM b'pHYs' 57 9
+2022-07-04 14:08:59,336: DEBUG: STREAM b'IDAT' 78 351
+2022-07-04 14:08:59,337: DEBUG: STREAM b'IHDR' 16 13
+2022-07-04 14:08:59,338: DEBUG: STREAM b'sBIT' 41 4
+2022-07-04 14:08:59,339: DEBUG: b'sBIT' 41 4 (unknown)
+2022-07-04 14:08:59,339: DEBUG: STREAM b'pHYs' 57 9
+2022-07-04 14:08:59,340: DEBUG: STREAM b'IDAT' 78 364
+2022-07-04 14:08:59,427: INFO: ('Accuracy on Train Set', 27.77777910232544)
+2022-07-04 14:09:01,340: INFO: (1464, 'correctly labeled out of', 10000)
+2022-07-04 14:09:01,341: INFO: ('Accuracy on Test Set:', 14.64)
+2022-07-04 14:09:01,403: INFO: Saved model at cifar10/n100/random/Greedy_Model_100n_Epochs_1000_Early_Stop_112_Test_Acc_14.pth
+2022-07-04 14:09:01,403: INFO: Training Complete
+2022-07-04 14:09:01,423: DEBUG: STREAM b'IHDR' 16 13
+2022-07-04 14:09:01,424: DEBUG: STREAM b'sBIT' 41 4
+2022-07-04 14:09:01,425: DEBUG: b'sBIT' 41 4 (unknown)
+2022-07-04 14:09:01,425: DEBUG: STREAM b'pHYs' 57 9
+2022-07-04 14:09:01,426: DEBUG: STREAM b'IDAT' 78 374
+2022-07-04 14:09:01,427: DEBUG: STREAM b'IHDR' 16 13
+2022-07-04 14:09:01,429: DEBUG: STREAM b'sBIT' 41 4
+2022-07-04 14:09:01,433: DEBUG: b'sBIT' 41 4 (unknown)
+2022-07-04 14:09:01,434: DEBUG: STREAM b'pHYs' 57 9
+2022-07-04 14:09:01,435: DEBUG: STREAM b'IDAT' 78 286
+2022-07-04 14:09:01,436: DEBUG: STREAM b'IHDR' 16 13
+2022-07-04 14:09:01,437: DEBUG: STREAM b'sBIT' 41 4
+2022-07-04 14:09:01,438: DEBUG: b'sBIT' 41 4 (unknown)
+2022-07-04 14:09:01,438: DEBUG: STREAM b'pHYs' 57 9
+2022-07-04 14:09:01,438: DEBUG: STREAM b'IDAT' 78 263
+2022-07-04 14:09:01,440: DEBUG: STREAM b'IHDR' 16 13
+2022-07-04 14:09:01,440: DEBUG: STREAM b'sBIT' 41 4
+2022-07-04 14:09:01,441: DEBUG: b'sBIT' 41 4 (unknown)
+2022-07-04 14:09:01,441: DEBUG: STREAM b'pHYs' 57 9
+2022-07-04 14:09:01,442: DEBUG: STREAM b'IDAT' 78 387
+2022-07-04 14:09:01,443: DEBUG: STREAM b'IHDR' 16 13
+2022-07-04 14:09:01,444: DEBUG: STREAM b'sBIT' 41 4
+2022-07-04 14:09:01,445: DEBUG: b'sBIT' 41 4 (unknown)
+2022-07-04 14:09:01,445: DEBUG: STREAM b'pHYs' 57 9
+2022-07-04 14:09:01,446: DEBUG: STREAM b'IDAT' 78 436
+2022-07-04 14:09:01,448: DEBUG: STREAM b'IHDR' 16 13
+2022-07-04 14:09:01,448: DEBUG: STREAM b'sBIT' 41 4
+2022-07-04 14:09:01,449: DEBUG: b'sBIT' 41 4 (unknown)
+2022-07-04 14:09:01,449: DEBUG: STREAM b'pHYs' 57 9
+2022-07-04 14:09:01,450: DEBUG: STREAM b'IDAT' 78 351
+2022-07-04 14:09:01,451: DEBUG: STREAM b'IHDR' 16 13
+2022-07-04 14:09:01,452: DEBUG: STREAM b'sBIT' 41 4
+2022-07-04 14:09:01,452: DEBUG: b'sBIT' 41 4 (unknown)
+2022-07-04 14:09:01,453: DEBUG: STREAM b'pHYs' 57 9
+2022-07-04 14:09:01,454: DEBUG: STREAM b'IDAT' 78 364
+2022-07-04 14:09:01,579: INFO: Model Summary
+==========================================================================================
+Layer (type:depth-idx)                   Output Shape              Param #
+==========================================================================================
+├─Sequential: 1-1                        [-1, 1024]                --
+|    └─Conv2d: 2-1                       [-1, 64, 16, 16]          1,792
+|    └─MaxPool2d: 2-2                    [-1, 64, 8, 8]            --
+|    └─ReLU: 2-3                         [-1, 64, 8, 8]            --
+|    └─Conv2d: 2-4                       [-1, 192, 8, 8]           110,784
+|    └─MaxPool2d: 2-5                    [-1, 192, 4, 4]           --
+|    └─ReLU: 2-6                         [-1, 192, 4, 4]           --
+|    └─Conv2d: 2-7                       [-1, 384, 4, 4]           663,936
+|    └─ReLU: 2-8                         [-1, 384, 4, 4]           --
+|    └─Conv2d: 2-9                       [-1, 256, 4, 4]           884,992
+|    └─ReLU: 2-10                        [-1, 256, 4, 4]           --
+|    └─Conv2d: 2-11                      [-1, 256, 4, 4]           590,080
+|    └─MaxPool2d: 2-12                   [-1, 256, 2, 2]           --
+|    └─ReLU: 2-13                        [-1, 256, 2, 2]           --
+|    └─Flatten: 2-14                     [-1, 1024]                --
+├─Sequential: 1-2                        [-1, 10]                  --
+|    └─Dropout: 2-15                     [-1, 1024]                --
+|    └─Linear: 2-16                      [-1, 512]                 524,800
+|    └─ReLU: 2-17                        [-1, 512]                 --
+|    └─Dropout: 2-18                     [-1, 512]                 --
+|    └─Linear: 2-19                      [-1, 256]                 131,328
+|    └─ReLU: 2-20                        [-1, 256]                 --
+|    └─Linear: 2-21                      [-1, 10]                  2,570
+|    └─LogSoftmax: 2-22                  [-1, 10]                  --
+==========================================================================================
+Total params: 2,910,282
+Trainable params: 2,910,282
+Non-trainable params: 0
+Total mult-adds (M): 45.30
+==========================================================================================
+Input size (MB): 0.01
+Forward/backward pass size (MB): 0.33
+Params size (MB): 11.10
+Estimated Total Size (MB): 11.45
+==========================================================================================
+2022-07-04 14:09:03,498: INFO: Epoch[   1] Loss: 13.43	Accuracy: 12.222	Val_Loss: 12.502	Val_Acc: 10.000
+2022-07-04 14:09:03,498: INFO: Epoch[   1] Test Accuracy: 9.980
+2022-07-04 14:09:09,580: INFO: Epoch[  51] Loss: 2.05	Accuracy: 26.667	Val_Loss: 2.749	Val_Acc: 20.000
+2022-07-04 14:09:09,581: INFO: Epoch[  51] Test Accuracy: 16.620
+2022-07-04 14:09:13,460: INFO: Epoch: 101 Early stopping counter 1 of 12
+2022-07-04 14:09:15,366: INFO: Epoch[ 101] Loss: 2.04	Accuracy: 26.667	Val_Loss: 2.747	Val_Acc: 20.000
+2022-07-04 14:09:15,367: INFO: Epoch[ 101] Test Accuracy: 16.590
+2022-07-04 14:09:15,400: INFO: Epoch: 102 Early stopping counter 2 of 12
+2022-07-04 14:09:15,480: INFO: Epoch: 103 Early stopping counter 3 of 12
+2022-07-04 14:09:15,561: INFO: Epoch: 104 Early stopping counter 4 of 12
+2022-07-04 14:09:15,641: INFO: Epoch: 105 Early stopping counter 5 of 12
+2022-07-04 14:09:15,730: INFO: Epoch: 106 Early stopping counter 6 of 12
+2022-07-04 14:09:15,827: INFO: Epoch: 107 Early stopping counter 7 of 12
+2022-07-04 14:09:15,907: INFO: Epoch: 108 Early stopping counter 8 of 12
+2022-07-04 14:09:15,988: INFO: Epoch: 109 Early stopping counter 9 of 12
+2022-07-04 14:09:16,071: INFO: Epoch: 110 Early stopping counter 10 of 12
+2022-07-04 14:09:16,167: INFO: Epoch: 111 Early stopping counter 11 of 12
+2022-07-04 14:09:16,256: INFO: Epoch: 112 Early stopping counter 12 of 12
+2022-07-04 14:09:16,257: INFO: Early stopping
+2022-07-04 14:09:16,310: INFO: Trained for 112 Epochs.
+2022-07-04 14:09:16,337: DEBUG: STREAM b'IHDR' 16 13
+2022-07-04 14:09:16,338: DEBUG: STREAM b'sBIT' 41 4
+2022-07-04 14:09:16,339: DEBUG: b'sBIT' 41 4 (unknown)
+2022-07-04 14:09:16,339: DEBUG: STREAM b'pHYs' 57 9
+2022-07-04 14:09:16,340: DEBUG: STREAM b'IDAT' 78 374
+2022-07-04 14:09:16,342: DEBUG: STREAM b'IHDR' 16 13
+2022-07-04 14:09:16,342: DEBUG: STREAM b'sBIT' 41 4
+2022-07-04 14:09:16,343: DEBUG: b'sBIT' 41 4 (unknown)
+2022-07-04 14:09:16,343: DEBUG: STREAM b'pHYs' 57 9
+2022-07-04 14:09:16,344: DEBUG: STREAM b'IDAT' 78 286
+2022-07-04 14:09:16,346: DEBUG: STREAM b'IHDR' 16 13
+2022-07-04 14:09:16,346: DEBUG: STREAM b'sBIT' 41 4
+2022-07-04 14:09:16,347: DEBUG: b'sBIT' 41 4 (unknown)
+2022-07-04 14:09:16,348: DEBUG: STREAM b'pHYs' 57 9
+2022-07-04 14:09:16,349: DEBUG: STREAM b'IDAT' 78 263
+2022-07-04 14:09:16,351: DEBUG: STREAM b'IHDR' 16 13
+2022-07-04 14:09:16,352: DEBUG: STREAM b'sBIT' 41 4
+2022-07-04 14:09:16,352: DEBUG: b'sBIT' 41 4 (unknown)
+2022-07-04 14:09:16,353: DEBUG: STREAM b'pHYs' 57 9
+2022-07-04 14:09:16,353: DEBUG: STREAM b'IDAT' 78 387
+2022-07-04 14:09:16,356: DEBUG: STREAM b'IHDR' 16 13
+2022-07-04 14:09:16,357: DEBUG: STREAM b'sBIT' 41 4
+2022-07-04 14:09:16,357: DEBUG: b'sBIT' 41 4 (unknown)
+2022-07-04 14:09:16,358: DEBUG: STREAM b'pHYs' 57 9
+2022-07-04 14:09:16,358: DEBUG: STREAM b'IDAT' 78 436
+2022-07-04 14:09:16,359: DEBUG: STREAM b'IHDR' 16 13
+2022-07-04 14:09:16,360: DEBUG: STREAM b'sBIT' 41 4
+2022-07-04 14:09:16,360: DEBUG: b'sBIT' 41 4 (unknown)
+2022-07-04 14:09:16,361: DEBUG: STREAM b'pHYs' 57 9
+2022-07-04 14:09:16,362: DEBUG: STREAM b'IDAT' 78 351
+2022-07-04 14:09:16,364: DEBUG: STREAM b'IHDR' 16 13
+2022-07-04 14:09:16,364: DEBUG: STREAM b'sBIT' 41 4
+2022-07-04 14:09:16,365: DEBUG: b'sBIT' 41 4 (unknown)
+2022-07-04 14:09:16,365: DEBUG: STREAM b'pHYs' 57 9
+2022-07-04 14:09:16,365: DEBUG: STREAM b'IDAT' 78 364
+2022-07-04 14:09:16,531: DEBUG: STREAM b'IHDR' 16 13
+2022-07-04 14:09:16,532: DEBUG: STREAM b'sBIT' 41 4
+2022-07-04 14:09:16,532: DEBUG: b'sBIT' 41 4 (unknown)
+2022-07-04 14:09:16,533: DEBUG: STREAM b'pHYs' 57 9
+2022-07-04 14:09:16,533: DEBUG: STREAM b'IDAT' 78 374
+2022-07-04 14:09:16,535: DEBUG: STREAM b'IHDR' 16 13
+2022-07-04 14:09:16,535: DEBUG: STREAM b'sBIT' 41 4
+2022-07-04 14:09:16,536: DEBUG: b'sBIT' 41 4 (unknown)
+2022-07-04 14:09:16,536: DEBUG: STREAM b'pHYs' 57 9
+2022-07-04 14:09:16,537: DEBUG: STREAM b'IDAT' 78 286
+2022-07-04 14:09:16,538: DEBUG: STREAM b'IHDR' 16 13
+2022-07-04 14:09:16,538: DEBUG: STREAM b'sBIT' 41 4
+2022-07-04 14:09:16,539: DEBUG: b'sBIT' 41 4 (unknown)
+2022-07-04 14:09:16,539: DEBUG: STREAM b'pHYs' 57 9
+2022-07-04 14:09:16,540: DEBUG: STREAM b'IDAT' 78 263
+2022-07-04 14:09:16,541: DEBUG: STREAM b'IHDR' 16 13
+2022-07-04 14:09:16,541: DEBUG: STREAM b'sBIT' 41 4
+2022-07-04 14:09:16,542: DEBUG: b'sBIT' 41 4 (unknown)
+2022-07-04 14:09:16,542: DEBUG: STREAM b'pHYs' 57 9
+2022-07-04 14:09:16,543: DEBUG: STREAM b'IDAT' 78 387
+2022-07-04 14:09:16,544: DEBUG: STREAM b'IHDR' 16 13
+2022-07-04 14:09:16,544: DEBUG: STREAM b'sBIT' 41 4
+2022-07-04 14:09:16,545: DEBUG: b'sBIT' 41 4 (unknown)
+2022-07-04 14:09:16,545: DEBUG: STREAM b'pHYs' 57 9
+2022-07-04 14:09:16,546: DEBUG: STREAM b'IDAT' 78 436
+2022-07-04 14:09:16,547: DEBUG: STREAM b'IHDR' 16 13
+2022-07-04 14:09:16,548: DEBUG: STREAM b'sBIT' 41 4
+2022-07-04 14:09:16,548: DEBUG: b'sBIT' 41 4 (unknown)
+2022-07-04 14:09:16,549: DEBUG: STREAM b'pHYs' 57 9
+2022-07-04 14:09:16,549: DEBUG: STREAM b'IDAT' 78 351
+2022-07-04 14:09:16,551: DEBUG: STREAM b'IHDR' 16 13
+2022-07-04 14:09:16,551: DEBUG: STREAM b'sBIT' 41 4
+2022-07-04 14:09:16,552: DEBUG: b'sBIT' 41 4 (unknown)
+2022-07-04 14:09:16,552: DEBUG: STREAM b'pHYs' 57 9
+2022-07-04 14:09:16,553: DEBUG: STREAM b'IDAT' 78 364
+2022-07-04 14:09:16,650: INFO: ('Accuracy on Train Set', 34.44444537162781)
+2022-07-04 14:09:18,492: INFO: (1659, 'correctly labeled out of', 10000)
+2022-07-04 14:09:18,492: INFO: ('Accuracy on Test Set:', 16.59)
+2022-07-04 14:09:18,548: INFO: Saved model at cifar10/n100/random/Greedy_Model_100n_Epochs_1000_Early_Stop_112_Test_Acc_16.pth
+2022-07-04 14:09:18,548: INFO: Training Complete
+2022-07-04 14:09:18,569: DEBUG: STREAM b'IHDR' 16 13
+2022-07-04 14:09:18,569: DEBUG: STREAM b'sBIT' 41 4
+2022-07-04 14:09:18,570: DEBUG: b'sBIT' 41 4 (unknown)
+2022-07-04 14:09:18,570: DEBUG: STREAM b'pHYs' 57 9
+2022-07-04 14:09:18,571: DEBUG: STREAM b'IDAT' 78 374
+2022-07-04 14:09:18,572: DEBUG: STREAM b'IHDR' 16 13
+2022-07-04 14:09:18,573: DEBUG: STREAM b'sBIT' 41 4
+2022-07-04 14:09:18,573: DEBUG: b'sBIT' 41 4 (unknown)
+2022-07-04 14:09:18,574: DEBUG: STREAM b'pHYs' 57 9
+2022-07-04 14:09:18,574: DEBUG: STREAM b'IDAT' 78 286
+2022-07-04 14:09:18,576: DEBUG: STREAM b'IHDR' 16 13
+2022-07-04 14:09:18,576: DEBUG: STREAM b'sBIT' 41 4
+2022-07-04 14:09:18,577: DEBUG: b'sBIT' 41 4 (unknown)
+2022-07-04 14:09:18,577: DEBUG: STREAM b'pHYs' 57 9
+2022-07-04 14:09:18,578: DEBUG: STREAM b'IDAT' 78 263
+2022-07-04 14:09:18,580: DEBUG: STREAM b'IHDR' 16 13
+2022-07-04 14:09:18,580: DEBUG: STREAM b'sBIT' 41 4
+2022-07-04 14:09:18,581: DEBUG: b'sBIT' 41 4 (unknown)
+2022-07-04 14:09:18,582: DEBUG: STREAM b'pHYs' 57 9
+2022-07-04 14:09:18,582: DEBUG: STREAM b'IDAT' 78 387
+2022-07-04 14:09:18,584: DEBUG: STREAM b'IHDR' 16 13
+2022-07-04 14:09:18,584: DEBUG: STREAM b'sBIT' 41 4
+2022-07-04 14:09:18,585: DEBUG: b'sBIT' 41 4 (unknown)
+2022-07-04 14:09:18,586: DEBUG: STREAM b'pHYs' 57 9
+2022-07-04 14:09:18,586: DEBUG: STREAM b'IDAT' 78 436
+2022-07-04 14:09:18,588: DEBUG: STREAM b'IHDR' 16 13
+2022-07-04 14:09:18,589: DEBUG: STREAM b'sBIT' 41 4
+2022-07-04 14:09:18,590: DEBUG: b'sBIT' 41 4 (unknown)
+2022-07-04 14:09:18,590: DEBUG: STREAM b'pHYs' 57 9
+2022-07-04 14:09:18,591: DEBUG: STREAM b'IDAT' 78 351
+2022-07-04 14:09:18,592: DEBUG: STREAM b'IHDR' 16 13
+2022-07-04 14:09:18,593: DEBUG: STREAM b'sBIT' 41 4
+2022-07-04 14:09:18,593: DEBUG: b'sBIT' 41 4 (unknown)
+2022-07-04 14:09:18,594: DEBUG: STREAM b'pHYs' 57 9
+2022-07-04 14:09:18,594: DEBUG: STREAM b'IDAT' 78 364
+2022-07-04 14:09:18,704: INFO: Model Summary
+==========================================================================================
+Layer (type:depth-idx)                   Output Shape              Param #
+==========================================================================================
+├─Sequential: 1-1                        [-1, 1024]                --
+|    └─Conv2d: 2-1                       [-1, 64, 16, 16]          1,792
+|    └─MaxPool2d: 2-2                    [-1, 64, 8, 8]            --
+|    └─ReLU: 2-3                         [-1, 64, 8, 8]            --
+|    └─Conv2d: 2-4                       [-1, 192, 8, 8]           110,784
+|    └─MaxPool2d: 2-5                    [-1, 192, 4, 4]           --
+|    └─ReLU: 2-6                         [-1, 192, 4, 4]           --
+|    └─Conv2d: 2-7                       [-1, 384, 4, 4]           663,936
+|    └─ReLU: 2-8                         [-1, 384, 4, 4]           --
+|    └─Conv2d: 2-9                       [-1, 256, 4, 4]           884,992
+|    └─ReLU: 2-10                        [-1, 256, 4, 4]           --
+|    └─Conv2d: 2-11                      [-1, 256, 4, 4]           590,080
+|    └─MaxPool2d: 2-12                   [-1, 256, 2, 2]           --
+|    └─ReLU: 2-13                        [-1, 256, 2, 2]           --
+|    └─Flatten: 2-14                     [-1, 1024]                --
+├─Sequential: 1-2                        [-1, 10]                  --
+|    └─Dropout: 2-15                     [-1, 1024]                --
+|    └─Linear: 2-16                      [-1, 512]                 524,800
+|    └─ReLU: 2-17                        [-1, 512]                 --
+|    └─Dropout: 2-18                     [-1, 512]                 --
+|    └─Linear: 2-19                      [-1, 256]                 131,328
+|    └─ReLU: 2-20                        [-1, 256]                 --
+|    └─Linear: 2-21                      [-1, 10]                  2,570
+|    └─LogSoftmax: 2-22                  [-1, 10]                  --
+==========================================================================================
+Total params: 2,910,282
+Trainable params: 2,910,282
+Non-trainable params: 0
+Total mult-adds (M): 45.30
+==========================================================================================
+Input size (MB): 0.01
+Forward/backward pass size (MB): 0.33
+Params size (MB): 11.10
+Estimated Total Size (MB): 11.45
+==========================================================================================
+2022-07-04 14:09:20,572: INFO: Epoch[   1] Loss: 12.23	Accuracy: 6.667	Val_Loss: 9.650	Val_Acc: 0.000
+2022-07-04 14:09:20,573: INFO: Epoch[   1] Test Accuracy: 10.000
+2022-07-04 14:09:26,383: INFO: Epoch[  51] Loss: 2.25	Accuracy: 27.778	Val_Loss: 2.712	Val_Acc: 0.000
+2022-07-04 14:09:26,384: INFO: Epoch[  51] Test Accuracy: 10.000
+2022-07-04 14:09:30,438: INFO: Epoch: 101 Early stopping counter 1 of 12
+2022-07-04 14:09:32,207: INFO: Epoch[ 101] Loss: 2.37	Accuracy: 16.667	Val_Loss: 2.711	Val_Acc: 0.000
+2022-07-04 14:09:32,207: INFO: Epoch[ 101] Test Accuracy: 10.000
+2022-07-04 14:09:32,240: INFO: Epoch: 102 Early stopping counter 2 of 12
+2022-07-04 14:09:32,319: INFO: Epoch: 103 Early stopping counter 3 of 12
+2022-07-04 14:09:32,399: INFO: Epoch: 104 Early stopping counter 4 of 12
+2022-07-04 14:09:32,481: INFO: Epoch: 105 Early stopping counter 5 of 12
+2022-07-04 14:09:32,567: INFO: Epoch: 106 Early stopping counter 6 of 12
+2022-07-04 14:09:32,648: INFO: Epoch: 107 Early stopping counter 7 of 12
+2022-07-04 14:09:32,729: INFO: Epoch: 108 Early stopping counter 8 of 12
+2022-07-04 14:09:32,813: INFO: Epoch: 109 Early stopping counter 9 of 12
+2022-07-04 14:09:32,894: INFO: Epoch: 110 Early stopping counter 10 of 12
+2022-07-04 14:09:32,974: INFO: Epoch: 111 Early stopping counter 11 of 12
+2022-07-04 14:09:33,052: INFO: Epoch: 112 Early stopping counter 12 of 12
+2022-07-04 14:09:33,053: INFO: Early stopping
+2022-07-04 14:09:33,102: INFO: Trained for 112 Epochs.
+2022-07-04 14:09:33,125: DEBUG: STREAM b'IHDR' 16 13
+2022-07-04 14:09:33,126: DEBUG: STREAM b'sBIT' 41 4
+2022-07-04 14:09:33,126: DEBUG: b'sBIT' 41 4 (unknown)
+2022-07-04 14:09:33,127: DEBUG: STREAM b'pHYs' 57 9
+2022-07-04 14:09:33,127: DEBUG: STREAM b'IDAT' 78 374
+2022-07-04 14:09:33,129: DEBUG: STREAM b'IHDR' 16 13
+2022-07-04 14:09:33,129: DEBUG: STREAM b'sBIT' 41 4
+2022-07-04 14:09:33,130: DEBUG: b'sBIT' 41 4 (unknown)
+2022-07-04 14:09:33,130: DEBUG: STREAM b'pHYs' 57 9
+2022-07-04 14:09:33,130: DEBUG: STREAM b'IDAT' 78 286
+2022-07-04 14:09:33,132: DEBUG: STREAM b'IHDR' 16 13
+2022-07-04 14:09:33,133: DEBUG: STREAM b'sBIT' 41 4
+2022-07-04 14:09:33,133: DEBUG: b'sBIT' 41 4 (unknown)
+2022-07-04 14:09:33,133: DEBUG: STREAM b'pHYs' 57 9
+2022-07-04 14:09:33,134: DEBUG: STREAM b'IDAT' 78 263
+2022-07-04 14:09:33,135: DEBUG: STREAM b'IHDR' 16 13
+2022-07-04 14:09:33,136: DEBUG: STREAM b'sBIT' 41 4
+2022-07-04 14:09:33,136: DEBUG: b'sBIT' 41 4 (unknown)
+2022-07-04 14:09:33,137: DEBUG: STREAM b'pHYs' 57 9
+2022-07-04 14:09:33,137: DEBUG: STREAM b'IDAT' 78 387
+2022-07-04 14:09:33,139: DEBUG: STREAM b'IHDR' 16 13
+2022-07-04 14:09:33,139: DEBUG: STREAM b'sBIT' 41 4
+2022-07-04 14:09:33,140: DEBUG: b'sBIT' 41 4 (unknown)
+2022-07-04 14:09:33,140: DEBUG: STREAM b'pHYs' 57 9
+2022-07-04 14:09:33,141: DEBUG: STREAM b'IDAT' 78 436
+2022-07-04 14:09:33,142: DEBUG: STREAM b'IHDR' 16 13
+2022-07-04 14:09:33,142: DEBUG: STREAM b'sBIT' 41 4
+2022-07-04 14:09:33,143: DEBUG: b'sBIT' 41 4 (unknown)
+2022-07-04 14:09:33,143: DEBUG: STREAM b'pHYs' 57 9
+2022-07-04 14:09:33,143: DEBUG: STREAM b'IDAT' 78 351
+2022-07-04 14:09:33,145: DEBUG: STREAM b'IHDR' 16 13
+2022-07-04 14:09:33,145: DEBUG: STREAM b'sBIT' 41 4
+2022-07-04 14:09:33,146: DEBUG: b'sBIT' 41 4 (unknown)
+2022-07-04 14:09:33,146: DEBUG: STREAM b'pHYs' 57 9
+2022-07-04 14:09:33,146: DEBUG: STREAM b'IDAT' 78 364
+2022-07-04 14:09:33,324: DEBUG: STREAM b'IHDR' 16 13
+2022-07-04 14:09:33,325: DEBUG: STREAM b'sBIT' 41 4
+2022-07-04 14:09:33,326: DEBUG: b'sBIT' 41 4 (unknown)
+2022-07-04 14:09:33,327: DEBUG: STREAM b'pHYs' 57 9
+2022-07-04 14:09:33,328: DEBUG: STREAM b'IDAT' 78 374
+2022-07-04 14:09:33,330: DEBUG: STREAM b'IHDR' 16 13
+2022-07-04 14:09:33,330: DEBUG: STREAM b'sBIT' 41 4
+2022-07-04 14:09:33,331: DEBUG: b'sBIT' 41 4 (unknown)
+2022-07-04 14:09:33,331: DEBUG: STREAM b'pHYs' 57 9
+2022-07-04 14:09:33,332: DEBUG: STREAM b'IDAT' 78 286
+2022-07-04 14:09:33,334: DEBUG: STREAM b'IHDR' 16 13
+2022-07-04 14:09:33,335: DEBUG: STREAM b'sBIT' 41 4
+2022-07-04 14:09:33,335: DEBUG: b'sBIT' 41 4 (unknown)
+2022-07-04 14:09:33,336: DEBUG: STREAM b'pHYs' 57 9
+2022-07-04 14:09:33,337: DEBUG: STREAM b'IDAT' 78 263
+2022-07-04 14:09:33,339: DEBUG: STREAM b'IHDR' 16 13
+2022-07-04 14:09:33,340: DEBUG: STREAM b'sBIT' 41 4
+2022-07-04 14:09:33,340: DEBUG: b'sBIT' 41 4 (unknown)
+2022-07-04 14:09:33,341: DEBUG: STREAM b'pHYs' 57 9
+2022-07-04 14:09:33,342: DEBUG: STREAM b'IDAT' 78 387
+2022-07-04 14:09:33,344: DEBUG: STREAM b'IHDR' 16 13
+2022-07-04 14:09:33,345: DEBUG: STREAM b'sBIT' 41 4
+2022-07-04 14:09:33,345: DEBUG: b'sBIT' 41 4 (unknown)
+2022-07-04 14:09:33,346: DEBUG: STREAM b'pHYs' 57 9
+2022-07-04 14:09:33,347: DEBUG: STREAM b'IDAT' 78 436
+2022-07-04 14:09:33,349: DEBUG: STREAM b'IHDR' 16 13
+2022-07-04 14:09:33,349: DEBUG: STREAM b'sBIT' 41 4
+2022-07-04 14:09:33,350: DEBUG: b'sBIT' 41 4 (unknown)
+2022-07-04 14:09:33,350: DEBUG: STREAM b'pHYs' 57 9
+2022-07-04 14:09:33,351: DEBUG: STREAM b'IDAT' 78 351
+2022-07-04 14:09:33,352: DEBUG: STREAM b'IHDR' 16 13
+2022-07-04 14:09:33,353: DEBUG: STREAM b'sBIT' 41 4
+2022-07-04 14:09:33,353: DEBUG: b'sBIT' 41 4 (unknown)
+2022-07-04 14:09:33,354: DEBUG: STREAM b'pHYs' 57 9
+2022-07-04 14:09:33,355: DEBUG: STREAM b'IDAT' 78 364
+2022-07-04 14:09:33,445: INFO: ('Accuracy on Train Set', 14.444445073604584)
+2022-07-04 14:09:35,244: INFO: (1000, 'correctly labeled out of', 10000)
+2022-07-04 14:09:35,245: INFO: ('Accuracy on Test Set:', 10.0)
+2022-07-04 14:09:35,297: INFO: Saved model at cifar10/n100/random/Greedy_Model_100n_Epochs_1000_Early_Stop_112_Test_Acc_10.pth
+2022-07-04 14:09:35,298: INFO: Training Complete
+2022-07-04 14:09:35,324: DEBUG: STREAM b'IHDR' 16 13
+2022-07-04 14:09:35,325: DEBUG: STREAM b'sBIT' 41 4
+2022-07-04 14:09:35,326: DEBUG: b'sBIT' 41 4 (unknown)
+2022-07-04 14:09:35,327: DEBUG: STREAM b'pHYs' 57 9
+2022-07-04 14:09:35,328: DEBUG: STREAM b'IDAT' 78 374
+2022-07-04 14:09:35,330: DEBUG: STREAM b'IHDR' 16 13
+2022-07-04 14:09:35,331: DEBUG: STREAM b'sBIT' 41 4
+2022-07-04 14:09:35,332: DEBUG: b'sBIT' 41 4 (unknown)
+2022-07-04 14:09:35,332: DEBUG: STREAM b'pHYs' 57 9
+2022-07-04 14:09:35,333: DEBUG: STREAM b'IDAT' 78 286
+2022-07-04 14:09:35,335: DEBUG: STREAM b'IHDR' 16 13
+2022-07-04 14:09:35,336: DEBUG: STREAM b'sBIT' 41 4
+2022-07-04 14:09:35,337: DEBUG: b'sBIT' 41 4 (unknown)
+2022-07-04 14:09:35,337: DEBUG: STREAM b'pHYs' 57 9
+2022-07-04 14:09:35,338: DEBUG: STREAM b'IDAT' 78 263
+2022-07-04 14:09:35,339: DEBUG: STREAM b'IHDR' 16 13
+2022-07-04 14:09:35,340: DEBUG: STREAM b'sBIT' 41 4
+2022-07-04 14:09:35,341: DEBUG: b'sBIT' 41 4 (unknown)
+2022-07-04 14:09:35,342: DEBUG: STREAM b'pHYs' 57 9
+2022-07-04 14:09:35,342: DEBUG: STREAM b'IDAT' 78 387
+2022-07-04 14:09:35,344: DEBUG: STREAM b'IHDR' 16 13
+2022-07-04 14:09:35,345: DEBUG: STREAM b'sBIT' 41 4
+2022-07-04 14:09:35,345: DEBUG: b'sBIT' 41 4 (unknown)
+2022-07-04 14:09:35,346: DEBUG: STREAM b'pHYs' 57 9
+2022-07-04 14:09:35,347: DEBUG: STREAM b'IDAT' 78 436
+2022-07-04 14:09:35,349: DEBUG: STREAM b'IHDR' 16 13
+2022-07-04 14:09:35,350: DEBUG: STREAM b'sBIT' 41 4
+2022-07-04 14:09:35,350: DEBUG: b'sBIT' 41 4 (unknown)
+2022-07-04 14:09:35,351: DEBUG: STREAM b'pHYs' 57 9
+2022-07-04 14:09:35,351: DEBUG: STREAM b'IDAT' 78 351
+2022-07-04 14:09:35,352: DEBUG: STREAM b'IHDR' 16 13
+2022-07-04 14:09:35,353: DEBUG: STREAM b'sBIT' 41 4
+2022-07-04 14:09:35,354: DEBUG: b'sBIT' 41 4 (unknown)
+2022-07-04 14:09:35,355: DEBUG: STREAM b'pHYs' 57 9
+2022-07-04 14:09:35,355: DEBUG: STREAM b'IDAT' 78 364
+2022-07-04 14:09:35,480: INFO: Model Summary
+==========================================================================================
+Layer (type:depth-idx)                   Output Shape              Param #
+==========================================================================================
+├─Sequential: 1-1                        [-1, 1024]                --
+|    └─Conv2d: 2-1                       [-1, 64, 16, 16]          1,792
+|    └─MaxPool2d: 2-2                    [-1, 64, 8, 8]            --
+|    └─ReLU: 2-3                         [-1, 64, 8, 8]            --
+|    └─Conv2d: 2-4                       [-1, 192, 8, 8]           110,784
+|    └─MaxPool2d: 2-5                    [-1, 192, 4, 4]           --
+|    └─ReLU: 2-6                         [-1, 192, 4, 4]           --
+|    └─Conv2d: 2-7                       [-1, 384, 4, 4]           663,936
+|    └─ReLU: 2-8                         [-1, 384, 4, 4]           --
+|    └─Conv2d: 2-9                       [-1, 256, 4, 4]           884,992
+|    └─ReLU: 2-10                        [-1, 256, 4, 4]           --
+|    └─Conv2d: 2-11                      [-1, 256, 4, 4]           590,080
+|    └─MaxPool2d: 2-12                   [-1, 256, 2, 2]           --
+|    └─ReLU: 2-13                        [-1, 256, 2, 2]           --
+|    └─Flatten: 2-14                     [-1, 1024]                --
+├─Sequential: 1-2                        [-1, 10]                  --
+|    └─Dropout: 2-15                     [-1, 1024]                --
+|    └─Linear: 2-16                      [-1, 512]                 524,800
+|    └─ReLU: 2-17                        [-1, 512]                 --
+|    └─Dropout: 2-18                     [-1, 512]                 --
+|    └─Linear: 2-19                      [-1, 256]                 131,328
+|    └─ReLU: 2-20                        [-1, 256]                 --
+|    └─Linear: 2-21                      [-1, 10]                  2,570
+|    └─LogSoftmax: 2-22                  [-1, 10]                  --
+==========================================================================================
+Total params: 2,910,282
+Trainable params: 2,910,282
+Non-trainable params: 0
+Total mult-adds (M): 45.30
+==========================================================================================
+Input size (MB): 0.01
+Forward/backward pass size (MB): 0.33
+Params size (MB): 11.10
+Estimated Total Size (MB): 11.45
+==========================================================================================
+2022-07-04 14:09:37,418: INFO: Epoch[   1] Loss: 12.04	Accuracy: 3.333	Val_Loss: 7.168	Val_Acc: 20.000
+2022-07-04 14:09:37,419: INFO: Epoch[   1] Test Accuracy: 10.000
+2022-07-04 14:09:43,645: INFO: Epoch[  51] Loss: 2.17	Accuracy: 17.778	Val_Loss: 2.180	Val_Acc: 30.000
+2022-07-04 14:09:43,645: INFO: Epoch[  51] Test Accuracy: 20.780
+2022-07-04 14:09:47,965: INFO: Epoch: 101 Early stopping counter 1 of 12
+2022-07-04 14:09:49,985: INFO: Epoch[ 101] Loss: 2.19	Accuracy: 22.222	Val_Loss: 2.187	Val_Acc: 30.000
+2022-07-04 14:09:49,986: INFO: Epoch[ 101] Test Accuracy: 21.890
+2022-07-04 14:09:50,022: INFO: Epoch: 102 Early stopping counter 2 of 12
+2022-07-04 14:09:50,111: INFO: Epoch: 103 Early stopping counter 3 of 12
+2022-07-04 14:09:50,199: INFO: Epoch: 104 Early stopping counter 4 of 12
+2022-07-04 14:09:50,293: INFO: Epoch: 105 Early stopping counter 5 of 12
+2022-07-04 14:09:50,382: INFO: Epoch: 106 Early stopping counter 6 of 12
+2022-07-04 14:09:50,486: INFO: Epoch: 107 Early stopping counter 7 of 12
+2022-07-04 14:09:50,577: INFO: Epoch: 108 Early stopping counter 8 of 12
+2022-07-04 14:09:50,680: INFO: Epoch: 109 Early stopping counter 9 of 12
+2022-07-04 14:09:50,783: INFO: Epoch: 110 Early stopping counter 10 of 12
+2022-07-04 14:09:50,871: INFO: Epoch: 111 Early stopping counter 11 of 12
+2022-07-04 14:09:50,962: INFO: Epoch: 112 Early stopping counter 12 of 12
+2022-07-04 14:09:50,963: INFO: Early stopping
+2022-07-04 14:09:51,019: INFO: Trained for 112 Epochs.
+2022-07-04 14:09:51,042: DEBUG: STREAM b'IHDR' 16 13
+2022-07-04 14:09:51,043: DEBUG: STREAM b'sBIT' 41 4
+2022-07-04 14:09:51,044: DEBUG: b'sBIT' 41 4 (unknown)
+2022-07-04 14:09:51,044: DEBUG: STREAM b'pHYs' 57 9
+2022-07-04 14:09:51,045: DEBUG: STREAM b'IDAT' 78 374
+2022-07-04 14:09:51,047: DEBUG: STREAM b'IHDR' 16 13
+2022-07-04 14:09:51,048: DEBUG: STREAM b'sBIT' 41 4
+2022-07-04 14:09:51,048: DEBUG: b'sBIT' 41 4 (unknown)
+2022-07-04 14:09:51,049: DEBUG: STREAM b'pHYs' 57 9
+2022-07-04 14:09:51,049: DEBUG: STREAM b'IDAT' 78 286
+2022-07-04 14:09:51,052: DEBUG: STREAM b'IHDR' 16 13
+2022-07-04 14:09:51,052: DEBUG: STREAM b'sBIT' 41 4
+2022-07-04 14:09:51,053: DEBUG: b'sBIT' 41 4 (unknown)
+2022-07-04 14:09:51,053: DEBUG: STREAM b'pHYs' 57 9
+2022-07-04 14:09:51,053: DEBUG: STREAM b'IDAT' 78 263
+2022-07-04 14:09:51,055: DEBUG: STREAM b'IHDR' 16 13
+2022-07-04 14:09:51,055: DEBUG: STREAM b'sBIT' 41 4
+2022-07-04 14:09:51,056: DEBUG: b'sBIT' 41 4 (unknown)
+2022-07-04 14:09:51,056: DEBUG: STREAM b'pHYs' 57 9
+2022-07-04 14:09:51,057: DEBUG: STREAM b'IDAT' 78 387
+2022-07-04 14:09:51,058: DEBUG: STREAM b'IHDR' 16 13
+2022-07-04 14:09:51,059: DEBUG: STREAM b'sBIT' 41 4
+2022-07-04 14:09:51,059: DEBUG: b'sBIT' 41 4 (unknown)
+2022-07-04 14:09:51,060: DEBUG: STREAM b'pHYs' 57 9
+2022-07-04 14:09:51,060: DEBUG: STREAM b'IDAT' 78 436
+2022-07-04 14:09:51,061: DEBUG: STREAM b'IHDR' 16 13
+2022-07-04 14:09:51,062: DEBUG: STREAM b'sBIT' 41 4
+2022-07-04 14:09:51,063: DEBUG: b'sBIT' 41 4 (unknown)
+2022-07-04 14:09:51,063: DEBUG: STREAM b'pHYs' 57 9
+2022-07-04 14:09:51,063: DEBUG: STREAM b'IDAT' 78 351
+2022-07-04 14:09:51,064: DEBUG: STREAM b'IHDR' 16 13
+2022-07-04 14:09:51,065: DEBUG: STREAM b'sBIT' 41 4
+2022-07-04 14:09:51,065: DEBUG: b'sBIT' 41 4 (unknown)
+2022-07-04 14:09:51,066: DEBUG: STREAM b'pHYs' 57 9
+2022-07-04 14:09:51,066: DEBUG: STREAM b'IDAT' 78 364
+2022-07-04 14:09:51,216: DEBUG: STREAM b'IHDR' 16 13
+2022-07-04 14:09:51,216: DEBUG: STREAM b'sBIT' 41 4
+2022-07-04 14:09:51,217: DEBUG: b'sBIT' 41 4 (unknown)
+2022-07-04 14:09:51,217: DEBUG: STREAM b'pHYs' 57 9
+2022-07-04 14:09:51,218: DEBUG: STREAM b'IDAT' 78 374
+2022-07-04 14:09:51,219: DEBUG: STREAM b'IHDR' 16 13
+2022-07-04 14:09:51,220: DEBUG: STREAM b'sBIT' 41 4
+2022-07-04 14:09:51,220: DEBUG: b'sBIT' 41 4 (unknown)
+2022-07-04 14:09:51,220: DEBUG: STREAM b'pHYs' 57 9
+2022-07-04 14:09:51,221: DEBUG: STREAM b'IDAT' 78 286
+2022-07-04 14:09:51,223: DEBUG: STREAM b'IHDR' 16 13
+2022-07-04 14:09:51,223: DEBUG: STREAM b'sBIT' 41 4
+2022-07-04 14:09:51,224: DEBUG: b'sBIT' 41 4 (unknown)
+2022-07-04 14:09:51,224: DEBUG: STREAM b'pHYs' 57 9
+2022-07-04 14:09:51,224: DEBUG: STREAM b'IDAT' 78 263
+2022-07-04 14:09:51,226: DEBUG: STREAM b'IHDR' 16 13
+2022-07-04 14:09:51,227: DEBUG: STREAM b'sBIT' 41 4
+2022-07-04 14:09:51,227: DEBUG: b'sBIT' 41 4 (unknown)
+2022-07-04 14:09:51,228: DEBUG: STREAM b'pHYs' 57 9
+2022-07-04 14:09:51,228: DEBUG: STREAM b'IDAT' 78 387
+2022-07-04 14:09:51,229: DEBUG: STREAM b'IHDR' 16 13
+2022-07-04 14:09:51,230: DEBUG: STREAM b'sBIT' 41 4
+2022-07-04 14:09:51,230: DEBUG: b'sBIT' 41 4 (unknown)
+2022-07-04 14:09:51,231: DEBUG: STREAM b'pHYs' 57 9
+2022-07-04 14:09:51,231: DEBUG: STREAM b'IDAT' 78 436
+2022-07-04 14:09:51,233: DEBUG: STREAM b'IHDR' 16 13
+2022-07-04 14:09:51,233: DEBUG: STREAM b'sBIT' 41 4
+2022-07-04 14:09:51,233: DEBUG: b'sBIT' 41 4 (unknown)
+2022-07-04 14:09:51,234: DEBUG: STREAM b'pHYs' 57 9
+2022-07-04 14:09:51,234: DEBUG: STREAM b'IDAT' 78 351
+2022-07-04 14:09:51,236: DEBUG: STREAM b'IHDR' 16 13
+2022-07-04 14:09:51,236: DEBUG: STREAM b'sBIT' 41 4
+2022-07-04 14:09:51,237: DEBUG: b'sBIT' 41 4 (unknown)
+2022-07-04 14:09:51,237: DEBUG: STREAM b'pHYs' 57 9
+2022-07-04 14:09:51,237: DEBUG: STREAM b'IDAT' 78 364
+2022-07-04 14:09:51,319: INFO: ('Accuracy on Train Set', 37.77777850627899)
+2022-07-04 14:09:53,063: INFO: (2188, 'correctly labeled out of', 10000)
+2022-07-04 14:09:53,064: INFO: ('Accuracy on Test Set:', 21.88)
+2022-07-04 14:09:53,118: INFO: Saved model at cifar10/n100/random/Greedy_Model_100n_Epochs_1000_Early_Stop_112_Test_Acc_21.pth
+2022-07-04 14:09:53,118: INFO: Training Complete
+2022-07-04 14:09:53,139: DEBUG: STREAM b'IHDR' 16 13
+2022-07-04 14:09:53,140: DEBUG: STREAM b'sBIT' 41 4
+2022-07-04 14:09:53,141: DEBUG: b'sBIT' 41 4 (unknown)
+2022-07-04 14:09:53,141: DEBUG: STREAM b'pHYs' 57 9
+2022-07-04 14:09:53,142: DEBUG: STREAM b'IDAT' 78 374
+2022-07-04 14:09:53,144: DEBUG: STREAM b'IHDR' 16 13
+2022-07-04 14:09:53,145: DEBUG: STREAM b'sBIT' 41 4
+2022-07-04 14:09:53,145: DEBUG: b'sBIT' 41 4 (unknown)
+2022-07-04 14:09:53,146: DEBUG: STREAM b'pHYs' 57 9
+2022-07-04 14:09:53,146: DEBUG: STREAM b'IDAT' 78 286
+2022-07-04 14:09:53,148: DEBUG: STREAM b'IHDR' 16 13
+2022-07-04 14:09:53,148: DEBUG: STREAM b'sBIT' 41 4
+2022-07-04 14:09:53,149: DEBUG: b'sBIT' 41 4 (unknown)
+2022-07-04 14:09:53,149: DEBUG: STREAM b'pHYs' 57 9
+2022-07-04 14:09:53,150: DEBUG: STREAM b'IDAT' 78 263
+2022-07-04 14:09:53,151: DEBUG: STREAM b'IHDR' 16 13
+2022-07-04 14:09:53,152: DEBUG: STREAM b'sBIT' 41 4
+2022-07-04 14:09:53,152: DEBUG: b'sBIT' 41 4 (unknown)
+2022-07-04 14:09:53,153: DEBUG: STREAM b'pHYs' 57 9
+2022-07-04 14:09:53,153: DEBUG: STREAM b'IDAT' 78 387
+2022-07-04 14:09:53,154: DEBUG: STREAM b'IHDR' 16 13
+2022-07-04 14:09:53,155: DEBUG: STREAM b'sBIT' 41 4
+2022-07-04 14:09:53,155: DEBUG: b'sBIT' 41 4 (unknown)
+2022-07-04 14:09:53,156: DEBUG: STREAM b'pHYs' 57 9
+2022-07-04 14:09:53,156: DEBUG: STREAM b'IDAT' 78 436
+2022-07-04 14:09:53,158: DEBUG: STREAM b'IHDR' 16 13
+2022-07-04 14:09:53,159: DEBUG: STREAM b'sBIT' 41 4
+2022-07-04 14:09:53,159: DEBUG: b'sBIT' 41 4 (unknown)
+2022-07-04 14:09:53,159: DEBUG: STREAM b'pHYs' 57 9
+2022-07-04 14:09:53,160: DEBUG: STREAM b'IDAT' 78 351
+2022-07-04 14:09:53,161: DEBUG: STREAM b'IHDR' 16 13
+2022-07-04 14:09:53,162: DEBUG: STREAM b'sBIT' 41 4
+2022-07-04 14:09:53,162: DEBUG: b'sBIT' 41 4 (unknown)
+2022-07-04 14:09:53,163: DEBUG: STREAM b'pHYs' 57 9
+2022-07-04 14:09:53,163: DEBUG: STREAM b'IDAT' 78 364
+2022-07-04 14:09:53,293: INFO: Model Summary
+==========================================================================================
+Layer (type:depth-idx)                   Output Shape              Param #
+==========================================================================================
+├─Sequential: 1-1                        [-1, 1024]                --
+|    └─Conv2d: 2-1                       [-1, 64, 16, 16]          1,792
+|    └─MaxPool2d: 2-2                    [-1, 64, 8, 8]            --
+|    └─ReLU: 2-3                         [-1, 64, 8, 8]            --
+|    └─Conv2d: 2-4                       [-1, 192, 8, 8]           110,784
+|    └─MaxPool2d: 2-5                    [-1, 192, 4, 4]           --
+|    └─ReLU: 2-6                         [-1, 192, 4, 4]           --
+|    └─Conv2d: 2-7                       [-1, 384, 4, 4]           663,936
+|    └─ReLU: 2-8                         [-1, 384, 4, 4]           --
+|    └─Conv2d: 2-9                       [-1, 256, 4, 4]           884,992
+|    └─ReLU: 2-10                        [-1, 256, 4, 4]           --
+|    └─Conv2d: 2-11                      [-1, 256, 4, 4]           590,080
+|    └─MaxPool2d: 2-12                   [-1, 256, 2, 2]           --
+|    └─ReLU: 2-13                        [-1, 256, 2, 2]           --
+|    └─Flatten: 2-14                     [-1, 1024]                --
+├─Sequential: 1-2                        [-1, 10]                  --
+|    └─Dropout: 2-15                     [-1, 1024]                --
+|    └─Linear: 2-16                      [-1, 512]                 524,800
+|    └─ReLU: 2-17                        [-1, 512]                 --
+|    └─Dropout: 2-18                     [-1, 512]                 --
+|    └─Linear: 2-19                      [-1, 256]                 131,328
+|    └─ReLU: 2-20                        [-1, 256]                 --
+|    └─Linear: 2-21                      [-1, 10]                  2,570
+|    └─LogSoftmax: 2-22                  [-1, 10]                  --
+==========================================================================================
+Total params: 2,910,282
+Trainable params: 2,910,282
+Non-trainable params: 0
+Total mult-adds (M): 45.30
+==========================================================================================
+Input size (MB): 0.01
+Forward/backward pass size (MB): 0.33
+Params size (MB): 11.10
+Estimated Total Size (MB): 11.45
+==========================================================================================
+2022-07-04 14:09:55,208: INFO: Epoch[   1] Loss: 11.89	Accuracy: 15.556	Val_Loss: 5.850	Val_Acc: 10.000
+2022-07-04 14:09:55,209: INFO: Epoch[   1] Test Accuracy: 9.630
+2022-07-04 14:10:01,286: INFO: Epoch[  51] Loss: 2.23	Accuracy: 17.778	Val_Loss: 2.250	Val_Acc: 20.000
+2022-07-04 14:10:01,287: INFO: Epoch[  51] Test Accuracy: 14.820
+2022-07-04 14:10:06,052: INFO: Epoch: 101 Early stopping counter 1 of 12
+2022-07-04 14:10:07,944: INFO: Epoch[ 101] Loss: 2.29	Accuracy: 14.444	Val_Loss: 2.252	Val_Acc: 20.000
+2022-07-04 14:10:07,945: INFO: Epoch[ 101] Test Accuracy: 14.690
+2022-07-04 14:10:07,979: INFO: Epoch: 102 Early stopping counter 2 of 12
+2022-07-04 14:10:08,081: INFO: Epoch: 103 Early stopping counter 3 of 12
+2022-07-04 14:10:08,180: INFO: Epoch: 104 Early stopping counter 4 of 12
+2022-07-04 14:10:08,271: INFO: Epoch: 105 Early stopping counter 5 of 12
+2022-07-04 14:10:08,360: INFO: Epoch: 106 Early stopping counter 6 of 12
+2022-07-04 14:10:08,454: INFO: Epoch: 107 Early stopping counter 7 of 12
+2022-07-04 14:10:08,550: INFO: Epoch: 108 Early stopping counter 8 of 12
+2022-07-04 14:10:08,641: INFO: Epoch: 109 Early stopping counter 9 of 12
+2022-07-04 14:10:08,734: INFO: Epoch: 110 Early stopping counter 10 of 12
+2022-07-04 14:10:08,832: INFO: Epoch: 111 Early stopping counter 11 of 12
+2022-07-04 14:10:08,927: INFO: Epoch: 112 Early stopping counter 12 of 12
+2022-07-04 14:10:08,928: INFO: Early stopping
+2022-07-04 14:10:08,987: INFO: Trained for 112 Epochs.
+2022-07-04 14:10:09,010: DEBUG: STREAM b'IHDR' 16 13
+2022-07-04 14:10:09,011: DEBUG: STREAM b'sBIT' 41 4
+2022-07-04 14:10:09,011: DEBUG: b'sBIT' 41 4 (unknown)
+2022-07-04 14:10:09,012: DEBUG: STREAM b'pHYs' 57 9
+2022-07-04 14:10:09,012: DEBUG: STREAM b'IDAT' 78 374
+2022-07-04 14:10:09,014: DEBUG: STREAM b'IHDR' 16 13
+2022-07-04 14:10:09,014: DEBUG: STREAM b'sBIT' 41 4
+2022-07-04 14:10:09,015: DEBUG: b'sBIT' 41 4 (unknown)
+2022-07-04 14:10:09,015: DEBUG: STREAM b'pHYs' 57 9
+2022-07-04 14:10:09,016: DEBUG: STREAM b'IDAT' 78 286
+2022-07-04 14:10:09,017: DEBUG: STREAM b'IHDR' 16 13
+2022-07-04 14:10:09,018: DEBUG: STREAM b'sBIT' 41 4
+2022-07-04 14:10:09,019: DEBUG: b'sBIT' 41 4 (unknown)
+2022-07-04 14:10:09,019: DEBUG: STREAM b'pHYs' 57 9
+2022-07-04 14:10:09,020: DEBUG: STREAM b'IDAT' 78 263
+2022-07-04 14:10:09,022: DEBUG: STREAM b'IHDR' 16 13
+2022-07-04 14:10:09,022: DEBUG: STREAM b'sBIT' 41 4
+2022-07-04 14:10:09,023: DEBUG: b'sBIT' 41 4 (unknown)
+2022-07-04 14:10:09,023: DEBUG: STREAM b'pHYs' 57 9
+2022-07-04 14:10:09,023: DEBUG: STREAM b'IDAT' 78 387
+2022-07-04 14:10:09,025: DEBUG: STREAM b'IHDR' 16 13
+2022-07-04 14:10:09,025: DEBUG: STREAM b'sBIT' 41 4
+2022-07-04 14:10:09,025: DEBUG: b'sBIT' 41 4 (unknown)
+2022-07-04 14:10:09,026: DEBUG: STREAM b'pHYs' 57 9
+2022-07-04 14:10:09,027: DEBUG: STREAM b'IDAT' 78 436
+2022-07-04 14:10:09,028: DEBUG: STREAM b'IHDR' 16 13
+2022-07-04 14:10:09,029: DEBUG: STREAM b'sBIT' 41 4
+2022-07-04 14:10:09,029: DEBUG: b'sBIT' 41 4 (unknown)
+2022-07-04 14:10:09,029: DEBUG: STREAM b'pHYs' 57 9
+2022-07-04 14:10:09,030: DEBUG: STREAM b'IDAT' 78 351
+2022-07-04 14:10:09,031: DEBUG: STREAM b'IHDR' 16 13
+2022-07-04 14:10:09,031: DEBUG: STREAM b'sBIT' 41 4
+2022-07-04 14:10:09,032: DEBUG: b'sBIT' 41 4 (unknown)
+2022-07-04 14:10:09,032: DEBUG: STREAM b'pHYs' 57 9
+2022-07-04 14:10:09,032: DEBUG: STREAM b'IDAT' 78 364
+2022-07-04 14:10:09,176: DEBUG: STREAM b'IHDR' 16 13
+2022-07-04 14:10:09,177: DEBUG: STREAM b'sBIT' 41 4
+2022-07-04 14:10:09,177: DEBUG: b'sBIT' 41 4 (unknown)
+2022-07-04 14:10:09,178: DEBUG: STREAM b'pHYs' 57 9
+2022-07-04 14:10:09,178: DEBUG: STREAM b'IDAT' 78 374
+2022-07-04 14:10:09,180: DEBUG: STREAM b'IHDR' 16 13
+2022-07-04 14:10:09,180: DEBUG: STREAM b'sBIT' 41 4
+2022-07-04 14:10:09,181: DEBUG: b'sBIT' 41 4 (unknown)
+2022-07-04 14:10:09,181: DEBUG: STREAM b'pHYs' 57 9
+2022-07-04 14:10:09,181: DEBUG: STREAM b'IDAT' 78 286
+2022-07-04 14:10:09,183: DEBUG: STREAM b'IHDR' 16 13
+2022-07-04 14:10:09,184: DEBUG: STREAM b'sBIT' 41 4
+2022-07-04 14:10:09,184: DEBUG: b'sBIT' 41 4 (unknown)
+2022-07-04 14:10:09,184: DEBUG: STREAM b'pHYs' 57 9
+2022-07-04 14:10:09,185: DEBUG: STREAM b'IDAT' 78 263
+2022-07-04 14:10:09,186: DEBUG: STREAM b'IHDR' 16 13
+2022-07-04 14:10:09,187: DEBUG: STREAM b'sBIT' 41 4
+2022-07-04 14:10:09,188: DEBUG: b'sBIT' 41 4 (unknown)
+2022-07-04 14:10:09,188: DEBUG: STREAM b'pHYs' 57 9
+2022-07-04 14:10:09,188: DEBUG: STREAM b'IDAT' 78 387
+2022-07-04 14:10:09,189: DEBUG: STREAM b'IHDR' 16 13
+2022-07-04 14:10:09,190: DEBUG: STREAM b'sBIT' 41 4
+2022-07-04 14:10:09,191: DEBUG: b'sBIT' 41 4 (unknown)
+2022-07-04 14:10:09,191: DEBUG: STREAM b'pHYs' 57 9
+2022-07-04 14:10:09,192: DEBUG: STREAM b'IDAT' 78 436
+2022-07-04 14:10:09,193: DEBUG: STREAM b'IHDR' 16 13
+2022-07-04 14:10:09,194: DEBUG: STREAM b'sBIT' 41 4
+2022-07-04 14:10:09,194: DEBUG: b'sBIT' 41 4 (unknown)
+2022-07-04 14:10:09,195: DEBUG: STREAM b'pHYs' 57 9
+2022-07-04 14:10:09,195: DEBUG: STREAM b'IDAT' 78 351
+2022-07-04 14:10:09,197: DEBUG: STREAM b'IHDR' 16 13
+2022-07-04 14:10:09,197: DEBUG: STREAM b'sBIT' 41 4
+2022-07-04 14:10:09,198: DEBUG: b'sBIT' 41 4 (unknown)
+2022-07-04 14:10:09,198: DEBUG: STREAM b'pHYs' 57 9
+2022-07-04 14:10:09,199: DEBUG: STREAM b'IDAT' 78 364
+2022-07-04 14:10:09,277: INFO: ('Accuracy on Train Set', 25.555557012557983)
+2022-07-04 14:10:11,107: INFO: (1469, 'correctly labeled out of', 10000)
+2022-07-04 14:10:11,107: INFO: ('Accuracy on Test Set:', 14.69)
+2022-07-04 14:10:11,157: INFO: Saved model at cifar10/n100/random/Greedy_Model_100n_Epochs_1000_Early_Stop_112_Test_Acc_14.pth
+2022-07-04 14:10:11,157: INFO: Training Complete
+2022-07-04 14:10:11,180: DEBUG: STREAM b'IHDR' 16 13
+2022-07-04 14:10:11,180: DEBUG: STREAM b'sBIT' 41 4
+2022-07-04 14:10:11,181: DEBUG: b'sBIT' 41 4 (unknown)
+2022-07-04 14:10:11,181: DEBUG: STREAM b'pHYs' 57 9
+2022-07-04 14:10:11,182: DEBUG: STREAM b'IDAT' 78 374
+2022-07-04 14:10:11,183: DEBUG: STREAM b'IHDR' 16 13
+2022-07-04 14:10:11,183: DEBUG: STREAM b'sBIT' 41 4
+2022-07-04 14:10:11,184: DEBUG: b'sBIT' 41 4 (unknown)
+2022-07-04 14:10:11,184: DEBUG: STREAM b'pHYs' 57 9
+2022-07-04 14:10:11,185: DEBUG: STREAM b'IDAT' 78 286
+2022-07-04 14:10:11,187: DEBUG: STREAM b'IHDR' 16 13
+2022-07-04 14:10:11,188: DEBUG: STREAM b'sBIT' 41 4
+2022-07-04 14:10:11,188: DEBUG: b'sBIT' 41 4 (unknown)
+2022-07-04 14:10:11,189: DEBUG: STREAM b'pHYs' 57 9
+2022-07-04 14:10:11,190: DEBUG: STREAM b'IDAT' 78 263
+2022-07-04 14:10:11,191: DEBUG: STREAM b'IHDR' 16 13
+2022-07-04 14:10:11,192: DEBUG: STREAM b'sBIT' 41 4
+2022-07-04 14:10:11,192: DEBUG: b'sBIT' 41 4 (unknown)
+2022-07-04 14:10:11,193: DEBUG: STREAM b'pHYs' 57 9
+2022-07-04 14:10:11,193: DEBUG: STREAM b'IDAT' 78 387
+2022-07-04 14:10:11,195: DEBUG: STREAM b'IHDR' 16 13
+2022-07-04 14:10:11,195: DEBUG: STREAM b'sBIT' 41 4
+2022-07-04 14:10:11,196: DEBUG: b'sBIT' 41 4 (unknown)
+2022-07-04 14:10:11,196: DEBUG: STREAM b'pHYs' 57 9
+2022-07-04 14:10:11,196: DEBUG: STREAM b'IDAT' 78 436
+2022-07-04 14:10:11,197: DEBUG: STREAM b'IHDR' 16 13
+2022-07-04 14:10:11,198: DEBUG: STREAM b'sBIT' 41 4
+2022-07-04 14:10:11,198: DEBUG: b'sBIT' 41 4 (unknown)
+2022-07-04 14:10:11,199: DEBUG: STREAM b'pHYs' 57 9
+2022-07-04 14:10:11,199: DEBUG: STREAM b'IDAT' 78 351
+2022-07-04 14:10:11,200: DEBUG: STREAM b'IHDR' 16 13
+2022-07-04 14:10:11,201: DEBUG: STREAM b'sBIT' 41 4
+2022-07-04 14:10:11,201: DEBUG: b'sBIT' 41 4 (unknown)
+2022-07-04 14:10:11,202: DEBUG: STREAM b'pHYs' 57 9
+2022-07-04 14:10:11,202: DEBUG: STREAM b'IDAT' 78 364
+2022-07-04 14:10:11,367: INFO: Model Summary
+==========================================================================================
+Layer (type:depth-idx)                   Output Shape              Param #
+==========================================================================================
+├─Sequential: 1-1                        [-1, 1024]                --
+|    └─Conv2d: 2-1                       [-1, 64, 16, 16]          1,792
+|    └─MaxPool2d: 2-2                    [-1, 64, 8, 8]            --
+|    └─ReLU: 2-3                         [-1, 64, 8, 8]            --
+|    └─Conv2d: 2-4                       [-1, 192, 8, 8]           110,784
+|    └─MaxPool2d: 2-5                    [-1, 192, 4, 4]           --
+|    └─ReLU: 2-6                         [-1, 192, 4, 4]           --
+|    └─Conv2d: 2-7                       [-1, 384, 4, 4]           663,936
+|    └─ReLU: 2-8                         [-1, 384, 4, 4]           --
+|    └─Conv2d: 2-9                       [-1, 256, 4, 4]           884,992
+|    └─ReLU: 2-10                        [-1, 256, 4, 4]           --
+|    └─Conv2d: 2-11                      [-1, 256, 4, 4]           590,080
+|    └─MaxPool2d: 2-12                   [-1, 256, 2, 2]           --
+|    └─ReLU: 2-13                        [-1, 256, 2, 2]           --
+|    └─Flatten: 2-14                     [-1, 1024]                --
+├─Sequential: 1-2                        [-1, 10]                  --
+|    └─Dropout: 2-15                     [-1, 1024]                --
+|    └─Linear: 2-16                      [-1, 512]                 524,800
+|    └─ReLU: 2-17                        [-1, 512]                 --
+|    └─Dropout: 2-18                     [-1, 512]                 --
+|    └─Linear: 2-19                      [-1, 256]                 131,328
+|    └─ReLU: 2-20                        [-1, 256]                 --
+|    └─Linear: 2-21                      [-1, 10]                  2,570
+|    └─LogSoftmax: 2-22                  [-1, 10]                  --
+==========================================================================================
+Total params: 2,910,282
+Trainable params: 2,910,282
+Non-trainable params: 0
+Total mult-adds (M): 45.30
+==========================================================================================
+Input size (MB): 0.01
+Forward/backward pass size (MB): 0.33
+Params size (MB): 11.10
+Estimated Total Size (MB): 11.45
+==========================================================================================
+2022-07-04 14:10:13,703: INFO: Epoch[   1] Loss: 9.39	Accuracy: 5.556	Val_Loss: 6.789	Val_Acc: 0.000
+2022-07-04 14:10:13,704: INFO: Epoch[   1] Test Accuracy: 10.110
+2022-07-04 14:10:21,160: INFO: Epoch[  51] Loss: 2.19	Accuracy: 23.333	Val_Loss: 2.390	Val_Acc: 0.000
+2022-07-04 14:10:21,161: INFO: Epoch[  51] Test Accuracy: 13.740
+2022-07-04 14:10:25,696: INFO: Epoch: 101 Early stopping counter 1 of 12
+2022-07-04 14:10:27,472: INFO: Epoch[ 101] Loss: 2.15	Accuracy: 22.222	Val_Loss: 2.388	Val_Acc: 0.000
+2022-07-04 14:10:27,473: INFO: Epoch[ 101] Test Accuracy: 13.890
+2022-07-04 14:10:27,507: INFO: Epoch: 102 Early stopping counter 2 of 12
+2022-07-04 14:10:27,600: INFO: Epoch: 103 Early stopping counter 3 of 12
+2022-07-04 14:10:27,694: INFO: Epoch: 104 Early stopping counter 4 of 12
+2022-07-04 14:10:27,835: INFO: Epoch: 105 Early stopping counter 5 of 12
+2022-07-04 14:10:27,964: INFO: Epoch: 106 Early stopping counter 6 of 12
+2022-07-04 14:10:28,075: INFO: Epoch: 107 Early stopping counter 7 of 12
+2022-07-04 14:10:28,187: INFO: Epoch: 108 Early stopping counter 8 of 12
+2022-07-04 14:10:28,319: INFO: Epoch: 109 Early stopping counter 9 of 12
+2022-07-04 14:10:28,437: INFO: Epoch: 110 Early stopping counter 10 of 12
+2022-07-04 14:10:28,528: INFO: Epoch: 111 Early stopping counter 11 of 12
+2022-07-04 14:10:28,622: INFO: Epoch: 112 Early stopping counter 12 of 12
+2022-07-04 14:10:28,623: INFO: Early stopping
+2022-07-04 14:10:28,718: INFO: Trained for 112 Epochs.
+2022-07-04 14:10:28,745: DEBUG: STREAM b'IHDR' 16 13
+2022-07-04 14:10:28,752: DEBUG: STREAM b'sBIT' 41 4
+2022-07-04 14:10:28,752: DEBUG: b'sBIT' 41 4 (unknown)
+2022-07-04 14:10:28,753: DEBUG: STREAM b'pHYs' 57 9
+2022-07-04 14:10:28,754: DEBUG: STREAM b'IDAT' 78 374
+2022-07-04 14:10:28,756: DEBUG: STREAM b'IHDR' 16 13
+2022-07-04 14:10:28,758: DEBUG: STREAM b'sBIT' 41 4
+2022-07-04 14:10:28,759: DEBUG: b'sBIT' 41 4 (unknown)
+2022-07-04 14:10:28,760: DEBUG: STREAM b'pHYs' 57 9
+2022-07-04 14:10:28,761: DEBUG: STREAM b'IDAT' 78 286
+2022-07-04 14:10:28,763: DEBUG: STREAM b'IHDR' 16 13
+2022-07-04 14:10:28,764: DEBUG: STREAM b'sBIT' 41 4
+2022-07-04 14:10:28,766: DEBUG: b'sBIT' 41 4 (unknown)
+2022-07-04 14:10:28,767: DEBUG: STREAM b'pHYs' 57 9
+2022-07-04 14:10:28,768: DEBUG: STREAM b'IDAT' 78 263
+2022-07-04 14:10:28,771: DEBUG: STREAM b'IHDR' 16 13
+2022-07-04 14:10:28,772: DEBUG: STREAM b'sBIT' 41 4
+2022-07-04 14:10:28,773: DEBUG: b'sBIT' 41 4 (unknown)
+2022-07-04 14:10:28,778: DEBUG: STREAM b'pHYs' 57 9
+2022-07-04 14:10:28,779: DEBUG: STREAM b'IDAT' 78 387
+2022-07-04 14:10:28,783: DEBUG: STREAM b'IHDR' 16 13
+2022-07-04 14:10:28,784: DEBUG: STREAM b'sBIT' 41 4
+2022-07-04 14:10:28,785: DEBUG: b'sBIT' 41 4 (unknown)
+2022-07-04 14:10:28,786: DEBUG: STREAM b'pHYs' 57 9
+2022-07-04 14:10:28,787: DEBUG: STREAM b'IDAT' 78 436
+2022-07-04 14:10:28,788: DEBUG: STREAM b'IHDR' 16 13
+2022-07-04 14:10:28,789: DEBUG: STREAM b'sBIT' 41 4
+2022-07-04 14:10:28,790: DEBUG: b'sBIT' 41 4 (unknown)
+2022-07-04 14:10:28,790: DEBUG: STREAM b'pHYs' 57 9
+2022-07-04 14:10:28,791: DEBUG: STREAM b'IDAT' 78 351
+2022-07-04 14:10:28,792: DEBUG: STREAM b'IHDR' 16 13
+2022-07-04 14:10:28,793: DEBUG: STREAM b'sBIT' 41 4
+2022-07-04 14:10:28,793: DEBUG: b'sBIT' 41 4 (unknown)
+2022-07-04 14:10:28,794: DEBUG: STREAM b'pHYs' 57 9
+2022-07-04 14:10:28,794: DEBUG: STREAM b'IDAT' 78 364
+2022-07-04 14:10:28,973: DEBUG: STREAM b'IHDR' 16 13
+2022-07-04 14:10:28,974: DEBUG: STREAM b'sBIT' 41 4
+2022-07-04 14:10:28,974: DEBUG: b'sBIT' 41 4 (unknown)
+2022-07-04 14:10:28,975: DEBUG: STREAM b'pHYs' 57 9
+2022-07-04 14:10:28,975: DEBUG: STREAM b'IDAT' 78 374
+2022-07-04 14:10:28,977: DEBUG: STREAM b'IHDR' 16 13
+2022-07-04 14:10:28,977: DEBUG: STREAM b'sBIT' 41 4
+2022-07-04 14:10:28,978: DEBUG: b'sBIT' 41 4 (unknown)
+2022-07-04 14:10:28,979: DEBUG: STREAM b'pHYs' 57 9
+2022-07-04 14:10:28,979: DEBUG: STREAM b'IDAT' 78 286
+2022-07-04 14:10:28,981: DEBUG: STREAM b'IHDR' 16 13
+2022-07-04 14:10:28,981: DEBUG: STREAM b'sBIT' 41 4
+2022-07-04 14:10:28,982: DEBUG: b'sBIT' 41 4 (unknown)
+2022-07-04 14:10:28,982: DEBUG: STREAM b'pHYs' 57 9
+2022-07-04 14:10:28,983: DEBUG: STREAM b'IDAT' 78 263
+2022-07-04 14:10:28,985: DEBUG: STREAM b'IHDR' 16 13
+2022-07-04 14:10:28,986: DEBUG: STREAM b'sBIT' 41 4
+2022-07-04 14:10:28,986: DEBUG: b'sBIT' 41 4 (unknown)
+2022-07-04 14:10:28,987: DEBUG: STREAM b'pHYs' 57 9
+2022-07-04 14:10:28,987: DEBUG: STREAM b'IDAT' 78 387
+2022-07-04 14:10:28,988: DEBUG: STREAM b'IHDR' 16 13
+2022-07-04 14:10:28,989: DEBUG: STREAM b'sBIT' 41 4
+2022-07-04 14:10:28,990: DEBUG: b'sBIT' 41 4 (unknown)
+2022-07-04 14:10:28,990: DEBUG: STREAM b'pHYs' 57 9
+2022-07-04 14:10:28,990: DEBUG: STREAM b'IDAT' 78 436
+2022-07-04 14:10:28,992: DEBUG: STREAM b'IHDR' 16 13
+2022-07-04 14:10:28,993: DEBUG: STREAM b'sBIT' 41 4
+2022-07-04 14:10:28,994: DEBUG: b'sBIT' 41 4 (unknown)
+2022-07-04 14:10:28,994: DEBUG: STREAM b'pHYs' 57 9
+2022-07-04 14:10:28,994: DEBUG: STREAM b'IDAT' 78 351
+2022-07-04 14:10:28,996: DEBUG: STREAM b'IHDR' 16 13
+2022-07-04 14:10:28,996: DEBUG: STREAM b'sBIT' 41 4
+2022-07-04 14:10:28,997: DEBUG: b'sBIT' 41 4 (unknown)
+2022-07-04 14:10:28,997: DEBUG: STREAM b'pHYs' 57 9
+2022-07-04 14:10:28,998: DEBUG: STREAM b'IDAT' 78 364
+2022-07-04 14:10:29,091: INFO: ('Accuracy on Train Set', 26.66666805744171)
+2022-07-04 14:10:31,039: INFO: (1389, 'correctly labeled out of', 10000)
+2022-07-04 14:10:31,040: INFO: ('Accuracy on Test Set:', 13.889999999999999)
+2022-07-04 14:10:31,103: INFO: Saved model at cifar10/n100/random/Greedy_Model_100n_Epochs_1000_Early_Stop_112_Test_Acc_13.pth
+2022-07-04 14:10:31,104: INFO: Training Complete
+2022-07-04 14:10:31,127: DEBUG: STREAM b'IHDR' 16 13
+2022-07-04 14:10:31,127: DEBUG: STREAM b'sBIT' 41 4
+2022-07-04 14:10:31,128: DEBUG: b'sBIT' 41 4 (unknown)
+2022-07-04 14:10:31,128: DEBUG: STREAM b'pHYs' 57 9
+2022-07-04 14:10:31,129: DEBUG: STREAM b'IDAT' 78 374
+2022-07-04 14:10:31,130: DEBUG: STREAM b'IHDR' 16 13
+2022-07-04 14:10:31,131: DEBUG: STREAM b'sBIT' 41 4
+2022-07-04 14:10:31,132: DEBUG: b'sBIT' 41 4 (unknown)
+2022-07-04 14:10:31,133: DEBUG: STREAM b'pHYs' 57 9
+2022-07-04 14:10:31,133: DEBUG: STREAM b'IDAT' 78 286
+2022-07-04 14:10:31,135: DEBUG: STREAM b'IHDR' 16 13
+2022-07-04 14:10:31,135: DEBUG: STREAM b'sBIT' 41 4
+2022-07-04 14:10:31,135: DEBUG: b'sBIT' 41 4 (unknown)
+2022-07-04 14:10:31,136: DEBUG: STREAM b'pHYs' 57 9
+2022-07-04 14:10:31,136: DEBUG: STREAM b'IDAT' 78 263
+2022-07-04 14:10:31,138: DEBUG: STREAM b'IHDR' 16 13
+2022-07-04 14:10:31,139: DEBUG: STREAM b'sBIT' 41 4
+2022-07-04 14:10:31,140: DEBUG: b'sBIT' 41 4 (unknown)
+2022-07-04 14:10:31,140: DEBUG: STREAM b'pHYs' 57 9
+2022-07-04 14:10:31,140: DEBUG: STREAM b'IDAT' 78 387
+2022-07-04 14:10:31,141: DEBUG: STREAM b'IHDR' 16 13
+2022-07-04 14:10:31,142: DEBUG: STREAM b'sBIT' 41 4
+2022-07-04 14:10:31,142: DEBUG: b'sBIT' 41 4 (unknown)
+2022-07-04 14:10:31,143: DEBUG: STREAM b'pHYs' 57 9
+2022-07-04 14:10:31,143: DEBUG: STREAM b'IDAT' 78 436
+2022-07-04 14:10:31,145: DEBUG: STREAM b'IHDR' 16 13
+2022-07-04 14:10:31,145: DEBUG: STREAM b'sBIT' 41 4
+2022-07-04 14:10:31,146: DEBUG: b'sBIT' 41 4 (unknown)
+2022-07-04 14:10:31,146: DEBUG: STREAM b'pHYs' 57 9
+2022-07-04 14:10:31,147: DEBUG: STREAM b'IDAT' 78 351
+2022-07-04 14:10:31,148: DEBUG: STREAM b'IHDR' 16 13
+2022-07-04 14:10:31,149: DEBUG: STREAM b'sBIT' 41 4
+2022-07-04 14:10:31,149: DEBUG: b'sBIT' 41 4 (unknown)
+2022-07-04 14:10:31,150: DEBUG: STREAM b'pHYs' 57 9
+2022-07-04 14:10:31,150: DEBUG: STREAM b'IDAT' 78 364
+2022-07-04 14:10:31,284: INFO: Model Summary
+==========================================================================================
+Layer (type:depth-idx)                   Output Shape              Param #
+==========================================================================================
+├─Sequential: 1-1                        [-1, 1024]                --
+|    └─Conv2d: 2-1                       [-1, 64, 16, 16]          1,792
+|    └─MaxPool2d: 2-2                    [-1, 64, 8, 8]            --
+|    └─ReLU: 2-3                         [-1, 64, 8, 8]            --
+|    └─Conv2d: 2-4                       [-1, 192, 8, 8]           110,784
+|    └─MaxPool2d: 2-5                    [-1, 192, 4, 4]           --
+|    └─ReLU: 2-6                         [-1, 192, 4, 4]           --
+|    └─Conv2d: 2-7                       [-1, 384, 4, 4]           663,936
+|    └─ReLU: 2-8                         [-1, 384, 4, 4]           --
+|    └─Conv2d: 2-9                       [-1, 256, 4, 4]           884,992
+|    └─ReLU: 2-10                        [-1, 256, 4, 4]           --
+|    └─Conv2d: 2-11                      [-1, 256, 4, 4]           590,080
+|    └─MaxPool2d: 2-12                   [-1, 256, 2, 2]           --
+|    └─ReLU: 2-13                        [-1, 256, 2, 2]           --
+|    └─Flatten: 2-14                     [-1, 1024]                --
+├─Sequential: 1-2                        [-1, 10]                  --
+|    └─Dropout: 2-15                     [-1, 1024]                --
+|    └─Linear: 2-16                      [-1, 512]                 524,800
+|    └─ReLU: 2-17                        [-1, 512]                 --
+|    └─Dropout: 2-18                     [-1, 512]                 --
+|    └─Linear: 2-19                      [-1, 256]                 131,328
+|    └─ReLU: 2-20                        [-1, 256]                 --
+|    └─Linear: 2-21                      [-1, 10]                  2,570
+|    └─LogSoftmax: 2-22                  [-1, 10]                  --
+==========================================================================================
+Total params: 2,910,282
+Trainable params: 2,910,282
+Non-trainable params: 0
+Total mult-adds (M): 45.30
+==========================================================================================
+Input size (MB): 0.01
+Forward/backward pass size (MB): 0.33
+Params size (MB): 11.10
+Estimated Total Size (MB): 11.45
+==========================================================================================
+2022-07-04 14:10:33,330: INFO: Epoch[   1] Loss: 10.38	Accuracy: 7.778	Val_Loss: 8.721	Val_Acc: 0.000
+2022-07-04 14:10:33,330: INFO: Epoch[   1] Test Accuracy: 10.450
+2022-07-04 14:10:40,231: INFO: Epoch[  51] Loss: 1.30	Accuracy: 56.667	Val_Loss: 1.793	Val_Acc: 40.000
+2022-07-04 14:10:40,232: INFO: Epoch[  51] Test Accuracy: 22.850
+2022-07-04 14:10:45,479: INFO: Epoch: 101 Early stopping counter 1 of 12
+2022-07-04 14:10:47,603: INFO: Epoch[ 101] Loss: 1.17	Accuracy: 60.000	Val_Loss: 1.801	Val_Acc: 50.000
+2022-07-04 14:10:47,604: INFO: Epoch[ 101] Test Accuracy: 23.850
+2022-07-04 14:10:47,636: INFO: Epoch: 102 Early stopping counter 2 of 12
+2022-07-04 14:10:47,748: INFO: Epoch: 103 Early stopping counter 3 of 12
+2022-07-04 14:10:47,852: INFO: Epoch: 104 Early stopping counter 4 of 12
+2022-07-04 14:10:47,969: INFO: Epoch: 105 Early stopping counter 5 of 12
+2022-07-04 14:10:48,107: INFO: Epoch: 106 Early stopping counter 6 of 12
+2022-07-04 14:10:48,291: INFO: Epoch: 107 Early stopping counter 7 of 12
+2022-07-04 14:10:48,413: INFO: Epoch: 108 Early stopping counter 8 of 12
+2022-07-04 14:10:48,523: INFO: Epoch: 109 Early stopping counter 9 of 12
+2022-07-04 14:10:48,626: INFO: Epoch: 110 Early stopping counter 10 of 12
+2022-07-04 14:10:48,729: INFO: Epoch: 111 Early stopping counter 11 of 12
+2022-07-04 14:10:48,835: INFO: Epoch: 112 Early stopping counter 12 of 12
+2022-07-04 14:10:48,836: INFO: Early stopping
+2022-07-04 14:10:48,905: INFO: Trained for 112 Epochs.
+2022-07-04 14:10:48,930: DEBUG: STREAM b'IHDR' 16 13
+2022-07-04 14:10:48,931: DEBUG: STREAM b'sBIT' 41 4
+2022-07-04 14:10:48,931: DEBUG: b'sBIT' 41 4 (unknown)
+2022-07-04 14:10:48,932: DEBUG: STREAM b'pHYs' 57 9
+2022-07-04 14:10:48,932: DEBUG: STREAM b'IDAT' 78 374
+2022-07-04 14:10:48,934: DEBUG: STREAM b'IHDR' 16 13
+2022-07-04 14:10:48,934: DEBUG: STREAM b'sBIT' 41 4
+2022-07-04 14:10:48,935: DEBUG: b'sBIT' 41 4 (unknown)
+2022-07-04 14:10:48,936: DEBUG: STREAM b'pHYs' 57 9
+2022-07-04 14:10:48,937: DEBUG: STREAM b'IDAT' 78 286
+2022-07-04 14:10:48,938: DEBUG: STREAM b'IHDR' 16 13
+2022-07-04 14:10:48,939: DEBUG: STREAM b'sBIT' 41 4
+2022-07-04 14:10:48,939: DEBUG: b'sBIT' 41 4 (unknown)
+2022-07-04 14:10:48,940: DEBUG: STREAM b'pHYs' 57 9
+2022-07-04 14:10:48,940: DEBUG: STREAM b'IDAT' 78 263
+2022-07-04 14:10:48,942: DEBUG: STREAM b'IHDR' 16 13
+2022-07-04 14:10:48,942: DEBUG: STREAM b'sBIT' 41 4
+2022-07-04 14:10:48,943: DEBUG: b'sBIT' 41 4 (unknown)
+2022-07-04 14:10:48,943: DEBUG: STREAM b'pHYs' 57 9
+2022-07-04 14:10:48,944: DEBUG: STREAM b'IDAT' 78 387
+2022-07-04 14:10:48,945: DEBUG: STREAM b'IHDR' 16 13
+2022-07-04 14:10:48,946: DEBUG: STREAM b'sBIT' 41 4
+2022-07-04 14:10:48,946: DEBUG: b'sBIT' 41 4 (unknown)
+2022-07-04 14:10:48,946: DEBUG: STREAM b'pHYs' 57 9
+2022-07-04 14:10:48,947: DEBUG: STREAM b'IDAT' 78 436
+2022-07-04 14:10:48,948: DEBUG: STREAM b'IHDR' 16 13
+2022-07-04 14:10:48,949: DEBUG: STREAM b'sBIT' 41 4
+2022-07-04 14:10:48,949: DEBUG: b'sBIT' 41 4 (unknown)
+2022-07-04 14:10:48,950: DEBUG: STREAM b'pHYs' 57 9
+2022-07-04 14:10:48,950: DEBUG: STREAM b'IDAT' 78 351
+2022-07-04 14:10:48,952: DEBUG: STREAM b'IHDR' 16 13
+2022-07-04 14:10:48,953: DEBUG: STREAM b'sBIT' 41 4
+2022-07-04 14:10:48,954: DEBUG: b'sBIT' 41 4 (unknown)
+2022-07-04 14:10:48,954: DEBUG: STREAM b'pHYs' 57 9
+2022-07-04 14:10:48,955: DEBUG: STREAM b'IDAT' 78 364
+2022-07-04 14:10:49,144: DEBUG: STREAM b'IHDR' 16 13
+2022-07-04 14:10:49,145: DEBUG: STREAM b'sBIT' 41 4
+2022-07-04 14:10:49,145: DEBUG: b'sBIT' 41 4 (unknown)
+2022-07-04 14:10:49,146: DEBUG: STREAM b'pHYs' 57 9
+2022-07-04 14:10:49,146: DEBUG: STREAM b'IDAT' 78 374
+2022-07-04 14:10:49,147: DEBUG: STREAM b'IHDR' 16 13
+2022-07-04 14:10:49,148: DEBUG: STREAM b'sBIT' 41 4
+2022-07-04 14:10:49,148: DEBUG: b'sBIT' 41 4 (unknown)
+2022-07-04 14:10:49,149: DEBUG: STREAM b'pHYs' 57 9
+2022-07-04 14:10:49,149: DEBUG: STREAM b'IDAT' 78 286
+2022-07-04 14:10:49,150: DEBUG: STREAM b'IHDR' 16 13
+2022-07-04 14:10:49,151: DEBUG: STREAM b'sBIT' 41 4
+2022-07-04 14:10:49,152: DEBUG: b'sBIT' 41 4 (unknown)
+2022-07-04 14:10:49,152: DEBUG: STREAM b'pHYs' 57 9
+2022-07-04 14:10:49,153: DEBUG: STREAM b'IDAT' 78 263
+2022-07-04 14:10:49,154: DEBUG: STREAM b'IHDR' 16 13
+2022-07-04 14:10:49,154: DEBUG: STREAM b'sBIT' 41 4
+2022-07-04 14:10:49,155: DEBUG: b'sBIT' 41 4 (unknown)
+2022-07-04 14:10:49,155: DEBUG: STREAM b'pHYs' 57 9
+2022-07-04 14:10:49,156: DEBUG: STREAM b'IDAT' 78 387
+2022-07-04 14:10:49,157: DEBUG: STREAM b'IHDR' 16 13
+2022-07-04 14:10:49,158: DEBUG: STREAM b'sBIT' 41 4
+2022-07-04 14:10:49,158: DEBUG: b'sBIT' 41 4 (unknown)
+2022-07-04 14:10:49,159: DEBUG: STREAM b'pHYs' 57 9
+2022-07-04 14:10:49,159: DEBUG: STREAM b'IDAT' 78 436
+2022-07-04 14:10:49,160: DEBUG: STREAM b'IHDR' 16 13
+2022-07-04 14:10:49,161: DEBUG: STREAM b'sBIT' 41 4
+2022-07-04 14:10:49,161: DEBUG: b'sBIT' 41 4 (unknown)
+2022-07-04 14:10:49,161: DEBUG: STREAM b'pHYs' 57 9
+2022-07-04 14:10:49,162: DEBUG: STREAM b'IDAT' 78 351
+2022-07-04 14:10:49,163: DEBUG: STREAM b'IHDR' 16 13
+2022-07-04 14:10:49,163: DEBUG: STREAM b'sBIT' 41 4
+2022-07-04 14:10:49,164: DEBUG: b'sBIT' 41 4 (unknown)
+2022-07-04 14:10:49,164: DEBUG: STREAM b'pHYs' 57 9
+2022-07-04 14:10:49,165: DEBUG: STREAM b'IDAT' 78 364
+2022-07-04 14:10:49,249: INFO: ('Accuracy on Train Set', 68.88889074325562)
+2022-07-04 14:10:51,063: INFO: (2385, 'correctly labeled out of', 10000)
+2022-07-04 14:10:51,063: INFO: ('Accuracy on Test Set:', 23.849999999999998)
+2022-07-04 14:10:51,116: INFO: Saved model at cifar10/n100/random/Greedy_Model_100n_Epochs_1000_Early_Stop_112_Test_Acc_23.pth
+2022-07-04 14:10:51,117: INFO: Training Complete
+2022-07-04 14:10:51,138: DEBUG: STREAM b'IHDR' 16 13
+2022-07-04 14:10:51,139: DEBUG: STREAM b'sBIT' 41 4
+2022-07-04 14:10:51,140: DEBUG: b'sBIT' 41 4 (unknown)
+2022-07-04 14:10:51,140: DEBUG: STREAM b'pHYs' 57 9
+2022-07-04 14:10:51,140: DEBUG: STREAM b'IDAT' 78 374
+2022-07-04 14:10:51,141: DEBUG: STREAM b'IHDR' 16 13
+2022-07-04 14:10:51,142: DEBUG: STREAM b'sBIT' 41 4
+2022-07-04 14:10:51,142: DEBUG: b'sBIT' 41 4 (unknown)
+2022-07-04 14:10:51,143: DEBUG: STREAM b'pHYs' 57 9
+2022-07-04 14:10:51,143: DEBUG: STREAM b'IDAT' 78 286
+2022-07-04 14:10:51,145: DEBUG: STREAM b'IHDR' 16 13
+2022-07-04 14:10:51,145: DEBUG: STREAM b'sBIT' 41 4
+2022-07-04 14:10:51,146: DEBUG: b'sBIT' 41 4 (unknown)
+2022-07-04 14:10:51,147: DEBUG: STREAM b'pHYs' 57 9
+2022-07-04 14:10:51,147: DEBUG: STREAM b'IDAT' 78 263
+2022-07-04 14:10:51,148: DEBUG: STREAM b'IHDR' 16 13
+2022-07-04 14:10:51,149: DEBUG: STREAM b'sBIT' 41 4
+2022-07-04 14:10:51,149: DEBUG: b'sBIT' 41 4 (unknown)
+2022-07-04 14:10:51,150: DEBUG: STREAM b'pHYs' 57 9
+2022-07-04 14:10:51,150: DEBUG: STREAM b'IDAT' 78 387
+2022-07-04 14:10:51,152: DEBUG: STREAM b'IHDR' 16 13
+2022-07-04 14:10:51,152: DEBUG: STREAM b'sBIT' 41 4
+2022-07-04 14:10:51,153: DEBUG: b'sBIT' 41 4 (unknown)
+2022-07-04 14:10:51,153: DEBUG: STREAM b'pHYs' 57 9
+2022-07-04 14:10:51,153: DEBUG: STREAM b'IDAT' 78 436
+2022-07-04 14:10:51,155: DEBUG: STREAM b'IHDR' 16 13
+2022-07-04 14:10:51,155: DEBUG: STREAM b'sBIT' 41 4
+2022-07-04 14:10:51,156: DEBUG: b'sBIT' 41 4 (unknown)
+2022-07-04 14:10:51,156: DEBUG: STREAM b'pHYs' 57 9
+2022-07-04 14:10:51,156: DEBUG: STREAM b'IDAT' 78 351
+2022-07-04 14:10:51,158: DEBUG: STREAM b'IHDR' 16 13
+2022-07-04 14:10:51,158: DEBUG: STREAM b'sBIT' 41 4
+2022-07-04 14:10:51,159: DEBUG: b'sBIT' 41 4 (unknown)
+2022-07-04 14:10:51,159: DEBUG: STREAM b'pHYs' 57 9
+2022-07-04 14:10:51,160: DEBUG: STREAM b'IDAT' 78 364
+2022-07-04 14:10:51,285: INFO: Model Summary
+==========================================================================================
+Layer (type:depth-idx)                   Output Shape              Param #
+==========================================================================================
+├─Sequential: 1-1                        [-1, 1024]                --
+|    └─Conv2d: 2-1                       [-1, 64, 16, 16]          1,792
+|    └─MaxPool2d: 2-2                    [-1, 64, 8, 8]            --
+|    └─ReLU: 2-3                         [-1, 64, 8, 8]            --
+|    └─Conv2d: 2-4                       [-1, 192, 8, 8]           110,784
+|    └─MaxPool2d: 2-5                    [-1, 192, 4, 4]           --
+|    └─ReLU: 2-6                         [-1, 192, 4, 4]           --
+|    └─Conv2d: 2-7                       [-1, 384, 4, 4]           663,936
+|    └─ReLU: 2-8                         [-1, 384, 4, 4]           --
+|    └─Conv2d: 2-9                       [-1, 256, 4, 4]           884,992
+|    └─ReLU: 2-10                        [-1, 256, 4, 4]           --
+|    └─Conv2d: 2-11                      [-1, 256, 4, 4]           590,080
+|    └─MaxPool2d: 2-12                   [-1, 256, 2, 2]           --
+|    └─ReLU: 2-13                        [-1, 256, 2, 2]           --
+|    └─Flatten: 2-14                     [-1, 1024]                --
+├─Sequential: 1-2                        [-1, 10]                  --
+|    └─Dropout: 2-15                     [-1, 1024]                --
+|    └─Linear: 2-16                      [-1, 512]                 524,800
+|    └─ReLU: 2-17                        [-1, 512]                 --
+|    └─Dropout: 2-18                     [-1, 512]                 --
+|    └─Linear: 2-19                      [-1, 256]                 131,328
+|    └─ReLU: 2-20                        [-1, 256]                 --
+|    └─Linear: 2-21                      [-1, 10]                  2,570
+|    └─LogSoftmax: 2-22                  [-1, 10]                  --
+==========================================================================================
+Total params: 2,910,282
+Trainable params: 2,910,282
+Non-trainable params: 0
+Total mult-adds (M): 45.30
+==========================================================================================
+Input size (MB): 0.01
+Forward/backward pass size (MB): 0.33
+Params size (MB): 11.10
+Estimated Total Size (MB): 11.45
+==========================================================================================
+2022-07-04 14:10:53,333: INFO: Epoch[   1] Loss: 18.94	Accuracy: 5.556	Val_Loss: 10.456	Val_Acc: 0.000
+2022-07-04 14:10:53,334: INFO: Epoch[   1] Test Accuracy: 10.090
+2022-07-04 14:11:00,500: INFO: Epoch[  51] Loss: 2.34	Accuracy: 14.444	Val_Loss: 2.588	Val_Acc: 10.000
+2022-07-04 14:11:00,501: INFO: Epoch[  51] Test Accuracy: 10.390
+2022-07-04 14:11:05,781: INFO: Epoch: 101 Early stopping counter 1 of 12
+2022-07-04 14:11:07,613: INFO: Epoch[ 101] Loss: 2.41	Accuracy: 12.222	Val_Loss: 2.588	Val_Acc: 10.000
+2022-07-04 14:11:07,614: INFO: Epoch[ 101] Test Accuracy: 10.370
+2022-07-04 14:11:07,651: INFO: Epoch: 102 Early stopping counter 2 of 12
+2022-07-04 14:11:07,752: INFO: Epoch: 103 Early stopping counter 3 of 12
+2022-07-04 14:11:07,856: INFO: Epoch: 104 Early stopping counter 4 of 12
+2022-07-04 14:11:07,958: INFO: Epoch: 105 Early stopping counter 5 of 12
+2022-07-04 14:11:08,059: INFO: Epoch: 106 Early stopping counter 6 of 12
+2022-07-04 14:11:08,161: INFO: Epoch: 107 Early stopping counter 7 of 12
+2022-07-04 14:11:08,266: INFO: Epoch: 108 Early stopping counter 8 of 12
+2022-07-04 14:11:08,372: INFO: Epoch: 109 Early stopping counter 9 of 12
+2022-07-04 14:11:08,479: INFO: Epoch: 110 Early stopping counter 10 of 12
+2022-07-04 14:11:08,584: INFO: Epoch: 111 Early stopping counter 11 of 12
+2022-07-04 14:11:08,687: INFO: Epoch: 112 Early stopping counter 12 of 12
+2022-07-04 14:11:08,688: INFO: Early stopping
+2022-07-04 14:11:08,757: INFO: Trained for 112 Epochs.
+2022-07-04 14:11:08,783: DEBUG: STREAM b'IHDR' 16 13
+2022-07-04 14:11:08,783: DEBUG: STREAM b'sBIT' 41 4
+2022-07-04 14:11:08,784: DEBUG: b'sBIT' 41 4 (unknown)
+2022-07-04 14:11:08,784: DEBUG: STREAM b'pHYs' 57 9
+2022-07-04 14:11:08,785: DEBUG: STREAM b'IDAT' 78 374
+2022-07-04 14:11:08,786: DEBUG: STREAM b'IHDR' 16 13
+2022-07-04 14:11:08,786: DEBUG: STREAM b'sBIT' 41 4
+2022-07-04 14:11:08,787: DEBUG: b'sBIT' 41 4 (unknown)
+2022-07-04 14:11:08,787: DEBUG: STREAM b'pHYs' 57 9
+2022-07-04 14:11:08,788: DEBUG: STREAM b'IDAT' 78 286
+2022-07-04 14:11:08,789: DEBUG: STREAM b'IHDR' 16 13
+2022-07-04 14:11:08,790: DEBUG: STREAM b'sBIT' 41 4
+2022-07-04 14:11:08,790: DEBUG: b'sBIT' 41 4 (unknown)
+2022-07-04 14:11:08,790: DEBUG: STREAM b'pHYs' 57 9
+2022-07-04 14:11:08,791: DEBUG: STREAM b'IDAT' 78 263
+2022-07-04 14:11:08,792: DEBUG: STREAM b'IHDR' 16 13
+2022-07-04 14:11:08,793: DEBUG: STREAM b'sBIT' 41 4
+2022-07-04 14:11:08,793: DEBUG: b'sBIT' 41 4 (unknown)
+2022-07-04 14:11:08,794: DEBUG: STREAM b'pHYs' 57 9
+2022-07-04 14:11:08,794: DEBUG: STREAM b'IDAT' 78 387
+2022-07-04 14:11:08,796: DEBUG: STREAM b'IHDR' 16 13
+2022-07-04 14:11:08,797: DEBUG: STREAM b'sBIT' 41 4
+2022-07-04 14:11:08,797: DEBUG: b'sBIT' 41 4 (unknown)
+2022-07-04 14:11:08,798: DEBUG: STREAM b'pHYs' 57 9
+2022-07-04 14:11:08,798: DEBUG: STREAM b'IDAT' 78 436
+2022-07-04 14:11:08,799: DEBUG: STREAM b'IHDR' 16 13
+2022-07-04 14:11:08,800: DEBUG: STREAM b'sBIT' 41 4
+2022-07-04 14:11:08,800: DEBUG: b'sBIT' 41 4 (unknown)
+2022-07-04 14:11:08,801: DEBUG: STREAM b'pHYs' 57 9
+2022-07-04 14:11:08,801: DEBUG: STREAM b'IDAT' 78 351
+2022-07-04 14:11:08,803: DEBUG: STREAM b'IHDR' 16 13
+2022-07-04 14:11:08,804: DEBUG: STREAM b'sBIT' 41 4
+2022-07-04 14:11:08,804: DEBUG: b'sBIT' 41 4 (unknown)
+2022-07-04 14:11:08,805: DEBUG: STREAM b'pHYs' 57 9
+2022-07-04 14:11:08,805: DEBUG: STREAM b'IDAT' 78 364
+2022-07-04 14:11:08,972: DEBUG: STREAM b'IHDR' 16 13
+2022-07-04 14:11:08,972: DEBUG: STREAM b'sBIT' 41 4
+2022-07-04 14:11:08,973: DEBUG: b'sBIT' 41 4 (unknown)
+2022-07-04 14:11:08,973: DEBUG: STREAM b'pHYs' 57 9
+2022-07-04 14:11:08,974: DEBUG: STREAM b'IDAT' 78 374
+2022-07-04 14:11:08,975: DEBUG: STREAM b'IHDR' 16 13
+2022-07-04 14:11:08,976: DEBUG: STREAM b'sBIT' 41 4
+2022-07-04 14:11:08,976: DEBUG: b'sBIT' 41 4 (unknown)
+2022-07-04 14:11:08,977: DEBUG: STREAM b'pHYs' 57 9
+2022-07-04 14:11:08,979: DEBUG: STREAM b'IDAT' 78 286
+2022-07-04 14:11:08,981: DEBUG: STREAM b'IHDR' 16 13
+2022-07-04 14:11:08,981: DEBUG: STREAM b'sBIT' 41 4
+2022-07-04 14:11:08,981: DEBUG: b'sBIT' 41 4 (unknown)
+2022-07-04 14:11:08,982: DEBUG: STREAM b'pHYs' 57 9
+2022-07-04 14:11:08,983: DEBUG: STREAM b'IDAT' 78 263
+2022-07-04 14:11:08,985: DEBUG: STREAM b'IHDR' 16 13
+2022-07-04 14:11:08,986: DEBUG: STREAM b'sBIT' 41 4
+2022-07-04 14:11:08,986: DEBUG: b'sBIT' 41 4 (unknown)
+2022-07-04 14:11:08,987: DEBUG: STREAM b'pHYs' 57 9
+2022-07-04 14:11:08,987: DEBUG: STREAM b'IDAT' 78 387
+2022-07-04 14:11:08,988: DEBUG: STREAM b'IHDR' 16 13
+2022-07-04 14:11:09,007: DEBUG: STREAM b'sBIT' 41 4
+2022-07-04 14:11:09,007: DEBUG: b'sBIT' 41 4 (unknown)
+2022-07-04 14:11:09,008: DEBUG: STREAM b'pHYs' 57 9
+2022-07-04 14:11:09,008: DEBUG: STREAM b'IDAT' 78 436
+2022-07-04 14:11:09,028: DEBUG: STREAM b'IHDR' 16 13
+2022-07-04 14:11:09,029: DEBUG: STREAM b'sBIT' 41 4
+2022-07-04 14:11:09,029: DEBUG: b'sBIT' 41 4 (unknown)
+2022-07-04 14:11:09,030: DEBUG: STREAM b'pHYs' 57 9
+2022-07-04 14:11:09,030: DEBUG: STREAM b'IDAT' 78 351
+2022-07-04 14:11:09,032: DEBUG: STREAM b'IHDR' 16 13
+2022-07-04 14:11:09,033: DEBUG: STREAM b'sBIT' 41 4
+2022-07-04 14:11:09,033: DEBUG: b'sBIT' 41 4 (unknown)
+2022-07-04 14:11:09,034: DEBUG: STREAM b'pHYs' 57 9
+2022-07-04 14:11:09,034: DEBUG: STREAM b'IDAT' 78 364
+2022-07-04 14:11:09,173: INFO: ('Accuracy on Train Set', 16.66666716337204)
+2022-07-04 14:11:11,074: INFO: (1037, 'correctly labeled out of', 10000)
+2022-07-04 14:11:11,075: INFO: ('Accuracy on Test Set:', 10.37)
+2022-07-04 14:11:11,137: INFO: Saved model at cifar10/n100/random/Greedy_Model_100n_Epochs_1000_Early_Stop_112_Test_Acc_10.pth
+2022-07-04 14:11:11,138: INFO: Training Complete
+2022-07-04 14:11:11,162: DEBUG: STREAM b'IHDR' 16 13
+2022-07-04 14:11:11,163: DEBUG: STREAM b'sBIT' 41 4
+2022-07-04 14:11:11,163: DEBUG: b'sBIT' 41 4 (unknown)
+2022-07-04 14:11:11,164: DEBUG: STREAM b'pHYs' 57 9
+2022-07-04 14:11:11,164: DEBUG: STREAM b'IDAT' 78 374
+2022-07-04 14:11:11,166: DEBUG: STREAM b'IHDR' 16 13
+2022-07-04 14:11:11,166: DEBUG: STREAM b'sBIT' 41 4
+2022-07-04 14:11:11,167: DEBUG: b'sBIT' 41 4 (unknown)
+2022-07-04 14:11:11,168: DEBUG: STREAM b'pHYs' 57 9
+2022-07-04 14:11:11,168: DEBUG: STREAM b'IDAT' 78 286
+2022-07-04 14:11:11,169: DEBUG: STREAM b'IHDR' 16 13
+2022-07-04 14:11:11,169: DEBUG: STREAM b'sBIT' 41 4
+2022-07-04 14:11:11,170: DEBUG: b'sBIT' 41 4 (unknown)
+2022-07-04 14:11:11,170: DEBUG: STREAM b'pHYs' 57 9
+2022-07-04 14:11:11,170: DEBUG: STREAM b'IDAT' 78 263
+2022-07-04 14:11:11,173: DEBUG: STREAM b'IHDR' 16 13
+2022-07-04 14:11:11,174: DEBUG: STREAM b'sBIT' 41 4
+2022-07-04 14:11:11,174: DEBUG: b'sBIT' 41 4 (unknown)
+2022-07-04 14:11:11,175: DEBUG: STREAM b'pHYs' 57 9
+2022-07-04 14:11:11,175: DEBUG: STREAM b'IDAT' 78 387
+2022-07-04 14:11:11,176: DEBUG: STREAM b'IHDR' 16 13
+2022-07-04 14:11:11,177: DEBUG: STREAM b'sBIT' 41 4
+2022-07-04 14:11:11,177: DEBUG: b'sBIT' 41 4 (unknown)
+2022-07-04 14:11:11,178: DEBUG: STREAM b'pHYs' 57 9
+2022-07-04 14:11:11,178: DEBUG: STREAM b'IDAT' 78 436
+2022-07-04 14:11:11,180: DEBUG: STREAM b'IHDR' 16 13
+2022-07-04 14:11:11,180: DEBUG: STREAM b'sBIT' 41 4
+2022-07-04 14:11:11,181: DEBUG: b'sBIT' 41 4 (unknown)
+2022-07-04 14:11:11,181: DEBUG: STREAM b'pHYs' 57 9
+2022-07-04 14:11:11,181: DEBUG: STREAM b'IDAT' 78 351
+2022-07-04 14:11:11,182: DEBUG: STREAM b'IHDR' 16 13
+2022-07-04 14:11:11,183: DEBUG: STREAM b'sBIT' 41 4
+2022-07-04 14:11:11,183: DEBUG: b'sBIT' 41 4 (unknown)
+2022-07-04 14:11:11,183: DEBUG: STREAM b'pHYs' 57 9
+2022-07-04 14:11:11,183: DEBUG: STREAM b'IDAT' 78 364
+2022-07-04 14:11:11,314: INFO: Model Summary
+==========================================================================================
+Layer (type:depth-idx)                   Output Shape              Param #
+==========================================================================================
+├─Sequential: 1-1                        [-1, 1024]                --
+|    └─Conv2d: 2-1                       [-1, 64, 16, 16]          1,792
+|    └─MaxPool2d: 2-2                    [-1, 64, 8, 8]            --
+|    └─ReLU: 2-3                         [-1, 64, 8, 8]            --
+|    └─Conv2d: 2-4                       [-1, 192, 8, 8]           110,784
+|    └─MaxPool2d: 2-5                    [-1, 192, 4, 4]           --
+|    └─ReLU: 2-6                         [-1, 192, 4, 4]           --
+|    └─Conv2d: 2-7                       [-1, 384, 4, 4]           663,936
+|    └─ReLU: 2-8                         [-1, 384, 4, 4]           --
+|    └─Conv2d: 2-9                       [-1, 256, 4, 4]           884,992
+|    └─ReLU: 2-10                        [-1, 256, 4, 4]           --
+|    └─Conv2d: 2-11                      [-1, 256, 4, 4]           590,080
+|    └─MaxPool2d: 2-12                   [-1, 256, 2, 2]           --
+|    └─ReLU: 2-13                        [-1, 256, 2, 2]           --
+|    └─Flatten: 2-14                     [-1, 1024]                --
+├─Sequential: 1-2                        [-1, 10]                  --
+|    └─Dropout: 2-15                     [-1, 1024]                --
+|    └─Linear: 2-16                      [-1, 512]                 524,800
+|    └─ReLU: 2-17                        [-1, 512]                 --
+|    └─Dropout: 2-18                     [-1, 512]                 --
+|    └─Linear: 2-19                      [-1, 256]                 131,328
+|    └─ReLU: 2-20                        [-1, 256]                 --
+|    └─Linear: 2-21                      [-1, 10]                  2,570
+|    └─LogSoftmax: 2-22                  [-1, 10]                  --
+==========================================================================================
+Total params: 2,910,282
+Trainable params: 2,910,282
+Non-trainable params: 0
+Total mult-adds (M): 45.30
+==========================================================================================
+Input size (MB): 0.01
+Forward/backward pass size (MB): 0.33
+Params size (MB): 11.10
+Estimated Total Size (MB): 11.45
+==========================================================================================
+2022-07-04 14:11:13,557: INFO: Epoch[   1] Loss: 8.71	Accuracy: 11.111	Val_Loss: 4.997	Val_Acc: 20.000
+2022-07-04 14:11:13,558: INFO: Epoch[   1] Test Accuracy: 10.320
+2022-07-04 14:11:21,538: INFO: Epoch[  51] Loss: 2.18	Accuracy: 23.333	Val_Loss: 2.389	Val_Acc: 20.000
+2022-07-04 14:11:21,539: INFO: Epoch[  51] Test Accuracy: 14.350
+2022-07-04 14:11:27,494: INFO: Epoch: 101 Early stopping counter 1 of 12
+2022-07-04 14:11:29,295: INFO: Epoch[ 101] Loss: 2.18	Accuracy: 14.444	Val_Loss: 2.391	Val_Acc: 20.000
+2022-07-04 14:11:29,296: INFO: Epoch[ 101] Test Accuracy: 14.380
+2022-07-04 14:11:29,329: INFO: Epoch: 102 Early stopping counter 2 of 12
+2022-07-04 14:11:29,434: INFO: Epoch: 103 Early stopping counter 3 of 12
+2022-07-04 14:11:29,548: INFO: Epoch: 104 Early stopping counter 4 of 12
+2022-07-04 14:11:29,654: INFO: Epoch: 105 Early stopping counter 5 of 12
+2022-07-04 14:11:29,761: INFO: Epoch: 106 Early stopping counter 6 of 12
+2022-07-04 14:11:29,866: INFO: Epoch: 107 Early stopping counter 7 of 12
+2022-07-04 14:11:29,971: INFO: Epoch: 108 Early stopping counter 8 of 12
+2022-07-04 14:11:30,077: INFO: Epoch: 109 Early stopping counter 9 of 12
+2022-07-04 14:11:30,184: INFO: Epoch: 110 Early stopping counter 10 of 12
+2022-07-04 14:11:30,295: INFO: Epoch: 111 Early stopping counter 11 of 12
+2022-07-04 14:11:30,400: INFO: Epoch: 112 Early stopping counter 12 of 12
+2022-07-04 14:11:30,401: INFO: Early stopping
+2022-07-04 14:11:30,484: INFO: Trained for 112 Epochs.
+2022-07-04 14:11:30,508: DEBUG: STREAM b'IHDR' 16 13
+2022-07-04 14:11:30,508: DEBUG: STREAM b'sBIT' 41 4
+2022-07-04 14:11:30,509: DEBUG: b'sBIT' 41 4 (unknown)
+2022-07-04 14:11:30,509: DEBUG: STREAM b'pHYs' 57 9
+2022-07-04 14:11:30,510: DEBUG: STREAM b'IDAT' 78 374
+2022-07-04 14:11:30,511: DEBUG: STREAM b'IHDR' 16 13
+2022-07-04 14:11:30,512: DEBUG: STREAM b'sBIT' 41 4
+2022-07-04 14:11:30,512: DEBUG: b'sBIT' 41 4 (unknown)
+2022-07-04 14:11:30,513: DEBUG: STREAM b'pHYs' 57 9
+2022-07-04 14:11:30,513: DEBUG: STREAM b'IDAT' 78 286
+2022-07-04 14:11:30,515: DEBUG: STREAM b'IHDR' 16 13
+2022-07-04 14:11:30,515: DEBUG: STREAM b'sBIT' 41 4
+2022-07-04 14:11:30,516: DEBUG: b'sBIT' 41 4 (unknown)
+2022-07-04 14:11:30,516: DEBUG: STREAM b'pHYs' 57 9
+2022-07-04 14:11:30,516: DEBUG: STREAM b'IDAT' 78 263
+2022-07-04 14:11:30,518: DEBUG: STREAM b'IHDR' 16 13
+2022-07-04 14:11:30,518: DEBUG: STREAM b'sBIT' 41 4
+2022-07-04 14:11:30,519: DEBUG: b'sBIT' 41 4 (unknown)
+2022-07-04 14:11:30,519: DEBUG: STREAM b'pHYs' 57 9
+2022-07-04 14:11:30,519: DEBUG: STREAM b'IDAT' 78 387
+2022-07-04 14:11:30,521: DEBUG: STREAM b'IHDR' 16 13
+2022-07-04 14:11:30,521: DEBUG: STREAM b'sBIT' 41 4
+2022-07-04 14:11:30,522: DEBUG: b'sBIT' 41 4 (unknown)
+2022-07-04 14:11:30,522: DEBUG: STREAM b'pHYs' 57 9
+2022-07-04 14:11:30,522: DEBUG: STREAM b'IDAT' 78 436
+2022-07-04 14:11:30,523: DEBUG: STREAM b'IHDR' 16 13
+2022-07-04 14:11:30,524: DEBUG: STREAM b'sBIT' 41 4
+2022-07-04 14:11:30,524: DEBUG: b'sBIT' 41 4 (unknown)
+2022-07-04 14:11:30,525: DEBUG: STREAM b'pHYs' 57 9
+2022-07-04 14:11:30,525: DEBUG: STREAM b'IDAT' 78 351
+2022-07-04 14:11:30,526: DEBUG: STREAM b'IHDR' 16 13
+2022-07-04 14:11:30,527: DEBUG: STREAM b'sBIT' 41 4
+2022-07-04 14:11:30,527: DEBUG: b'sBIT' 41 4 (unknown)
+2022-07-04 14:11:30,527: DEBUG: STREAM b'pHYs' 57 9
+2022-07-04 14:11:30,527: DEBUG: STREAM b'IDAT' 78 364
+2022-07-04 14:11:30,695: DEBUG: STREAM b'IHDR' 16 13
+2022-07-04 14:11:30,696: DEBUG: STREAM b'sBIT' 41 4
+2022-07-04 14:11:30,696: DEBUG: b'sBIT' 41 4 (unknown)
+2022-07-04 14:11:30,697: DEBUG: STREAM b'pHYs' 57 9
+2022-07-04 14:11:30,698: DEBUG: STREAM b'IDAT' 78 374
+2022-07-04 14:11:30,699: DEBUG: STREAM b'IHDR' 16 13
+2022-07-04 14:11:30,700: DEBUG: STREAM b'sBIT' 41 4
+2022-07-04 14:11:30,700: DEBUG: b'sBIT' 41 4 (unknown)
+2022-07-04 14:11:30,701: DEBUG: STREAM b'pHYs' 57 9
+2022-07-04 14:11:30,701: DEBUG: STREAM b'IDAT' 78 286
+2022-07-04 14:11:30,703: DEBUG: STREAM b'IHDR' 16 13
+2022-07-04 14:11:30,703: DEBUG: STREAM b'sBIT' 41 4
+2022-07-04 14:11:30,704: DEBUG: b'sBIT' 41 4 (unknown)
+2022-07-04 14:11:30,704: DEBUG: STREAM b'pHYs' 57 9
+2022-07-04 14:11:30,705: DEBUG: STREAM b'IDAT' 78 263
+2022-07-04 14:11:30,707: DEBUG: STREAM b'IHDR' 16 13
+2022-07-04 14:11:30,707: DEBUG: STREAM b'sBIT' 41 4
+2022-07-04 14:11:30,708: DEBUG: b'sBIT' 41 4 (unknown)
+2022-07-04 14:11:30,708: DEBUG: STREAM b'pHYs' 57 9
+2022-07-04 14:11:30,709: DEBUG: STREAM b'IDAT' 78 387
+2022-07-04 14:11:30,710: DEBUG: STREAM b'IHDR' 16 13
+2022-07-04 14:11:30,710: DEBUG: STREAM b'sBIT' 41 4
+2022-07-04 14:11:30,711: DEBUG: b'sBIT' 41 4 (unknown)
+2022-07-04 14:11:30,711: DEBUG: STREAM b'pHYs' 57 9
+2022-07-04 14:11:30,712: DEBUG: STREAM b'IDAT' 78 436
+2022-07-04 14:11:30,713: DEBUG: STREAM b'IHDR' 16 13
+2022-07-04 14:11:30,714: DEBUG: STREAM b'sBIT' 41 4
+2022-07-04 14:11:30,714: DEBUG: b'sBIT' 41 4 (unknown)
+2022-07-04 14:11:30,715: DEBUG: STREAM b'pHYs' 57 9
+2022-07-04 14:11:30,715: DEBUG: STREAM b'IDAT' 78 351
+2022-07-04 14:11:30,717: DEBUG: STREAM b'IHDR' 16 13
+2022-07-04 14:11:30,717: DEBUG: STREAM b'sBIT' 41 4
+2022-07-04 14:11:30,718: DEBUG: b'sBIT' 41 4 (unknown)
+2022-07-04 14:11:30,718: DEBUG: STREAM b'pHYs' 57 9
+2022-07-04 14:11:30,719: DEBUG: STREAM b'IDAT' 78 364
+2022-07-04 14:11:30,803: INFO: ('Accuracy on Train Set', 30.000001192092896)
+2022-07-04 14:11:32,797: INFO: (1438, 'correctly labeled out of', 10000)
+2022-07-04 14:11:32,798: INFO: ('Accuracy on Test Set:', 14.38)
+2022-07-04 14:11:32,865: INFO: Saved model at cifar10/n100/random/Greedy_Model_100n_Epochs_1000_Early_Stop_112_Test_Acc_14.pth
+2022-07-04 14:11:32,866: INFO: Training Complete
+2022-07-04 14:11:32,868: INFO: Mean Train Accuracy on Random 100 Train Samples is 33.778±16.00%
+2022-07-04 14:11:32,868: INFO: Mean Test Accuracy on Random 100 Train Samples is 16.300±4.68%
