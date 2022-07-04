@@ -4,18 +4,14 @@ jobs:
   formatting:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v3
-      - name: Set up Python 3.10.4
-        uses: actions/setup-python@v4
+      - uses: actions/checkout@v2
+      - name: Check files using the black formatter
+        uses: rickstaa/action-black@v1
+        id: action_black
         with:
-          python-version: 3.10.4
-      - name: Install Black
-        run: pip install black
-      - name: Run black --check .
-        run: black .
-        id: black
-      - name: If needed, commit black changes to the pull request
-        if: steps.black.outputs.is_formatted == 'true'
+          black_args: "."
+      - name: Create Pull Request
+        if: steps.action_black.outputs.is_formatted == 'true'
         uses: peter-evans/create-pull-request@v3
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
@@ -26,4 +22,3 @@ jobs:
             uses the [psf/black](https://github.com/psf/black) formatter to fix these issues.
           base: ${{ github.head_ref }} # Creates pull request onto pull request or commit branch
           branch: actions/black
-    
