@@ -118,7 +118,7 @@ def train_loop(p, best_inds: torch.Tensor, data, test_data) -> None:
     if p.scheduler:
         scheduler = get_scheduler(p, optimizer)
 
-    early_stopping = EarlyStopping(**p.early_stopping_kwargs, threshold=-2.2)
+    early_stopping = EarlyStopping(**p.early_stopping_kwargs)
     losses, accs, val_losses, val_accs = [], [], [], []
     lrs = []
     for epoch in trange(p.epochs, position=0, leave=True):
