@@ -175,4 +175,4 @@ def plot_learning_curves(
     ax1.legend()
     ax2.legend()
     plt.savefig(path)
-    plt.show()
+    # plt.show()

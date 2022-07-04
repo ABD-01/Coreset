@@ -1,0 +1,140 @@
+2022-07-03 22:52:11,634: INFO: Hyperparameters
+{'backbone': 'alexnet',
+ 'batch_size': 1000,
+ 'class_balanced': True,
+ 'config': 'src/configs/cifar10.yml',
+ 'criterion': 'NLLLoss',
+ 'criterion_kwargs': None,
+ 'dataset': 'cifar10',
+ 'dataset_dir': './data',
+ 'dont_train': False,
+ 'early_stopping_kwargs': {'min_delta': 0.0001, 'patience': 12},
+ 'epochs': 1000,
+ 'logdir': PosixPath('cifar10/logs'),
+ 'lr': 0.01,
+ 'num_classes': 10,
+ 'num_workers': 2,
+ 'optimizer': 'sgd',
+ 'optimizer_kwargs': {'momentum': 0.9, 'weight_decay': 0.01},
+ 'output_dir': PosixPath('cifar10'),
+ 'per_class': False,
+ 'random': False,
+ 'resume': None,
+ 'scheduler': 'reduceonplateau',
+ 'scheduler_kwargs': {'factor': 0.2,
+                      'min_lr': 1e-07,
+                      'patience': 10,
+                      'threshold': 0.001},
+ 'seed': 0,
+ 'test_model': None,
+ 'topn': 500,
+ 'transformation_kwargs': {'normalize': {'mean': [0.4914, 0.4822, 0.4465],
+                                         'std': [0.2023, 0.1994, 0.201]}},
+ 'use_saved_best_inds': None,
+ 'val_percent': 0.1,
+ 'wandb': False}
+2022-07-03 22:52:13,687: INFO: Dataset
+Dataset CIFAR10
+    Number of datapoints: 50000
+    Root location: ./data
+    Split: Train
+    StandardTransform
+Transform: Compose(
+               ToTensor()
+               Normalize(mean=[0.4914, 0.4822, 0.4465], std=[0.2023, 0.1994, 0.201])
+           )
+2022-07-03 22:52:14,987: INFO: Test Dataset
+Dataset CIFAR10
+    Number of datapoints: 10000
+    Root location: ./data
+    Split: Test
+    StandardTransform
+Transform: Compose(
+               ToTensor()
+               Normalize(mean=[0.4914, 0.4822, 0.4465], std=[0.2023, 0.1994, 0.201])
+           )
+2022-07-03 22:52:15,137: INFO: all_similarities.shape: (100, 50000), all_imginds.shape: (100, 50000)
+2022-07-03 22:52:21,705: INFO: Model Summary
+==========================================================================================
+Layer (type:depth-idx)                   Output Shape              Param #
+==========================================================================================
+├─Sequential: 1-1                        [-1, 1024]                --
+|    └─Conv2d: 2-1                       [-1, 64, 16, 16]          1,792
+|    └─MaxPool2d: 2-2                    [-1, 64, 8, 8]            --
+|    └─ReLU: 2-3                         [-1, 64, 8, 8]            --
+|    └─Conv2d: 2-4                       [-1, 192, 8, 8]           110,784
+|    └─MaxPool2d: 2-5                    [-1, 192, 4, 4]           --
+|    └─ReLU: 2-6                         [-1, 192, 4, 4]           --
+|    └─Conv2d: 2-7                       [-1, 384, 4, 4]           663,936
+|    └─ReLU: 2-8                         [-1, 384, 4, 4]           --
+|    └─Conv2d: 2-9                       [-1, 256, 4, 4]           884,992
+|    └─ReLU: 2-10                        [-1, 256, 4, 4]           --
+|    └─Conv2d: 2-11                      [-1, 256, 4, 4]           590,080
+|    └─MaxPool2d: 2-12                   [-1, 256, 2, 2]           --
+|    └─ReLU: 2-13                        [-1, 256, 2, 2]           --
+|    └─Flatten: 2-14                     [-1, 1024]                --
+├─Sequential: 1-2                        [-1, 10]                  --
+|    └─Dropout: 2-15                     [-1, 1024]                --
+|    └─Linear: 2-16                      [-1, 512]                 524,800
+|    └─ReLU: 2-17                        [-1, 512]                 --
+|    └─Dropout: 2-18                     [-1, 512]                 --
+|    └─Linear: 2-19                      [-1, 256]                 131,328
+|    └─ReLU: 2-20                        [-1, 256]                 --
+|    └─Linear: 2-21                      [-1, 10]                  2,570
+|    └─LogSoftmax: 2-22                  [-1, 10]                  --
+==========================================================================================
+Total params: 2,910,282
+Trainable params: 2,910,282
+Non-trainable params: 0
+Total mult-adds (M): 45.30
+==========================================================================================
+Input size (MB): 0.01
+Forward/backward pass size (MB): 0.33
+Params size (MB): 11.10
+Estimated Total Size (MB): 11.45
+==========================================================================================
+2022-07-03 22:52:26,494: INFO: Epoch[   1] Loss: 11.49	Accuracy: 11.778	Val_Loss: 5.744	Val_Acc: 12.000
+2022-07-03 22:52:26,496: INFO: Epoch[   1] Test Accuracy: 9.240
+2022-07-03 22:52:38,704: INFO: Epoch[  51] Loss: 2.26	Accuracy: 16.444	Val_Loss: 2.291	Val_Acc: 14.000
+2022-07-03 22:52:38,708: INFO: Epoch[  51] Test Accuracy: 15.300
+2022-07-03 22:52:50,843: INFO: Epoch[ 101] Loss: 2.17	Accuracy: 16.889	Val_Loss: 2.212	Val_Acc: 16.000
+2022-07-03 22:52:50,846: INFO: Epoch[ 101] Test Accuracy: 18.950
+2022-07-03 22:53:03,176: INFO: Epoch[ 151] Loss: 2.04	Accuracy: 22.889	Val_Loss: 2.152	Val_Acc: 18.000
+2022-07-03 22:53:03,179: INFO: Epoch[ 151] Test Accuracy: 21.110
+2022-07-03 22:53:16,032: INFO: Epoch[ 201] Loss: 1.93	Accuracy: 26.667	Val_Loss: 2.117	Val_Acc: 22.000
+2022-07-03 22:53:16,034: INFO: Epoch[ 201] Test Accuracy: 22.890
+2022-07-03 22:53:28,713: INFO: Epoch[ 251] Loss: 1.94	Accuracy: 28.889	Val_Loss: 2.112	Val_Acc: 20.000
+2022-07-03 22:53:28,715: INFO: Epoch[ 251] Test Accuracy: 22.980
+2022-07-03 22:53:41,576: INFO: Epoch[ 301] Loss: 1.91	Accuracy: 27.111	Val_Loss: 2.112	Val_Acc: 20.000
+2022-07-03 22:53:41,578: INFO: Epoch[ 301] Test Accuracy: 22.980
+2022-07-03 22:53:54,399: INFO: Epoch[ 351] Loss: 1.94	Accuracy: 27.333	Val_Loss: 2.112	Val_Acc: 20.000
+2022-07-03 22:53:54,400: INFO: Epoch[ 351] Test Accuracy: 22.980
+2022-07-03 22:54:07,121: INFO: Epoch[ 401] Loss: 1.96	Accuracy: 26.000	Val_Loss: 2.112	Val_Acc: 20.000
+2022-07-03 22:54:07,122: INFO: Epoch[ 401] Test Accuracy: 22.980
+2022-07-03 22:54:19,849: INFO: Epoch[ 451] Loss: 1.94	Accuracy: 26.444	Val_Loss: 2.112	Val_Acc: 20.000
+2022-07-03 22:54:19,850: INFO: Epoch[ 451] Test Accuracy: 22.980
+2022-07-03 22:54:32,685: INFO: Epoch[ 501] Loss: 1.94	Accuracy: 26.000	Val_Loss: 2.112	Val_Acc: 20.000
+2022-07-03 22:54:32,687: INFO: Epoch[ 501] Test Accuracy: 22.980
+2022-07-03 22:54:44,971: INFO: Epoch[ 551] Loss: 1.93	Accuracy: 30.000	Val_Loss: 2.112	Val_Acc: 20.000
+2022-07-03 22:54:44,973: INFO: Epoch[ 551] Test Accuracy: 22.980
+2022-07-03 22:54:57,411: INFO: Epoch[ 601] Loss: 1.97	Accuracy: 24.889	Val_Loss: 2.112	Val_Acc: 20.000
+2022-07-03 22:54:57,414: INFO: Epoch[ 601] Test Accuracy: 22.980
+2022-07-03 22:55:09,812: INFO: Epoch[ 651] Loss: 1.94	Accuracy: 30.000	Val_Loss: 2.112	Val_Acc: 20.000
+2022-07-03 22:55:09,814: INFO: Epoch[ 651] Test Accuracy: 22.980
+2022-07-03 22:55:22,084: INFO: Epoch[ 701] Loss: 1.90	Accuracy: 28.222	Val_Loss: 2.112	Val_Acc: 20.000
+2022-07-03 22:55:22,085: INFO: Epoch[ 701] Test Accuracy: 22.980
+2022-07-03 22:55:34,352: INFO: Epoch[ 751] Loss: 1.95	Accuracy: 28.000	Val_Loss: 2.112	Val_Acc: 20.000
+2022-07-03 22:55:34,355: INFO: Epoch[ 751] Test Accuracy: 22.980
+2022-07-03 22:55:46,620: INFO: Epoch[ 801] Loss: 1.92	Accuracy: 28.000	Val_Loss: 2.112	Val_Acc: 20.000
+2022-07-03 22:55:46,622: INFO: Epoch[ 801] Test Accuracy: 22.980
+2022-07-03 22:55:59,075: INFO: Epoch[ 851] Loss: 1.97	Accuracy: 26.444	Val_Loss: 2.112	Val_Acc: 20.000
+2022-07-03 22:55:59,077: INFO: Epoch[ 851] Test Accuracy: 22.980
+2022-07-03 22:56:11,782: INFO: Epoch[ 901] Loss: 1.92	Accuracy: 27.778	Val_Loss: 2.112	Val_Acc: 20.000
+2022-07-03 22:56:11,784: INFO: Epoch[ 901] Test Accuracy: 22.980
+2022-07-03 22:56:29,164: INFO: Epoch[ 951] Loss: 1.93	Accuracy: 30.667	Val_Loss: 2.112	Val_Acc: 20.000
+2022-07-03 22:56:29,166: INFO: Epoch[ 951] Test Accuracy: 22.990
+2022-07-03 22:56:56,707: INFO: ('Accuracy on Train Set', 29.111111164093018)
+2022-07-03 22:56:58,722: INFO: (2299, 'correctly labeled out of', 10000)
+2022-07-03 22:56:58,724: INFO: ('Accuracy on Test Set:', 22.99)
+2022-07-03 22:56:58,882: INFO: Saved model at cifar10/Greedy_Model_500n_Epochs_1000_Early_Stop_1000_Test_Acc_22__clsbalanced.pth
+2022-07-03 22:56:58,884: INFO: Training Complete

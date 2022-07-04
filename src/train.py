@@ -118,10 +118,10 @@ def train_loop(p, best_inds: torch.Tensor, data, test_data) -> None:
     if p.scheduler:
         scheduler = get_scheduler(p, optimizer)
 
-    early_stopping = EarlyStopping(**p.early_stopping_kwargs, threshold=-5)
+    early_stopping = EarlyStopping(**p.early_stopping_kwargs, threshold=-2.2)
     losses, accs, val_losses, val_accs = [], [], [], []
     lrs = []
-    for epoch in trange(p.epochs):
+    for epoch in trange(p.epochs, position=0, leave=True):
         model.train()
         loss, acc = train_epoch(
             train_loader, model, criterion, optimizer, scheduler, device
@@ -135,7 +135,7 @@ def train_loop(p, best_inds: torch.Tensor, data, test_data) -> None:
         if scheduler is not None:
             # scheduler.step()
             scheduler.step(val_loss.item())
-            lrs.append(optimizer.param_groups[0]['lr'])
+            lrs.append(optimizer.param_groups[0]["lr"])
         # logger.info(f"Epoch[{epoch+1:4}] Val_Loss: {val_loss:.3f}\tVal_Acc: {val_acc:.3f}")
         gc.collect()
         torch.cuda.empty_cache()
@@ -167,7 +167,9 @@ def train_loop(p, best_inds: torch.Tensor, data, test_data) -> None:
     if lrs:
         plt.figure()
         plt.plot(lrs, label="learning rate")
-        plt.savefig(p.output_dir / f"Learningrate_{p.scheduler}_{prefix}_n{p.topn}{suffix}")
+        plt.savefig(
+            p.output_dir / f"Learningrate_{p.scheduler}_{prefix}_n{p.topn}{suffix}"
+        )
 
     model.eval()
     _, train_acc = validate(train_loader, model, criterion, device)
@@ -179,7 +181,7 @@ def train_loop(p, best_inds: torch.Tensor, data, test_data) -> None:
 
     model_path = (
         p.output_dir
-        / f"Greedy_Model_{p.topn}n_Epochs_{p.epochs}_Early_Stop_{epoch+1}_Test_Acc_{int(test_acc)}_{suffix}.pth"
+        / f"Greedy_Model_{p.topn}n_Epochs_{p.epochs}_Early_Stop_{epoch+1}_Test_Acc_{int(test_acc)}{'_random' if p.random else ''}{suffix}.pth"
     )
     torch.save(
         model.state_dict(),
@@ -234,7 +236,9 @@ def main(args):
 
     elif p.per_class:
         all_similarities = np.load(p.output_dir / f"all_similarities_perclass.npy")
-        all_imginds = np.load(p.output_dir / f"all_imginds_perclass.npy").squeeze(axis=-1)
+        all_imginds = np.load(p.output_dir / f"all_imginds_perclass.npy").squeeze(
+            axis=-1
+        )
         logger.info(
             f"all_similarities_perclass.shape: {all_similarities.shape}, all_imginds_perclass.shape: {all_imginds.shape}"
         )
@@ -267,7 +271,8 @@ def main(args):
                 best_inds = np.concatenate(
                     [
                         np.random.choice(
-                            np.argwhere(train_labels == c).squeeze(), p.topn // p.num_classes
+                            np.argwhere(train_labels == c).squeeze(),
+                            p.topn // p.num_classes,
                         )
                         for c in data.class_to_idx.values()
                     ]
