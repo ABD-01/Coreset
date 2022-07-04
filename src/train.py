@@ -235,8 +235,8 @@ def main(args):
         ), f"Given best indices shape {best_inds.shape[0]} and no. of best samples {p.topn} does not match."
 
     elif p.per_class:
-        all_similarities = np.load(p.output_dir / f"all_similarities_perclass.npy")
-        all_imginds = np.load(p.output_dir / f"all_imginds_perclass.npy").squeeze(
+        all_similarities = np.load(Path(p.dataset) / f"all_similarities_perclass.npy")
+        all_imginds = np.load(Path(p.dataset) / f"all_imginds_perclass.npy").squeeze(
             axis=-1
         )
         logger.info(
@@ -303,8 +303,8 @@ def main(args):
         )
 
     else:
-        all_similarities = np.load(p.output_dir / f"all_similarities.npy")
-        all_imginds = np.load(p.output_dir / f"all_imginds.npy")
+        all_similarities = np.load(Path(p.dataset) / f"all_similarities.npy")
+        all_imginds = np.load(Path(p.dataset) / f"all_imginds.npy")
         logger.info(
             f"all_similarities.shape: {all_similarities.shape}, all_imginds.shape: {all_imginds.shape}"
         )
