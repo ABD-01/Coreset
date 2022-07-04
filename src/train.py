@@ -393,7 +393,7 @@ if __name__ == "__main__":
 
     args = parser.parse_args()
     args.output_dir = Path(args.dataset) / f"n{args.topn}"
-    args.logdir = Path(args.dataset) / "logs"
+    args.logdir = args.output_dir / "logs"
     args.logdir.mkdir(parents=True, exist_ok=True)
 
     if args.test_model is not None and not Path(args.test_model).is_file():
