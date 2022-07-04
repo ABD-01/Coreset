@@ -17,8 +17,32 @@ jobs:
           token: ${{ secrets.GITHUB_TOKEN }}
           title: "Format Python code with psf/black push"
           commit-message: ":art: Format Python code with psf/black"
+          delete-branch: true
           body: |
             There appear to be some python formatting errors in ${{ github.sha }}. This pull request
             uses the [psf/black](https://github.com/psf/black) formatter to fix these issues.
+          labels: |
+            formatting
           base: ${{ github.head_ref }} # Creates pull request onto pull request or commit branch
           branch: actions/black
+
+    # steps:
+    #   - uses: actions/checkout@v3
+    #   - name: Set up Python 3.10.4
+    #     uses: actions/setup-python@v4
+    #     with:
+    #       python-version: 3.10.4
+    #   - name: Install Black
+    #     run: pip install black
+    #   - name: Run black --check .
+    #     run: black --check .
+    #   - name: If needed, commit black changes to the pull request
+    #     if: failure()
+    #     run: |
+    #       black .
+    #       git config --global user.name 'autoblack'
+    #       git config --global user.email 'abd-01@users.noreply.github.com'
+    #       git remote set-url origin https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/$GITHUB_REPOSITORY
+    #       git checkout $GITHUB_HEAD_REF
+    #       git commit -am "fixup: Format Python code with Black"
+    #       git push
