@@ -162,13 +162,13 @@ def train_loop(p, best_inds: torch.Tensor, data, test_data) -> None:
         val_losses,
         val_accs,
         p.topn,
-        p.output_dir / f"LearningCurve_{prefix}_n{p.topn}{suffix}",
+        p.output_dir / f"{'random/' if p.random else ''}LearningCurve_{prefix}_n{p.topn}{suffix}",
     )
     if lrs:
         plt.figure()
         plt.plot(lrs, label="learning rate")
         plt.savefig(
-            p.output_dir / f"Learningrate_{p.scheduler}_{prefix}_n{p.topn}{suffix}"
+            p.output_dir / f"{'random/' if p.random else ''}Learningrate_{p.scheduler}_{prefix}_n{p.topn}{suffix}"
         )
 
     model.eval()
@@ -181,7 +181,7 @@ def train_loop(p, best_inds: torch.Tensor, data, test_data) -> None:
 
     model_path = (
         p.output_dir
-        / f"Greedy_Model_{p.topn}n_Epochs_{p.epochs}_Early_Stop_{epoch+1}_Test_Acc_{int(test_acc)}{'_random' if p.random else ''}{suffix}.pth"
+        / f"{'random/' if p.random else ''}Greedy_Model_{p.topn}n_Epochs_{p.epochs}_Early_Stop_{epoch+1}_Test_Acc_{int(test_acc)}{suffix}.pth"
     )
     torch.save(
         model.state_dict(),
@@ -404,6 +404,9 @@ if __name__ == "__main__":
         and not Path(args.use_saved_best_inds).is_file()
     ):
         raise ValueError("Best indices file does not exist.")
+
+    if args.random:
+        (args.output_dir / "random").mkdir(exist_ok=True)
 
     global logger
     logger = get_logger(args, "train")
