@@ -30,6 +30,7 @@ def get_best_inds(
     for (sims, inds) in tqdm(zip(all_similarities, all_imginds)):
         # logging.debug(sims.shape)
         ind = np.argpartition(-sims, topn)[:topn]
+        # ind = np.argpartition(sims, topn)[:topn] # for least similar samples
         good_inds.append(inds[ind])
         # logging.debug("train labels for ind")
         # logging.debug(np.unique(train_labels[inds[ind]], return_counts=True))
@@ -77,6 +78,7 @@ def get_cls_balanced_best_inds(
             cls_inds = inds[cls_mask]
 
             ind = np.argpartition(-cls_sims, topn_per_class)[:topn_per_class]
+            # ind = np.argpartition(cls_sims, topn_per_class)[:topn_per_class] # for least similar samples
             good_ind = cls_inds[ind]
             cls_good_inds[i].append(good_ind)
 

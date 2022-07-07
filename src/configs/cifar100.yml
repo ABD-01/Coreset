@@ -8,6 +8,7 @@ backbone: alexnet
 # Dataset
 dataset: CIFAR100
 num_classes: 100
+input_shape: [3, 32, 32]
 
 transformation_kwargs:
   #  crop_size: [128, 98]

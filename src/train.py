@@ -102,7 +102,7 @@ def train_loop(p, best_inds: torch.Tensor, data, test_data) -> None:
     train_loader = DataLoader(
         Subset(data, train_inds), train_inds.shape[0], shuffle=True
     )
-    val_loader = DataLoader(Subset(data, val_inds), val_inds.shape[0])
+    val_loader = DataLoader(Subset(get_train_dataset(p, val=True), val_inds), val_inds.shape[0])
     test_loader = DataLoader(test_data, p.batch_size)
 
     # model
@@ -388,6 +388,7 @@ if __name__ == "__main__":
         type=float,
         help="Percentage[0-1] split of Validation set. (Default: 0.1)",
     )
+    parser.add_argument("--augment", action="store_true", help="Specify to use augmentation during training")
     parser.add_argument(
         "--resume", default=None, help="path to checkpoint from where to resume"
     )

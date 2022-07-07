@@ -9,7 +9,7 @@ import numpy as np
 import torch
 import torch.nn as nn
 import torch.optim as optim
-import torchvision.transforms as transforms
+import torchvision.transforms as T
 import yaml
 from easydict import EasyDict
 from torch.utils.data import Dataset
@@ -43,27 +43,46 @@ def seed_everything(seed: int):
 # https://discuss.pytorch.org/t/how-to-retrieve-the-sample-indices-of-a-mini-batch/7948/19
 
 
-def get_transform(p):
-    return transforms.Compose(
+def get_transform(p, aug=False):
+
+    normalize = T.Compose(
+        [T.ToTensor(), T.Normalize(**p["transformation_kwargs"]["normalize"])]
+    )
+
+    augment = T.Compose(
         [
-            transforms.ToTensor(),
-            transforms.Normalize(**p["transformation_kwargs"]["normalize"]),
+            T.RandomCrop(p.input_shape[-1], padding=4),
+            T.RandomHorizontalFlip(),
+            T.RandomRotation(degrees=10),
+            T.RandomGrayscale(),
+            # T.RandomApply([T.ColorJitter(0.5, 0.2, )]),
         ]
     )
 
+    return T.Compose([augment, normalize]) if aug else normalize
 
-def get_train_dataset(p):
+
+def get_train_dataset(p, val=False):
     if p.dataset.lower() == "mnist":
         return MNIST(
-            p.dataset_dir, train=True, transform=get_transform(p), download=True
+            p.dataset_dir,
+            train=True,
+            transform=get_transform(p, p.augment and not val),
+            download=True,
         )
     elif p.dataset.lower() == "cifar10":
         return CIFAR10(
-            p.dataset_dir, train=True, transform=get_transform(p), download=True
+            p.dataset_dir,
+            train=True,
+            transform=get_transform(p, p.augment and not val),
+            download=True,
         )
     elif p.dataset.lower() == "cifar100":
         return CIFAR100(
-            p.dataset_dir, train=True, transform=get_transform(p), download=True
+            p.dataset_dir,
+            train=True,
+            transform=get_transform(p, p.augment and not val),
+            download=True,
         )
     else:
         msg = f"Unknown value '{p.dataset}' for argument dataset"
@@ -230,17 +249,17 @@ def get_scheduler(p, optimizer):
 
 def get_logger(p, script="train"):
     logger = logging.getLogger()
-    logger.setLevel(logging.DEBUG)
+    logger.setLevel(logging.INFO)
     logging.getLogger("matplotlib.font_manager").disabled = True
     logging.getLogger("matplotlib.pyplot").disabled = True
     logging.getLogger("PIL").disabled = True
 
     stdout_handler = logging.StreamHandler(sys.stdout)
-    stdout_handler.setLevel(logging.DEBUG)
+    stdout_handler.setLevel(logging.INFO)
     output_file_handler = logging.FileHandler(
         pathlib.Path(p.logdir) / f"log_{script}_{get_time_str()}.txt"
     )
-    output_file_handler.setLevel(logging.DEBUG)
+    output_file_handler.setLevel(logging.INFO)
     formatter = logging.Formatter("%(asctime)s: %(levelname)s: %(message)s")
     stdout_handler.setFormatter(formatter)
     output_file_handler.setFormatter(formatter)
