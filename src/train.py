@@ -151,7 +151,7 @@ def train_loop(p, best_inds: torch.Tensor, data, test_data) -> None:
             logger.info(f"Trained for {epoch+1} Epochs.")
             break
 
-    suffix = "_clsbalanced" if p.class_balanced else "_perclass" if p.per_class else ""
+    suffix = "_augment" if p.augment else "" + "_clsbalanced" if p.class_balanced else "_perclass" if p.per_class else ""
     prefix = "greedy"
     if p.random:
         prefix = "random" + str(train_loop.counter)
