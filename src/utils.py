@@ -227,7 +227,7 @@ def get_scheduler(p, optimizer):
             steps_per_epoch=p.scheduler_kwargs.len_loader,
             div_factor=p.scheduler_kwargs.max_lr / p.lr,
             final_div_factor=p.lr / p.scheduler_kwargs.min_lr,
-            verbose=True,
+            verbose=False,
         )
     elif p.scheduler == "exponentiallr":
         scheduler = optim.lr_scheduler.ExponentialLR(
@@ -254,10 +254,11 @@ def get_logger(p, script="train"):
     logging.getLogger("matplotlib.pyplot").disabled = True
     logging.getLogger("PIL").disabled = True
 
+    suffix = str("_clsbalanced" if p.class_balanced else "_perclass" if p.per_class else "_baseline") + str("_augment" if p.augment else "")  
     stdout_handler = logging.StreamHandler(sys.stdout)
     stdout_handler.setLevel(logging.INFO)
     output_file_handler = logging.FileHandler(
-        pathlib.Path(p.logdir) / f"log_{script}_{get_time_str()}.txt"
+        pathlib.Path(p.logdir) / f"log_{script}_{get_time_str()}{suffix}.txt"
     )
     output_file_handler.setLevel(logging.INFO)
     formatter = logging.Formatter("%(asctime)s: %(levelname)s: %(message)s")

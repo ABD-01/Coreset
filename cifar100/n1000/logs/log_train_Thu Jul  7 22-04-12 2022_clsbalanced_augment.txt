@@ -1,0 +1,624 @@
+2022-07-07 22:04:12,388: INFO: Hyperparameters
+{'augment': True,
+ 'backbone': 'alexnet',
+ 'batch_size': 1000,
+ 'class_balanced': True,
+ 'config': 'src/configs/cifar100.yml',
+ 'criterion': 'NLLLoss',
+ 'criterion_kwargs': None,
+ 'dataset': 'cifar100',
+ 'dataset_dir': './data',
+ 'dont_train': False,
+ 'epochs': 300,
+ 'input_shape': [3, 32, 32],
+ 'logdir': PosixPath('cifar100/n1000/logs'),
+ 'lr': 0.001,
+ 'num_classes': 100,
+ 'num_workers': 2,
+ 'optimizer': 'sgd',
+ 'optimizer_kwargs': {'momentum': 0.9, 'weight_decay': 0.01},
+ 'output_dir': PosixPath('cifar100/n1000'),
+ 'per_class': False,
+ 'random': True,
+ 'resume': None,
+ 'scheduler': 'onecyclelr',
+ 'scheduler_kwargs': {'len_loader': 1, 'max_lr': 0.01, 'min_lr': 1e-05},
+ 'seed': 0,
+ 'test_model': None,
+ 'topn': 1000,
+ 'transformation_kwargs': {'normalize': {'mean': [0.5071, 0.4867, 0.4408],
+                                         'std': [0.2675, 0.2565, 0.2761]}},
+ 'use_saved_best_inds': None,
+ 'val_percent': 0.1,
+ 'wandb': False}
+2022-07-07 22:04:14,640: INFO: Dataset
+Dataset CIFAR100
+    Number of datapoints: 50000
+    Root location: ./data
+    Split: Train
+    StandardTransform
+Transform: Compose(
+               Compose(
+               RandomCrop(size=(32, 32), padding=4)
+               RandomHorizontalFlip(p=0.5)
+               RandomRotation(degrees=[-10.0, 10.0], interpolation=nearest, expand=False, fill=0)
+               RandomGrayscale(p=0.1)
+           )
+               Compose(
+               ToTensor()
+               Normalize(mean=[0.5071, 0.4867, 0.4408], std=[0.2675, 0.2565, 0.2761])
+           )
+           )
+2022-07-07 22:04:15,950: INFO: Test Dataset
+Dataset CIFAR100
+    Number of datapoints: 10000
+    Root location: ./data
+    Split: Test
+    StandardTransform
+Transform: Compose(
+               ToTensor()
+               Normalize(mean=[0.5071, 0.4867, 0.4408], std=[0.2675, 0.2565, 0.2761])
+           )
+2022-07-07 22:04:15,954: INFO: Training on randomly chosen Coreset for 10 iterations.
+2022-07-07 22:04:31,575: INFO: Model Summary
+==========================================================================================
+Layer (type:depth-idx)                   Output Shape              Param #
+==========================================================================================
+├─Sequential: 1-1                        [-1, 1024]                --
+|    └─Conv2d: 2-1                       [-1, 64, 16, 16]          1,792
+|    └─MaxPool2d: 2-2                    [-1, 64, 8, 8]            --
+|    └─ReLU: 2-3                         [-1, 64, 8, 8]            --
+|    └─Conv2d: 2-4                       [-1, 192, 8, 8]           110,784
+|    └─MaxPool2d: 2-5                    [-1, 192, 4, 4]           --
+|    └─ReLU: 2-6                         [-1, 192, 4, 4]           --
+|    └─Conv2d: 2-7                       [-1, 384, 4, 4]           663,936
+|    └─ReLU: 2-8                         [-1, 384, 4, 4]           --
+|    └─Conv2d: 2-9                       [-1, 256, 4, 4]           884,992
+|    └─ReLU: 2-10                        [-1, 256, 4, 4]           --
+|    └─Conv2d: 2-11                      [-1, 256, 4, 4]           590,080
+|    └─MaxPool2d: 2-12                   [-1, 256, 2, 2]           --
+|    └─ReLU: 2-13                        [-1, 256, 2, 2]           --
+|    └─Flatten: 2-14                     [-1, 1024]                --
+├─Sequential: 1-2                        [-1, 100]                 --
+|    └─Dropout: 2-15                     [-1, 1024]                --
+|    └─Linear: 2-16                      [-1, 512]                 524,800
+|    └─ReLU: 2-17                        [-1, 512]                 --
+|    └─Dropout: 2-18                     [-1, 512]                 --
+|    └─Linear: 2-19                      [-1, 256]                 131,328
+|    └─ReLU: 2-20                        [-1, 256]                 --
+|    └─Linear: 2-21                      [-1, 100]                 25,700
+|    └─LogSoftmax: 2-22                  [-1, 100]                 --
+==========================================================================================
+Total params: 2,933,412
+Trainable params: 2,933,412
+Non-trainable params: 0
+Total mult-adds (M): 45.34
+==========================================================================================
+Input size (MB): 0.01
+Forward/backward pass size (MB): 0.33
+Params size (MB): 11.19
+Estimated Total Size (MB): 11.54
+==========================================================================================
+2022-07-07 22:04:36,408: INFO: Epoch[   1] Loss: 17.40	Accuracy: 0.778	Val_Loss: 7.594	Val_Acc: 0.000
+2022-07-07 22:04:36,409: INFO: Epoch[   1] Test Accuracy: 0.930
+2022-07-07 22:04:59,374: INFO: Epoch[  51] Loss: 4.71	Accuracy: 1.000	Val_Loss: 4.613	Val_Acc: 1.000
+2022-07-07 22:04:59,375: INFO: Epoch[  51] Test Accuracy: 1.480
+2022-07-07 22:05:22,239: INFO: Epoch[ 101] Loss: 4.59	Accuracy: 2.222	Val_Loss: 4.563	Val_Acc: 2.000
+2022-07-07 22:05:22,240: INFO: Epoch[ 101] Test Accuracy: 2.540
+2022-07-07 22:05:45,236: INFO: Epoch[ 151] Loss: 4.47	Accuracy: 2.667	Val_Loss: 4.470	Val_Acc: 2.000
+2022-07-07 22:05:45,237: INFO: Epoch[ 151] Test Accuracy: 3.960
+2022-07-07 22:06:08,314: INFO: Epoch[ 201] Loss: 4.36	Accuracy: 3.333	Val_Loss: 4.371	Val_Acc: 4.000
+2022-07-07 22:06:08,315: INFO: Epoch[ 201] Test Accuracy: 4.850
+2022-07-07 22:06:31,480: INFO: Epoch[ 251] Loss: 4.27	Accuracy: 5.667	Val_Loss: 4.316	Val_Acc: 5.000
+2022-07-07 22:06:31,481: INFO: Epoch[ 251] Test Accuracy: 5.290
+2022-07-07 22:52:43,649: INFO: ('Accuracy on Train Set', 7.000000029802322)
+2022-07-07 22:52:46,603: INFO: (542, 'correctly labeled out of', 10000)
+2022-07-07 22:52:46,605: INFO: ('Accuracy on Test Set:', 5.42)
+2022-07-07 22:52:46,777: INFO: Saved model at cifar100/n1000/random/Greedy_Model_1000n_Epochs_300_Early_Stop_300_Test_Acc_5_augment_clsbalanced.pth
+2022-07-07 22:52:46,778: INFO: Training Complete
+2022-07-07 22:52:52,185: INFO: Model Summary
+==========================================================================================
+Layer (type:depth-idx)                   Output Shape              Param #
+==========================================================================================
+├─Sequential: 1-1                        [-1, 1024]                --
+|    └─Conv2d: 2-1                       [-1, 64, 16, 16]          1,792
+|    └─MaxPool2d: 2-2                    [-1, 64, 8, 8]            --
+|    └─ReLU: 2-3                         [-1, 64, 8, 8]            --
+|    └─Conv2d: 2-4                       [-1, 192, 8, 8]           110,784
+|    └─MaxPool2d: 2-5                    [-1, 192, 4, 4]           --
+|    └─ReLU: 2-6                         [-1, 192, 4, 4]           --
+|    └─Conv2d: 2-7                       [-1, 384, 4, 4]           663,936
+|    └─ReLU: 2-8                         [-1, 384, 4, 4]           --
+|    └─Conv2d: 2-9                       [-1, 256, 4, 4]           884,992
+|    └─ReLU: 2-10                        [-1, 256, 4, 4]           --
+|    └─Conv2d: 2-11                      [-1, 256, 4, 4]           590,080
+|    └─MaxPool2d: 2-12                   [-1, 256, 2, 2]           --
+|    └─ReLU: 2-13                        [-1, 256, 2, 2]           --
+|    └─Flatten: 2-14                     [-1, 1024]                --
+├─Sequential: 1-2                        [-1, 100]                 --
+|    └─Dropout: 2-15                     [-1, 1024]                --
+|    └─Linear: 2-16                      [-1, 512]                 524,800
+|    └─ReLU: 2-17                        [-1, 512]                 --
+|    └─Dropout: 2-18                     [-1, 512]                 --
+|    └─Linear: 2-19                      [-1, 256]                 131,328
+|    └─ReLU: 2-20                        [-1, 256]                 --
+|    └─Linear: 2-21                      [-1, 100]                 25,700
+|    └─LogSoftmax: 2-22                  [-1, 100]                 --
+==========================================================================================
+Total params: 2,933,412
+Trainable params: 2,933,412
+Non-trainable params: 0
+Total mult-adds (M): 45.34
+==========================================================================================
+Input size (MB): 0.01
+Forward/backward pass size (MB): 0.33
+Params size (MB): 11.19
+Estimated Total Size (MB): 11.54
+==========================================================================================
+2022-07-07 22:52:54,750: INFO: Epoch[   1] Loss: 16.28	Accuracy: 0.556	Val_Loss: 7.548	Val_Acc: 1.000
+2022-07-07 22:52:54,751: INFO: Epoch[   1] Test Accuracy: 0.860
+2022-07-07 22:53:19,408: INFO: Epoch[  51] Loss: 4.71	Accuracy: 1.000	Val_Loss: 4.610	Val_Acc: 1.000
+2022-07-07 22:53:19,409: INFO: Epoch[  51] Test Accuracy: 1.140
+2022-07-07 22:53:43,437: INFO: Epoch[ 101] Loss: 4.62	Accuracy: 1.333	Val_Loss: 4.554	Val_Acc: 2.000
+2022-07-07 22:53:43,438: INFO: Epoch[ 101] Test Accuracy: 2.900
+2022-07-07 22:54:08,639: INFO: Epoch[ 151] Loss: 4.49	Accuracy: 3.000	Val_Loss: 4.454	Val_Acc: 2.000
+2022-07-07 22:54:08,640: INFO: Epoch[ 151] Test Accuracy: 3.460
+2022-07-07 22:54:33,425: INFO: Epoch[ 201] Loss: 4.38	Accuracy: 4.667	Val_Loss: 4.367	Val_Acc: 3.000
+2022-07-07 22:54:33,426: INFO: Epoch[ 201] Test Accuracy: 3.880
+2022-07-07 22:54:57,833: INFO: Epoch[ 251] Loss: 4.34	Accuracy: 5.000	Val_Loss: 4.321	Val_Acc: 4.000
+2022-07-07 22:54:57,834: INFO: Epoch[ 251] Test Accuracy: 4.240
+2022-07-07 22:55:21,136: INFO: ('Accuracy on Train Set', 7.111111283302307)
+2022-07-07 22:55:22,910: INFO: (435, 'correctly labeled out of', 10000)
+2022-07-07 22:55:22,911: INFO: ('Accuracy on Test Set:', 4.35)
+2022-07-07 22:55:22,995: INFO: Saved model at cifar100/n1000/random/Greedy_Model_1000n_Epochs_300_Early_Stop_300_Test_Acc_4_augment_clsbalanced.pth
+2022-07-07 22:55:22,996: INFO: Training Complete
+2022-07-07 22:55:26,455: INFO: Model Summary
+==========================================================================================
+Layer (type:depth-idx)                   Output Shape              Param #
+==========================================================================================
+├─Sequential: 1-1                        [-1, 1024]                --
+|    └─Conv2d: 2-1                       [-1, 64, 16, 16]          1,792
+|    └─MaxPool2d: 2-2                    [-1, 64, 8, 8]            --
+|    └─ReLU: 2-3                         [-1, 64, 8, 8]            --
+|    └─Conv2d: 2-4                       [-1, 192, 8, 8]           110,784
+|    └─MaxPool2d: 2-5                    [-1, 192, 4, 4]           --
+|    └─ReLU: 2-6                         [-1, 192, 4, 4]           --
+|    └─Conv2d: 2-7                       [-1, 384, 4, 4]           663,936
+|    └─ReLU: 2-8                         [-1, 384, 4, 4]           --
+|    └─Conv2d: 2-9                       [-1, 256, 4, 4]           884,992
+|    └─ReLU: 2-10                        [-1, 256, 4, 4]           --
+|    └─Conv2d: 2-11                      [-1, 256, 4, 4]           590,080
+|    └─MaxPool2d: 2-12                   [-1, 256, 2, 2]           --
+|    └─ReLU: 2-13                        [-1, 256, 2, 2]           --
+|    └─Flatten: 2-14                     [-1, 1024]                --
+├─Sequential: 1-2                        [-1, 100]                 --
+|    └─Dropout: 2-15                     [-1, 1024]                --
+|    └─Linear: 2-16                      [-1, 512]                 524,800
+|    └─ReLU: 2-17                        [-1, 512]                 --
+|    └─Dropout: 2-18                     [-1, 512]                 --
+|    └─Linear: 2-19                      [-1, 256]                 131,328
+|    └─ReLU: 2-20                        [-1, 256]                 --
+|    └─Linear: 2-21                      [-1, 100]                 25,700
+|    └─LogSoftmax: 2-22                  [-1, 100]                 --
+==========================================================================================
+Total params: 2,933,412
+Trainable params: 2,933,412
+Non-trainable params: 0
+Total mult-adds (M): 45.34
+==========================================================================================
+Input size (MB): 0.01
+Forward/backward pass size (MB): 0.33
+Params size (MB): 11.19
+Estimated Total Size (MB): 11.54
+==========================================================================================
+2022-07-07 22:55:29,381: INFO: Epoch[   1] Loss: 17.94	Accuracy: 0.889	Val_Loss: 6.687	Val_Acc: 2.000
+2022-07-07 22:55:29,382: INFO: Epoch[   1] Test Accuracy: 0.940
+2022-07-07 22:55:54,426: INFO: Epoch[  51] Loss: 4.70	Accuracy: 1.111	Val_Loss: 4.632	Val_Acc: 2.000
+2022-07-07 22:55:54,426: INFO: Epoch[  51] Test Accuracy: 1.610
+2022-07-07 22:56:19,087: INFO: Epoch[ 101] Loss: 4.57	Accuracy: 2.000	Val_Loss: 4.565	Val_Acc: 3.000
+2022-07-07 22:56:19,088: INFO: Epoch[ 101] Test Accuracy: 1.950
+2022-07-07 22:56:43,845: INFO: Epoch[ 151] Loss: 4.47	Accuracy: 3.111	Val_Loss: 4.463	Val_Acc: 3.000
+2022-07-07 22:56:43,845: INFO: Epoch[ 151] Test Accuracy: 3.220
+2022-07-07 22:57:08,903: INFO: Epoch[ 201] Loss: 4.32	Accuracy: 4.667	Val_Loss: 4.346	Val_Acc: 5.000
+2022-07-07 22:57:08,903: INFO: Epoch[ 201] Test Accuracy: 4.090
+2022-07-07 22:57:33,740: INFO: Epoch[ 251] Loss: 4.30	Accuracy: 4.889	Val_Loss: 4.298	Val_Acc: 5.000
+2022-07-07 22:57:33,741: INFO: Epoch[ 251] Test Accuracy: 4.630
+2022-07-07 22:57:56,845: INFO: ('Accuracy on Train Set', 6.666667014360428)
+2022-07-07 22:57:58,594: INFO: (462, 'correctly labeled out of', 10000)
+2022-07-07 22:57:58,595: INFO: ('Accuracy on Test Set:', 4.62)
+2022-07-07 22:57:58,674: INFO: Saved model at cifar100/n1000/random/Greedy_Model_1000n_Epochs_300_Early_Stop_300_Test_Acc_4_augment_clsbalanced.pth
+2022-07-07 22:57:58,674: INFO: Training Complete
+2022-07-07 22:58:02,148: INFO: Model Summary
+==========================================================================================
+Layer (type:depth-idx)                   Output Shape              Param #
+==========================================================================================
+├─Sequential: 1-1                        [-1, 1024]                --
+|    └─Conv2d: 2-1                       [-1, 64, 16, 16]          1,792
+|    └─MaxPool2d: 2-2                    [-1, 64, 8, 8]            --
+|    └─ReLU: 2-3                         [-1, 64, 8, 8]            --
+|    └─Conv2d: 2-4                       [-1, 192, 8, 8]           110,784
+|    └─MaxPool2d: 2-5                    [-1, 192, 4, 4]           --
+|    └─ReLU: 2-6                         [-1, 192, 4, 4]           --
+|    └─Conv2d: 2-7                       [-1, 384, 4, 4]           663,936
+|    └─ReLU: 2-8                         [-1, 384, 4, 4]           --
+|    └─Conv2d: 2-9                       [-1, 256, 4, 4]           884,992
+|    └─ReLU: 2-10                        [-1, 256, 4, 4]           --
+|    └─Conv2d: 2-11                      [-1, 256, 4, 4]           590,080
+|    └─MaxPool2d: 2-12                   [-1, 256, 2, 2]           --
+|    └─ReLU: 2-13                        [-1, 256, 2, 2]           --
+|    └─Flatten: 2-14                     [-1, 1024]                --
+├─Sequential: 1-2                        [-1, 100]                 --
+|    └─Dropout: 2-15                     [-1, 1024]                --
+|    └─Linear: 2-16                      [-1, 512]                 524,800
+|    └─ReLU: 2-17                        [-1, 512]                 --
+|    └─Dropout: 2-18                     [-1, 512]                 --
+|    └─Linear: 2-19                      [-1, 256]                 131,328
+|    └─ReLU: 2-20                        [-1, 256]                 --
+|    └─Linear: 2-21                      [-1, 100]                 25,700
+|    └─LogSoftmax: 2-22                  [-1, 100]                 --
+==========================================================================================
+Total params: 2,933,412
+Trainable params: 2,933,412
+Non-trainable params: 0
+Total mult-adds (M): 45.34
+==========================================================================================
+Input size (MB): 0.01
+Forward/backward pass size (MB): 0.33
+Params size (MB): 11.19
+Estimated Total Size (MB): 11.54
+==========================================================================================
+2022-07-07 22:58:04,981: INFO: Epoch[   1] Loss: 20.15	Accuracy: 0.778	Val_Loss: 7.681	Val_Acc: 1.000
+2022-07-07 22:58:04,982: INFO: Epoch[   1] Test Accuracy: 0.930
+2022-07-07 22:58:30,686: INFO: Epoch[  51] Loss: 4.71	Accuracy: 1.222	Val_Loss: 4.637	Val_Acc: 1.000
+2022-07-07 22:58:30,687: INFO: Epoch[  51] Test Accuracy: 1.090
+2022-07-07 22:58:56,097: INFO: Epoch[ 101] Loss: 4.58	Accuracy: 1.889	Val_Loss: 4.574	Val_Acc: 2.000
+2022-07-07 22:58:56,097: INFO: Epoch[ 101] Test Accuracy: 2.440
+2022-07-07 22:59:21,667: INFO: Epoch[ 151] Loss: 4.46	Accuracy: 2.889	Val_Loss: 4.506	Val_Acc: 1.000
+2022-07-07 22:59:21,668: INFO: Epoch[ 151] Test Accuracy: 2.830
+2022-07-07 22:59:46,975: INFO: Epoch[ 201] Loss: 4.35	Accuracy: 4.000	Val_Loss: 4.422	Val_Acc: 3.000
+2022-07-07 22:59:46,976: INFO: Epoch[ 201] Test Accuracy: 3.690
+2022-07-07 23:00:12,235: INFO: Epoch[ 251] Loss: 4.27	Accuracy: 5.333	Val_Loss: 4.379	Val_Acc: 4.000
+2022-07-07 23:00:12,236: INFO: Epoch[ 251] Test Accuracy: 4.530
+2022-07-07 23:00:36,214: INFO: ('Accuracy on Train Set', 6.333333253860474)
+2022-07-07 23:00:37,992: INFO: (467, 'correctly labeled out of', 10000)
+2022-07-07 23:00:37,992: INFO: ('Accuracy on Test Set:', 4.67)
+2022-07-07 23:00:38,060: INFO: Saved model at cifar100/n1000/random/Greedy_Model_1000n_Epochs_300_Early_Stop_300_Test_Acc_4_augment_clsbalanced.pth
+2022-07-07 23:00:38,060: INFO: Training Complete
+2022-07-07 23:00:41,919: INFO: Model Summary
+==========================================================================================
+Layer (type:depth-idx)                   Output Shape              Param #
+==========================================================================================
+├─Sequential: 1-1                        [-1, 1024]                --
+|    └─Conv2d: 2-1                       [-1, 64, 16, 16]          1,792
+|    └─MaxPool2d: 2-2                    [-1, 64, 8, 8]            --
+|    └─ReLU: 2-3                         [-1, 64, 8, 8]            --
+|    └─Conv2d: 2-4                       [-1, 192, 8, 8]           110,784
+|    └─MaxPool2d: 2-5                    [-1, 192, 4, 4]           --
+|    └─ReLU: 2-6                         [-1, 192, 4, 4]           --
+|    └─Conv2d: 2-7                       [-1, 384, 4, 4]           663,936
+|    └─ReLU: 2-8                         [-1, 384, 4, 4]           --
+|    └─Conv2d: 2-9                       [-1, 256, 4, 4]           884,992
+|    └─ReLU: 2-10                        [-1, 256, 4, 4]           --
+|    └─Conv2d: 2-11                      [-1, 256, 4, 4]           590,080
+|    └─MaxPool2d: 2-12                   [-1, 256, 2, 2]           --
+|    └─ReLU: 2-13                        [-1, 256, 2, 2]           --
+|    └─Flatten: 2-14                     [-1, 1024]                --
+├─Sequential: 1-2                        [-1, 100]                 --
+|    └─Dropout: 2-15                     [-1, 1024]                --
+|    └─Linear: 2-16                      [-1, 512]                 524,800
+|    └─ReLU: 2-17                        [-1, 512]                 --
+|    └─Dropout: 2-18                     [-1, 512]                 --
+|    └─Linear: 2-19                      [-1, 256]                 131,328
+|    └─ReLU: 2-20                        [-1, 256]                 --
+|    └─Linear: 2-21                      [-1, 100]                 25,700
+|    └─LogSoftmax: 2-22                  [-1, 100]                 --
+==========================================================================================
+Total params: 2,933,412
+Trainable params: 2,933,412
+Non-trainable params: 0
+Total mult-adds (M): 45.34
+==========================================================================================
+Input size (MB): 0.01
+Forward/backward pass size (MB): 0.33
+Params size (MB): 11.19
+Estimated Total Size (MB): 11.54
+==========================================================================================
+2022-07-07 23:00:44,704: INFO: Epoch[   1] Loss: 17.62	Accuracy: 1.000	Val_Loss: 8.044	Val_Acc: 1.000
+2022-07-07 23:00:44,705: INFO: Epoch[   1] Test Accuracy: 1.000
+2022-07-07 23:01:10,994: INFO: Epoch[  51] Loss: 4.71	Accuracy: 1.222	Val_Loss: 4.669	Val_Acc: 3.000
+2022-07-07 23:01:10,995: INFO: Epoch[  51] Test Accuracy: 1.370
+2022-07-07 23:01:37,237: INFO: Epoch[ 101] Loss: 4.63	Accuracy: 0.667	Val_Loss: 4.593	Val_Acc: 2.000
+2022-07-07 23:01:37,238: INFO: Epoch[ 101] Test Accuracy: 1.750
+2022-07-07 23:02:03,074: INFO: Epoch[ 151] Loss: 4.56	Accuracy: 1.556	Val_Loss: 4.535	Val_Acc: 3.000
+2022-07-07 23:02:03,082: INFO: Epoch[ 151] Test Accuracy: 3.130
+2022-07-07 23:02:28,967: INFO: Epoch[ 201] Loss: 4.44	Accuracy: 2.778	Val_Loss: 4.457	Val_Acc: 5.000
+2022-07-07 23:02:28,970: INFO: Epoch[ 201] Test Accuracy: 3.980
+2022-07-07 23:02:55,335: INFO: Epoch[ 251] Loss: 4.41	Accuracy: 3.556	Val_Loss: 4.406	Val_Acc: 4.000
+2022-07-07 23:02:55,336: INFO: Epoch[ 251] Test Accuracy: 3.980
+2022-07-07 23:03:19,568: INFO: ('Accuracy on Train Set', 5.111111328005791)
+2022-07-07 23:03:21,327: INFO: (406, 'correctly labeled out of', 10000)
+2022-07-07 23:03:21,328: INFO: ('Accuracy on Test Set:', 4.06)
+2022-07-07 23:03:21,380: INFO: Saved model at cifar100/n1000/random/Greedy_Model_1000n_Epochs_300_Early_Stop_300_Test_Acc_4_augment_clsbalanced.pth
+2022-07-07 23:03:21,381: INFO: Training Complete
+2022-07-07 23:03:25,770: INFO: Model Summary
+==========================================================================================
+Layer (type:depth-idx)                   Output Shape              Param #
+==========================================================================================
+├─Sequential: 1-1                        [-1, 1024]                --
+|    └─Conv2d: 2-1                       [-1, 64, 16, 16]          1,792
+|    └─MaxPool2d: 2-2                    [-1, 64, 8, 8]            --
+|    └─ReLU: 2-3                         [-1, 64, 8, 8]            --
+|    └─Conv2d: 2-4                       [-1, 192, 8, 8]           110,784
+|    └─MaxPool2d: 2-5                    [-1, 192, 4, 4]           --
+|    └─ReLU: 2-6                         [-1, 192, 4, 4]           --
+|    └─Conv2d: 2-7                       [-1, 384, 4, 4]           663,936
+|    └─ReLU: 2-8                         [-1, 384, 4, 4]           --
+|    └─Conv2d: 2-9                       [-1, 256, 4, 4]           884,992
+|    └─ReLU: 2-10                        [-1, 256, 4, 4]           --
+|    └─Conv2d: 2-11                      [-1, 256, 4, 4]           590,080
+|    └─MaxPool2d: 2-12                   [-1, 256, 2, 2]           --
+|    └─ReLU: 2-13                        [-1, 256, 2, 2]           --
+|    └─Flatten: 2-14                     [-1, 1024]                --
+├─Sequential: 1-2                        [-1, 100]                 --
+|    └─Dropout: 2-15                     [-1, 1024]                --
+|    └─Linear: 2-16                      [-1, 512]                 524,800
+|    └─ReLU: 2-17                        [-1, 512]                 --
+|    └─Dropout: 2-18                     [-1, 512]                 --
+|    └─Linear: 2-19                      [-1, 256]                 131,328
+|    └─ReLU: 2-20                        [-1, 256]                 --
+|    └─Linear: 2-21                      [-1, 100]                 25,700
+|    └─LogSoftmax: 2-22                  [-1, 100]                 --
+==========================================================================================
+Total params: 2,933,412
+Trainable params: 2,933,412
+Non-trainable params: 0
+Total mult-adds (M): 45.34
+==========================================================================================
+Input size (MB): 0.01
+Forward/backward pass size (MB): 0.33
+Params size (MB): 11.19
+Estimated Total Size (MB): 11.54
+==========================================================================================
+2022-07-07 23:03:28,581: INFO: Epoch[   1] Loss: 17.48	Accuracy: 0.889	Val_Loss: 6.917	Val_Acc: 0.000
+2022-07-07 23:03:28,582: INFO: Epoch[   1] Test Accuracy: 0.880
+2022-07-07 23:03:54,821: INFO: Epoch[  51] Loss: 4.69	Accuracy: 1.333	Val_Loss: 4.619	Val_Acc: 1.000
+2022-07-07 23:03:54,822: INFO: Epoch[  51] Test Accuracy: 1.530
+2022-07-07 23:04:21,251: INFO: Epoch[ 101] Loss: 4.60	Accuracy: 1.444	Val_Loss: 4.560	Val_Acc: 3.000
+2022-07-07 23:04:21,252: INFO: Epoch[ 101] Test Accuracy: 2.670
+2022-07-07 23:04:47,553: INFO: Epoch[ 151] Loss: 4.50	Accuracy: 2.889	Val_Loss: 4.488	Val_Acc: 3.000
+2022-07-07 23:04:47,554: INFO: Epoch[ 151] Test Accuracy: 3.760
+2022-07-07 23:05:13,865: INFO: Epoch[ 201] Loss: 4.42	Accuracy: 3.333	Val_Loss: 4.390	Val_Acc: 4.000
+2022-07-07 23:05:13,866: INFO: Epoch[ 201] Test Accuracy: 4.050
+2022-07-07 23:05:40,177: INFO: Epoch[ 251] Loss: 4.29	Accuracy: 5.111	Val_Loss: 4.339	Val_Acc: 1.000
+2022-07-07 23:05:40,178: INFO: Epoch[ 251] Test Accuracy: 4.410
+2022-07-07 23:06:04,893: INFO: ('Accuracy on Train Set', 6.777778267860413)
+2022-07-07 23:06:06,697: INFO: (464, 'correctly labeled out of', 10000)
+2022-07-07 23:06:06,698: INFO: ('Accuracy on Test Set:', 4.64)
+2022-07-07 23:06:06,753: INFO: Saved model at cifar100/n1000/random/Greedy_Model_1000n_Epochs_300_Early_Stop_300_Test_Acc_4_augment_clsbalanced.pth
+2022-07-07 23:06:06,754: INFO: Training Complete
+2022-07-07 23:06:09,707: INFO: Model Summary
+==========================================================================================
+Layer (type:depth-idx)                   Output Shape              Param #
+==========================================================================================
+├─Sequential: 1-1                        [-1, 1024]                --
+|    └─Conv2d: 2-1                       [-1, 64, 16, 16]          1,792
+|    └─MaxPool2d: 2-2                    [-1, 64, 8, 8]            --
+|    └─ReLU: 2-3                         [-1, 64, 8, 8]            --
+|    └─Conv2d: 2-4                       [-1, 192, 8, 8]           110,784
+|    └─MaxPool2d: 2-5                    [-1, 192, 4, 4]           --
+|    └─ReLU: 2-6                         [-1, 192, 4, 4]           --
+|    └─Conv2d: 2-7                       [-1, 384, 4, 4]           663,936
+|    └─ReLU: 2-8                         [-1, 384, 4, 4]           --
+|    └─Conv2d: 2-9                       [-1, 256, 4, 4]           884,992
+|    └─ReLU: 2-10                        [-1, 256, 4, 4]           --
+|    └─Conv2d: 2-11                      [-1, 256, 4, 4]           590,080
+|    └─MaxPool2d: 2-12                   [-1, 256, 2, 2]           --
+|    └─ReLU: 2-13                        [-1, 256, 2, 2]           --
+|    └─Flatten: 2-14                     [-1, 1024]                --
+├─Sequential: 1-2                        [-1, 100]                 --
+|    └─Dropout: 2-15                     [-1, 1024]                --
+|    └─Linear: 2-16                      [-1, 512]                 524,800
+|    └─ReLU: 2-17                        [-1, 512]                 --
+|    └─Dropout: 2-18                     [-1, 512]                 --
+|    └─Linear: 2-19                      [-1, 256]                 131,328
+|    └─ReLU: 2-20                        [-1, 256]                 --
+|    └─Linear: 2-21                      [-1, 100]                 25,700
+|    └─LogSoftmax: 2-22                  [-1, 100]                 --
+==========================================================================================
+Total params: 2,933,412
+Trainable params: 2,933,412
+Non-trainable params: 0
+Total mult-adds (M): 45.34
+==========================================================================================
+Input size (MB): 0.01
+Forward/backward pass size (MB): 0.33
+Params size (MB): 11.19
+Estimated Total Size (MB): 11.54
+==========================================================================================
+2022-07-07 23:06:12,362: INFO: Epoch[   1] Loss: 18.37	Accuracy: 1.111	Val_Loss: 7.080	Val_Acc: 1.000
+2022-07-07 23:06:12,363: INFO: Epoch[   1] Test Accuracy: 0.850
+2022-07-07 23:06:39,398: INFO: Epoch[  51] Loss: 4.71	Accuracy: 1.111	Val_Loss: 4.636	Val_Acc: 2.000
+2022-07-07 23:06:39,398: INFO: Epoch[  51] Test Accuracy: 1.820
+2022-07-07 23:07:06,305: INFO: Epoch[ 101] Loss: 4.58	Accuracy: 2.111	Val_Loss: 4.575	Val_Acc: 1.000
+2022-07-07 23:07:06,305: INFO: Epoch[ 101] Test Accuracy: 2.080
+2022-07-07 23:07:33,226: INFO: Epoch[ 151] Loss: 4.50	Accuracy: 2.667	Val_Loss: 4.513	Val_Acc: 2.000
+2022-07-07 23:07:33,227: INFO: Epoch[ 151] Test Accuracy: 3.490
+2022-07-07 23:07:59,934: INFO: Epoch[ 201] Loss: 4.41	Accuracy: 3.667	Val_Loss: 4.456	Val_Acc: 4.000
+2022-07-07 23:07:59,934: INFO: Epoch[ 201] Test Accuracy: 4.500
+2022-07-07 23:08:26,633: INFO: Epoch[ 251] Loss: 4.27	Accuracy: 4.556	Val_Loss: 4.427	Val_Acc: 4.000
+2022-07-07 23:08:26,634: INFO: Epoch[ 251] Test Accuracy: 4.670
+2022-07-07 23:08:51,791: INFO: ('Accuracy on Train Set', 6.000000238418579)
+2022-07-07 23:08:53,502: INFO: (470, 'correctly labeled out of', 10000)
+2022-07-07 23:08:53,502: INFO: ('Accuracy on Test Set:', 4.7)
+2022-07-07 23:08:53,546: INFO: Saved model at cifar100/n1000/random/Greedy_Model_1000n_Epochs_300_Early_Stop_300_Test_Acc_4_augment_clsbalanced.pth
+2022-07-07 23:08:53,547: INFO: Training Complete
+2022-07-07 23:08:57,080: INFO: Model Summary
+==========================================================================================
+Layer (type:depth-idx)                   Output Shape              Param #
+==========================================================================================
+├─Sequential: 1-1                        [-1, 1024]                --
+|    └─Conv2d: 2-1                       [-1, 64, 16, 16]          1,792
+|    └─MaxPool2d: 2-2                    [-1, 64, 8, 8]            --
+|    └─ReLU: 2-3                         [-1, 64, 8, 8]            --
+|    └─Conv2d: 2-4                       [-1, 192, 8, 8]           110,784
+|    └─MaxPool2d: 2-5                    [-1, 192, 4, 4]           --
+|    └─ReLU: 2-6                         [-1, 192, 4, 4]           --
+|    └─Conv2d: 2-7                       [-1, 384, 4, 4]           663,936
+|    └─ReLU: 2-8                         [-1, 384, 4, 4]           --
+|    └─Conv2d: 2-9                       [-1, 256, 4, 4]           884,992
+|    └─ReLU: 2-10                        [-1, 256, 4, 4]           --
+|    └─Conv2d: 2-11                      [-1, 256, 4, 4]           590,080
+|    └─MaxPool2d: 2-12                   [-1, 256, 2, 2]           --
+|    └─ReLU: 2-13                        [-1, 256, 2, 2]           --
+|    └─Flatten: 2-14                     [-1, 1024]                --
+├─Sequential: 1-2                        [-1, 100]                 --
+|    └─Dropout: 2-15                     [-1, 1024]                --
+|    └─Linear: 2-16                      [-1, 512]                 524,800
+|    └─ReLU: 2-17                        [-1, 512]                 --
+|    └─Dropout: 2-18                     [-1, 512]                 --
+|    └─Linear: 2-19                      [-1, 256]                 131,328
+|    └─ReLU: 2-20                        [-1, 256]                 --
+|    └─Linear: 2-21                      [-1, 100]                 25,700
+|    └─LogSoftmax: 2-22                  [-1, 100]                 --
+==========================================================================================
+Total params: 2,933,412
+Trainable params: 2,933,412
+Non-trainable params: 0
+Total mult-adds (M): 45.34
+==========================================================================================
+Input size (MB): 0.01
+Forward/backward pass size (MB): 0.33
+Params size (MB): 11.19
+Estimated Total Size (MB): 11.54
+==========================================================================================
+2022-07-07 23:08:59,828: INFO: Epoch[   1] Loss: 18.82	Accuracy: 1.333	Val_Loss: 7.295	Val_Acc: 2.000
+2022-07-07 23:08:59,829: INFO: Epoch[   1] Test Accuracy: 1.060
+2022-07-07 23:09:27,021: INFO: Epoch[  51] Loss: 4.72	Accuracy: 1.111	Val_Loss: 4.612	Val_Acc: 1.000
+2022-07-07 23:09:27,021: INFO: Epoch[  51] Test Accuracy: 1.000
+2022-07-07 23:09:54,003: INFO: Epoch[ 101] Loss: 4.60	Accuracy: 2.000	Val_Loss: 4.564	Val_Acc: 2.000
+2022-07-07 23:09:54,004: INFO: Epoch[ 101] Test Accuracy: 1.760
+2022-07-07 23:10:21,073: INFO: Epoch[ 151] Loss: 4.53	Accuracy: 1.778	Val_Loss: 4.522	Val_Acc: 7.000
+2022-07-07 23:10:21,074: INFO: Epoch[ 151] Test Accuracy: 3.700
+2022-07-07 23:10:48,212: INFO: Epoch[ 201] Loss: 4.44	Accuracy: 4.444	Val_Loss: 4.450	Val_Acc: 6.000
+2022-07-07 23:10:48,213: INFO: Epoch[ 201] Test Accuracy: 4.640
+2022-07-07 23:11:15,421: INFO: Epoch[ 251] Loss: 4.36	Accuracy: 3.778	Val_Loss: 4.377	Val_Acc: 5.000
+2022-07-07 23:11:15,422: INFO: Epoch[ 251] Test Accuracy: 5.040
+2022-07-07 23:11:40,870: INFO: ('Accuracy on Train Set', 5.666666850447655)
+2022-07-07 23:11:42,583: INFO: (491, 'correctly labeled out of', 10000)
+2022-07-07 23:11:42,583: INFO: ('Accuracy on Test Set:', 4.91)
+2022-07-07 23:11:42,627: INFO: Saved model at cifar100/n1000/random/Greedy_Model_1000n_Epochs_300_Early_Stop_300_Test_Acc_4_augment_clsbalanced.pth
+2022-07-07 23:11:42,627: INFO: Training Complete
+2022-07-07 23:11:46,471: INFO: Model Summary
+==========================================================================================
+Layer (type:depth-idx)                   Output Shape              Param #
+==========================================================================================
+├─Sequential: 1-1                        [-1, 1024]                --
+|    └─Conv2d: 2-1                       [-1, 64, 16, 16]          1,792
+|    └─MaxPool2d: 2-2                    [-1, 64, 8, 8]            --
+|    └─ReLU: 2-3                         [-1, 64, 8, 8]            --
+|    └─Conv2d: 2-4                       [-1, 192, 8, 8]           110,784
+|    └─MaxPool2d: 2-5                    [-1, 192, 4, 4]           --
+|    └─ReLU: 2-6                         [-1, 192, 4, 4]           --
+|    └─Conv2d: 2-7                       [-1, 384, 4, 4]           663,936
+|    └─ReLU: 2-8                         [-1, 384, 4, 4]           --
+|    └─Conv2d: 2-9                       [-1, 256, 4, 4]           884,992
+|    └─ReLU: 2-10                        [-1, 256, 4, 4]           --
+|    └─Conv2d: 2-11                      [-1, 256, 4, 4]           590,080
+|    └─MaxPool2d: 2-12                   [-1, 256, 2, 2]           --
+|    └─ReLU: 2-13                        [-1, 256, 2, 2]           --
+|    └─Flatten: 2-14                     [-1, 1024]                --
+├─Sequential: 1-2                        [-1, 100]                 --
+|    └─Dropout: 2-15                     [-1, 1024]                --
+|    └─Linear: 2-16                      [-1, 512]                 524,800
+|    └─ReLU: 2-17                        [-1, 512]                 --
+|    └─Dropout: 2-18                     [-1, 512]                 --
+|    └─Linear: 2-19                      [-1, 256]                 131,328
+|    └─ReLU: 2-20                        [-1, 256]                 --
+|    └─Linear: 2-21                      [-1, 100]                 25,700
+|    └─LogSoftmax: 2-22                  [-1, 100]                 --
+==========================================================================================
+Total params: 2,933,412
+Trainable params: 2,933,412
+Non-trainable params: 0
+Total mult-adds (M): 45.34
+==========================================================================================
+Input size (MB): 0.01
+Forward/backward pass size (MB): 0.33
+Params size (MB): 11.19
+Estimated Total Size (MB): 11.54
+==========================================================================================
+2022-07-07 23:11:50,312: INFO: Epoch[   1] Loss: 19.68	Accuracy: 0.778	Val_Loss: 7.430	Val_Acc: 1.000
+2022-07-07 23:11:50,313: INFO: Epoch[   1] Test Accuracy: 0.860
+2022-07-07 23:12:17,921: INFO: Epoch[  51] Loss: 4.75	Accuracy: 1.222	Val_Loss: 4.651	Val_Acc: 1.000
+2022-07-07 23:12:17,922: INFO: Epoch[  51] Test Accuracy: 1.000
+2022-07-07 23:12:45,523: INFO: Epoch[ 101] Loss: 4.62	Accuracy: 1.667	Val_Loss: 4.565	Val_Acc: 3.000
+2022-07-07 23:12:45,524: INFO: Epoch[ 101] Test Accuracy: 1.990
+2022-07-07 23:13:12,943: INFO: Epoch[ 151] Loss: 4.51	Accuracy: 2.111	Val_Loss: 4.480	Val_Acc: 1.000
+2022-07-07 23:13:12,944: INFO: Epoch[ 151] Test Accuracy: 2.890
+2022-07-07 23:13:40,464: INFO: Epoch[ 201] Loss: 4.40	Accuracy: 4.000	Val_Loss: 4.378	Val_Acc: 3.000
+2022-07-07 23:13:40,464: INFO: Epoch[ 201] Test Accuracy: 4.290
+2022-07-07 23:14:07,907: INFO: Epoch[ 251] Loss: 4.34	Accuracy: 3.444	Val_Loss: 4.327	Val_Acc: 2.000
+2022-07-07 23:14:07,908: INFO: Epoch[ 251] Test Accuracy: 4.440
+2022-07-07 23:41:28,129: INFO: ('Accuracy on Train Set', 7.555555552244186)
+2022-07-07 23:41:30,168: INFO: (477, 'correctly labeled out of', 10000)
+2022-07-07 23:41:30,170: INFO: ('Accuracy on Test Set:', 4.77)
+2022-07-07 23:41:30,346: INFO: Saved model at cifar100/n1000/random/Greedy_Model_1000n_Epochs_300_Early_Stop_300_Test_Acc_4_augment_clsbalanced.pth
+2022-07-07 23:41:30,348: INFO: Training Complete
+2022-07-07 23:41:35,228: INFO: Model Summary
+==========================================================================================
+Layer (type:depth-idx)                   Output Shape              Param #
+==========================================================================================
+├─Sequential: 1-1                        [-1, 1024]                --
+|    └─Conv2d: 2-1                       [-1, 64, 16, 16]          1,792
+|    └─MaxPool2d: 2-2                    [-1, 64, 8, 8]            --
+|    └─ReLU: 2-3                         [-1, 64, 8, 8]            --
+|    └─Conv2d: 2-4                       [-1, 192, 8, 8]           110,784
+|    └─MaxPool2d: 2-5                    [-1, 192, 4, 4]           --
+|    └─ReLU: 2-6                         [-1, 192, 4, 4]           --
+|    └─Conv2d: 2-7                       [-1, 384, 4, 4]           663,936
+|    └─ReLU: 2-8                         [-1, 384, 4, 4]           --
+|    └─Conv2d: 2-9                       [-1, 256, 4, 4]           884,992
+|    └─ReLU: 2-10                        [-1, 256, 4, 4]           --
+|    └─Conv2d: 2-11                      [-1, 256, 4, 4]           590,080
+|    └─MaxPool2d: 2-12                   [-1, 256, 2, 2]           --
+|    └─ReLU: 2-13                        [-1, 256, 2, 2]           --
+|    └─Flatten: 2-14                     [-1, 1024]                --
+├─Sequential: 1-2                        [-1, 100]                 --
+|    └─Dropout: 2-15                     [-1, 1024]                --
+|    └─Linear: 2-16                      [-1, 512]                 524,800
+|    └─ReLU: 2-17                        [-1, 512]                 --
+|    └─Dropout: 2-18                     [-1, 512]                 --
+|    └─Linear: 2-19                      [-1, 256]                 131,328
+|    └─ReLU: 2-20                        [-1, 256]                 --
+|    └─Linear: 2-21                      [-1, 100]                 25,700
+|    └─LogSoftmax: 2-22                  [-1, 100]                 --
+==========================================================================================
+Total params: 2,933,412
+Trainable params: 2,933,412
+Non-trainable params: 0
+Total mult-adds (M): 45.34
+==========================================================================================
+Input size (MB): 0.01
+Forward/backward pass size (MB): 0.33
+Params size (MB): 11.19
+Estimated Total Size (MB): 11.54
+==========================================================================================
+2022-07-07 23:41:38,143: INFO: Epoch[   1] Loss: 19.57	Accuracy: 1.000	Val_Loss: 7.970	Val_Acc: 1.000
+2022-07-07 23:41:38,144: INFO: Epoch[   1] Test Accuracy: 1.300
+2022-07-07 23:42:06,916: INFO: Epoch[  51] Loss: 4.69	Accuracy: 1.444	Val_Loss: 4.632	Val_Acc: 1.000
+2022-07-07 23:42:06,917: INFO: Epoch[  51] Test Accuracy: 0.890
+2022-07-07 23:42:35,753: INFO: Epoch[ 101] Loss: 4.61	Accuracy: 1.444	Val_Loss: 4.574	Val_Acc: 1.000
+2022-07-07 23:42:35,754: INFO: Epoch[ 101] Test Accuracy: 1.640
+2022-07-07 23:43:04,504: INFO: Epoch[ 151] Loss: 4.53	Accuracy: 1.889	Val_Loss: 4.524	Val_Acc: 3.000
+2022-07-07 23:43:04,504: INFO: Epoch[ 151] Test Accuracy: 2.880
+2022-07-07 23:43:32,915: INFO: Epoch[ 201] Loss: 4.48	Accuracy: 2.000	Val_Loss: 4.479	Val_Acc: 4.000
+2022-07-07 23:43:32,916: INFO: Epoch[ 201] Test Accuracy: 3.670
+2022-07-07 23:44:01,618: INFO: Epoch[ 251] Loss: 4.40	Accuracy: 3.556	Val_Loss: 4.438	Val_Acc: 6.000
+2022-07-07 23:44:01,618: INFO: Epoch[ 251] Test Accuracy: 4.650
+2022-07-07 23:44:28,571: INFO: ('Accuracy on Train Set', 4.555555805563927)
+2022-07-07 23:44:30,308: INFO: (470, 'correctly labeled out of', 10000)
+2022-07-07 23:44:30,309: INFO: ('Accuracy on Test Set:', 4.7)
+2022-07-07 23:44:30,384: INFO: Saved model at cifar100/n1000/random/Greedy_Model_1000n_Epochs_300_Early_Stop_300_Test_Acc_4_augment_clsbalanced.pth
+2022-07-07 23:44:30,384: INFO: Training Complete
+2022-07-07 23:44:30,392: INFO: Mean Train Accuracy on Random 1000 Train Samples is 6.278±0.90%
+2022-07-07 23:44:30,393: INFO: Mean Test Accuracy on Random 1000 Train Samples is 4.684±0.33%

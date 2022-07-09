@@ -1,0 +1,118 @@
+2022-07-07 21:28:58,055: INFO: Hyperparameters
+{'augment': True,
+ 'backbone': 'alexnet',
+ 'batch_size': 1000,
+ 'class_balanced': False,
+ 'config': 'src/configs/cifar100.yml',
+ 'criterion': 'NLLLoss',
+ 'criterion_kwargs': None,
+ 'dataset': 'cifar100',
+ 'dataset_dir': './data',
+ 'dont_train': False,
+ 'epochs': 300,
+ 'input_shape': [3, 32, 32],
+ 'logdir': PosixPath('cifar100/n1000/logs'),
+ 'lr': 0.001,
+ 'num_classes': 100,
+ 'num_workers': 2,
+ 'optimizer': 'sgd',
+ 'optimizer_kwargs': {'momentum': 0.9, 'weight_decay': 0.01},
+ 'output_dir': PosixPath('cifar100/n1000'),
+ 'per_class': True,
+ 'random': False,
+ 'resume': None,
+ 'scheduler': 'onecyclelr',
+ 'scheduler_kwargs': {'len_loader': 1, 'max_lr': 0.01, 'min_lr': 1e-05},
+ 'seed': 0,
+ 'test_model': None,
+ 'topn': 1000,
+ 'transformation_kwargs': {'normalize': {'mean': [0.5071, 0.4867, 0.4408],
+                                         'std': [0.2675, 0.2565, 0.2761]}},
+ 'use_saved_best_inds': None,
+ 'val_percent': 0.1,
+ 'wandb': False}
+2022-07-07 21:29:01,091: INFO: Dataset
+Dataset CIFAR100
+    Number of datapoints: 50000
+    Root location: ./data
+    Split: Train
+    StandardTransform
+Transform: Compose(
+               Compose(
+               RandomCrop(size=(32, 32), padding=4)
+               RandomHorizontalFlip(p=0.5)
+               RandomRotation(degrees=[-10.0, 10.0], interpolation=nearest, expand=False, fill=0)
+               RandomGrayscale(p=0.1)
+           )
+               Compose(
+               ToTensor()
+               Normalize(mean=[0.5071, 0.4867, 0.4408], std=[0.2675, 0.2565, 0.2761])
+           )
+           )
+2022-07-07 21:29:02,644: INFO: Test Dataset
+Dataset CIFAR100
+    Number of datapoints: 10000
+    Root location: ./data
+    Split: Test
+    StandardTransform
+Transform: Compose(
+               ToTensor()
+               Normalize(mean=[0.5071, 0.4867, 0.4408], std=[0.2675, 0.2565, 0.2761])
+           )
+2022-07-07 21:29:03,176: INFO: all_similarities_perclass.shape: (100, 100, 500), all_imginds_perclass.shape: (100, 100, 500)
+2022-07-07 21:29:19,766: INFO: Model Summary
+==========================================================================================
+Layer (type:depth-idx)                   Output Shape              Param #
+==========================================================================================
+├─Sequential: 1-1                        [-1, 1024]                --
+|    └─Conv2d: 2-1                       [-1, 64, 16, 16]          1,792
+|    └─MaxPool2d: 2-2                    [-1, 64, 8, 8]            --
+|    └─ReLU: 2-3                         [-1, 64, 8, 8]            --
+|    └─Conv2d: 2-4                       [-1, 192, 8, 8]           110,784
+|    └─MaxPool2d: 2-5                    [-1, 192, 4, 4]           --
+|    └─ReLU: 2-6                         [-1, 192, 4, 4]           --
+|    └─Conv2d: 2-7                       [-1, 384, 4, 4]           663,936
+|    └─ReLU: 2-8                         [-1, 384, 4, 4]           --
+|    └─Conv2d: 2-9                       [-1, 256, 4, 4]           884,992
+|    └─ReLU: 2-10                        [-1, 256, 4, 4]           --
+|    └─Conv2d: 2-11                      [-1, 256, 4, 4]           590,080
+|    └─MaxPool2d: 2-12                   [-1, 256, 2, 2]           --
+|    └─ReLU: 2-13                        [-1, 256, 2, 2]           --
+|    └─Flatten: 2-14                     [-1, 1024]                --
+├─Sequential: 1-2                        [-1, 100]                 --
+|    └─Dropout: 2-15                     [-1, 1024]                --
+|    └─Linear: 2-16                      [-1, 512]                 524,800
+|    └─ReLU: 2-17                        [-1, 512]                 --
+|    └─Dropout: 2-18                     [-1, 512]                 --
+|    └─Linear: 2-19                      [-1, 256]                 131,328
+|    └─ReLU: 2-20                        [-1, 256]                 --
+|    └─Linear: 2-21                      [-1, 100]                 25,700
+|    └─LogSoftmax: 2-22                  [-1, 100]                 --
+==========================================================================================
+Total params: 2,933,412
+Trainable params: 2,933,412
+Non-trainable params: 0
+Total mult-adds (M): 45.34
+==========================================================================================
+Input size (MB): 0.01
+Forward/backward pass size (MB): 0.33
+Params size (MB): 11.19
+Estimated Total Size (MB): 11.54
+==========================================================================================
+2022-07-07 21:29:28,226: INFO: Epoch[   1] Loss: 16.83	Accuracy: 0.556	Val_Loss: 7.412	Val_Acc: 1.000
+2022-07-07 21:29:28,231: INFO: Epoch[   1] Test Accuracy: 0.950
+2022-07-07 21:30:00,191: INFO: Epoch[  51] Loss: 4.69	Accuracy: 1.000	Val_Loss: 4.593	Val_Acc: 1.000
+2022-07-07 21:30:00,195: INFO: Epoch[  51] Test Accuracy: 1.400
+2022-07-07 21:30:31,771: INFO: Epoch[ 101] Loss: 4.46	Accuracy: 3.333	Val_Loss: 4.388	Val_Acc: 4.000
+2022-07-07 21:30:31,774: INFO: Epoch[ 101] Test Accuracy: 2.490
+2022-07-07 21:31:03,124: INFO: Epoch[ 151] Loss: 4.10	Accuracy: 6.000	Val_Loss: 4.060	Val_Acc: 5.000
+2022-07-07 21:31:03,126: INFO: Epoch[ 151] Test Accuracy: 4.520
+2022-07-07 21:31:34,030: INFO: Epoch[ 201] Loss: 3.84	Accuracy: 8.000	Val_Loss: 3.821	Val_Acc: 7.000
+2022-07-07 21:31:34,032: INFO: Epoch[ 201] Test Accuracy: 5.830
+2022-07-07 21:32:03,096: INFO: Epoch[ 251] Loss: 3.70	Accuracy: 10.111	Val_Loss: 3.680	Val_Acc: 8.000
+2022-07-07 21:32:03,098: INFO: Epoch[ 251] Test Accuracy: 6.140
+2022-07-07 21:32:32,662: INFO: ('Accuracy on Train Set', 18.666666746139526)
+2022-07-07 21:32:35,038: INFO: (636, 'correctly labeled out of', 10000)
+2022-07-07 21:32:35,038: INFO: ('Accuracy on Test Set:', 6.36)
+2022-07-07 21:32:35,168: INFO: Saved model at cifar100/n1000/Greedy_Model_1000n_Epochs_300_Early_Stop_300_Test_Acc_6_augment_perclass.pth
+2022-07-07 21:32:35,170: INFO: Training Complete
