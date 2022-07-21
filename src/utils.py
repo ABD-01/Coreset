@@ -249,14 +249,14 @@ def get_scheduler(p, optimizer):
 
 def get_logger(p, script="train"):
     logger = logging.getLogger()
-    logger.setLevel(logging.INFO)
+    logger.setLevel(logging.DEBUG)
     logging.getLogger("matplotlib.font_manager").disabled = True
     logging.getLogger("matplotlib.pyplot").disabled = True
     logging.getLogger("PIL").disabled = True
 
-    suffix = str("_clsbalanced" if p.class_balanced else "_perclass" if p.per_class else "_baseline") + str("_augment" if p.augment else "")  
+    suffix = str("_clsbalanced" if p.class_balanced else "_perclass" if p.per_class else "_baseline") + str("_withtrain" if p.with_train else "") + str("_augment" if p.augment else "")  
     stdout_handler = logging.StreamHandler(sys.stdout)
-    stdout_handler.setLevel(logging.INFO)
+    stdout_handler.setLevel(logging.DEBUG)
     output_file_handler = logging.FileHandler(
         pathlib.Path(p.logdir) / f"log_{script}_{get_time_str()}{suffix}.txt"
     )

@@ -389,6 +389,7 @@ if __name__ == "__main__":
         help="Percentage[0-1] split of Validation set. (Default: 0.1)",
     )
     parser.add_argument("--augment", action="store_true", help="Specify to use augmentation during training")
+    parser.add_argument("--with_train", action="store_true", help="No. of epochs to train before finding Gmean")
     parser.add_argument(
         "--resume", default=None, help="path to checkpoint from where to resume"
     )
@@ -396,6 +397,8 @@ if __name__ == "__main__":
 
     args = parser.parse_args()
     args.output_dir = Path(args.dataset) / f"n{args.topn}"
+    if args.with_train:
+        args.output_dir = args.output_dir / f"with_train"
     args.logdir = args.output_dir / "logs"
     args.logdir.mkdir(parents=True, exist_ok=True)
 
