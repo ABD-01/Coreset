@@ -1,0 +1,42 @@
+2022-07-22 07:14:39,159: INFO: Hyperparameters
+{'augment': None,
+ 'backbone': 'alexnet',
+ 'batch_size': 500,
+ 'class_balanced': None,
+ 'config': 'src/configs/cifar10.yml',
+ 'criterion': 'NLLLoss',
+ 'criterion_kwargs': None,
+ 'dataset': 'cifar10',
+ 'dataset_dir': './data',
+ 'epochs': 200,
+ 'input_shape': [3, 32, 32],
+ 'iter': 100,
+ 'logdir': PosixPath('cifar10/logs'),
+ 'lr': 0.001,
+ 'num_classes': 10,
+ 'num_workers': 2,
+ 'optimizer': 'sgd',
+ 'optimizer_kwargs': {'momentum': 0.9, 'weight_decay': 0.01},
+ 'output_dir': PosixPath('cifar10'),
+ 'per_class': False,
+ 'resume': None,
+ 'scheduler': 'onecyclelr',
+ 'scheduler_kwargs': {'len_loader': 1, 'max_lr': 0.01, 'min_lr': 1e-05},
+ 'seed': 0,
+ 'topn': 500,
+ 'transformation_kwargs': {'normalize': {'mean': [0.4914, 0.4822, 0.4465],
+                                         'std': [0.2023, 0.1994, 0.201]}},
+ 'use_all_params': False,
+ 'with_train': True}
+2022-07-22 07:14:43,823: INFO: Dataset
+DatasetwithIndices CIFAR10
+    Number of datapoints: 50000
+    Root location: ./data
+    Split: Train
+    StandardTransform
+Transform: Compose(
+               ToTensor()
+               Normalize(mean=[0.4914, 0.4822, 0.4465], std=[0.2023, 0.1994, 0.201])
+           )
+2022-07-22 07:14:43,823: INFO: Finding Mean Gradients for whole dataset at once.
+2022-07-22 08:19:11,249: INFO: All similarities shape: (100, 50000), All imgindices shape: (100, 50000)
