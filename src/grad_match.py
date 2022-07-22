@@ -24,7 +24,8 @@ from utils import (
     AlexNet,
     create_config,
     get_dataset_with_indices,
-    get_logger, get_optimizer,
+    get_logger,
+    get_optimizer,
     get_test_dataset,
     get_train_dataset,
     seed_everything,
@@ -120,7 +121,13 @@ def get_similarities(model, dataset, batch_size, mean_gradients, use_all_params=
     return np.concatenate(similarities), np.concatenate(img_indices)
 
 
-def train_epoch(loader: torch.utils.data.DataLoader, model:nn.Module, criterion:nn.NLLLoss, optimizer:torch.optim.Optimizer, device:torch.device)->None:
+def train_epoch(
+    loader: torch.utils.data.DataLoader,
+    model: nn.Module,
+    criterion: nn.NLLLoss,
+    optimizer: torch.optim.Optimizer,
+    device: torch.device,
+) -> None:
     """Trains model for one epoch
 
     Args:
@@ -172,7 +179,6 @@ def train_epoch(loader: torch.utils.data.DataLoader, model:nn.Module, criterion:
 #     return test_acc
 
 
-
 def gradient_mathcing(p, data, logger):
     """Calculated mean gradient for the given dataset and find per sample similarity with mean gradients
 
@@ -202,22 +208,29 @@ def gradient_mathcing(p, data, logger):
     seed_everything(p.seed)
     model = AlexNet(p.num_classes, False).to(device)
     if p.with_train:
-        train_loader = DataLoader(data, p.batch_size, shuffle=True, num_workers=2, pin_memory=True)
+        train_loader = DataLoader(
+            data, p.batch_size, shuffle=True, num_workers=2, pin_memory=True
+        )
         criterion = nn.NLLLoss()
         optimizer = get_optimizer(p, model)
 
     all_similarities, all_imginds = [], []
     for k in trange(iterations, desc="Iterations", position=0, leave=False):
         # if p.with_train:
-            # moving to the end of loop
+        # moving to the end of loop
         if not p.with_train:
-            seed_everything(p.seed+k)
+            seed_everything(p.seed + k)
             model = AlexNet(p.num_classes, False).to(device)
             # slmodel, params, buffers = make_functional_with_buffers(model.fc)
 
         if not p.per_class:
             loader = DataLoader(
-                data, p.batch_size, shuffle=True, num_workers=2, pin_memory=True, drop_last=True
+                data,
+                p.batch_size,
+                shuffle=True,
+                num_workers=2,
+                pin_memory=True,
+                drop_last=True,
             )
             mean_gradients = get_mean_gradients(model, loader, p.use_all_params)
             similarities, img_indices = get_similarities(
@@ -225,13 +238,24 @@ def gradient_mathcing(p, data, logger):
             )
         elif p.per_class:
             similarities, img_indices = [], []
-            for dataset in tqdm(cls_data, desc="Per CLass Gradient Mathcing", position=1, leave=True):
-                loader = DataLoader(dataset, p.batch_size, shuffle=True, num_workers=2, pin_memory=True, drop_last=True)
+            for dataset in tqdm(
+                cls_data, desc="Per CLass Gradient Mathcing", position=1, leave=True
+            ):
+                loader = DataLoader(
+                    dataset,
+                    p.batch_size,
+                    shuffle=True,
+                    num_workers=2,
+                    pin_memory=True,
+                    drop_last=True,
+                )
                 mean_gradients = get_mean_gradients(model, loader, p.use_all_params)
-                cls_all_sims, cls_all_inds = get_similarities(model, dataset, p.batch_size, mean_gradients, p.use_all_params)
+                cls_all_sims, cls_all_inds = get_similarities(
+                    model, dataset, p.batch_size, mean_gradients, p.use_all_params
+                )
                 similarities.append(cls_all_sims)
                 img_indices.append(cls_all_inds)
-            similarities, img_indices= np.stack(similarities), np.stack(img_indices)
+            similarities, img_indices = np.stack(similarities), np.stack(img_indices)
 
         all_similarities.append(similarities)
         all_imginds.append(img_indices)
@@ -270,8 +294,16 @@ def main(p, logger):
     logger.info(
         f"All similarities shape: {all_similarities.shape}, All imgindices shape: {all_imginds.shape}"
     )
-    np.save(p.output_dir / f"all_similarities{'_perclass' if p.per_class else ''}{'_withtrain' if p.with_train else ''}.npy", all_similarities)
-    np.save(p.output_dir / f"all_imginds{'_perclass' if p.per_class else ''}{'_withtrain' if p.with_train else ''}.npy", all_imginds)
+    np.save(
+        p.output_dir
+        / f"all_similarities{'_perclass' if p.per_class else ''}{'_withtrain' if p.with_train else ''}.npy",
+        all_similarities,
+    )
+    np.save(
+        p.output_dir
+        / f"all_imginds{'_perclass' if p.per_class else ''}{'_withtrain' if p.with_train else ''}.npy",
+        all_imginds,
+    )
 
 
 if __name__ == "__main__":
@@ -292,7 +324,11 @@ if __name__ == "__main__":
         action="store_true",
         help="Specify whether to find Mean Gradients classwise",
     )
-    parser.add_argument("--with_train", action="store_true", help="No. of epochs to train before finding Gmean")
+    parser.add_argument(
+        "--with_train",
+        action="store_true",
+        help="No. of epochs to train before finding Gmean",
+    )
     parser.add_argument(
         "--use_all_params",
         help="Specify if all model parameters' gradients to be used. Defaults: (FC layers only)",
@@ -308,7 +344,7 @@ if __name__ == "__main__":
     args.logdir.mkdir(parents=True, exist_ok=True)
 
     # temporary fix
-    args.class_balanced = None 
+    args.class_balanced = None
     args.augment = None
     logger = get_logger(args, "gradmatch")
     try:

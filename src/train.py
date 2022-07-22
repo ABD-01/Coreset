@@ -102,7 +102,9 @@ def train_loop(p, best_inds: torch.Tensor, data, test_data) -> None:
     train_loader = DataLoader(
         Subset(data, train_inds), train_inds.shape[0], shuffle=True
     )
-    val_loader = DataLoader(Subset(get_train_dataset(p, val=True), val_inds), val_inds.shape[0])
+    val_loader = DataLoader(
+        Subset(get_train_dataset(p, val=True), val_inds), val_inds.shape[0]
+    )
     test_loader = DataLoader(test_data, p.batch_size)
 
     # model
@@ -148,10 +150,12 @@ def train_loop(p, best_inds: torch.Tensor, data, test_data) -> None:
                 f"Epoch[{epoch+1:4}] Test Accuracy: {(correct / len(test_data))*100 :.3f}"
             )
         # if early_stopping.early_stop:
-            # logger.info(f"Trained for {epoch+1} Epochs.")
-            # break
+        # logger.info(f"Trained for {epoch+1} Epochs.")
+        # break
 
-    suffix = str("_augment" if p.augment else "") + str("_clsbalanced" if p.class_balanced else "_perclass" if p.per_class else "")
+    suffix = str("_augment" if p.augment else "") + str(
+        "_clsbalanced" if p.class_balanced else "_perclass" if p.per_class else ""
+    )
     prefix = "greedy"
     if p.random:
         prefix = "random" + str(train_loop.counter)
@@ -388,8 +392,16 @@ if __name__ == "__main__":
         type=float,
         help="Percentage[0-1] split of Validation set. (Default: 0.1)",
     )
-    parser.add_argument("--augment", action="store_true", help="Specify to use augmentation during training")
-    parser.add_argument("--with_train", action="store_true", help="No. of epochs to train before finding Gmean")
+    parser.add_argument(
+        "--augment",
+        action="store_true",
+        help="Specify to use augmentation during training",
+    )
+    parser.add_argument(
+        "--with_train",
+        action="store_true",
+        help="No. of epochs to train before finding Gmean",
+    )
     parser.add_argument(
         "--resume", default=None, help="path to checkpoint from where to resume"
     )
