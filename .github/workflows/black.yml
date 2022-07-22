@@ -1,9 +1,11 @@
 name: Black
 on:
-   pull_request:
-     types: [opened, reopened]
+#    pull_request:
+#      types: [opened, reopened]
    schedule:
      - cron: "0 2 * * 2-5"
+   workflow_dispatch:
+   
 jobs:
   formatting:
     runs-on: ubuntu-latest
