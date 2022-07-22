@@ -132,7 +132,7 @@ def train_epoch(loader: torch.utils.data.DataLoader, model:nn.Module, criterion:
     """
     model.train()
     # losses, accs = [], []
-    for (images, labels) in loader:
+    for (images, labels, _) in loader:
         images, labels = images.to(device), labels.to(device)
         optimizer.zero_grad(set_to_none=True)
         output = model(images)
