@@ -245,12 +245,15 @@ def main(args):
         all_imginds = np.load(Path(p.dataset) / f"all_imginds_perclass{'_withtrain' if p.with_train else ''}.npy").squeeze(
             axis=-1
         )
+        if p.with_train:
+            all_similarities = all_similarities.swapaxes(0,1)
+            all_imginds = all_imginds.swapaxes(0,1)
         logger.info(
             f"all_similarities_perclass.shape: {all_similarities.shape}, all_imginds_perclass.shape: {all_imginds.shape}"
         )
         best_inds = []
         for i in range(all_similarities.shape[0]):
-            logger.debug(np.unique(train_labels[all_imginds[i]], return_counts=True))
+            # logger.debug(np.unique(train_labels[all_imginds[i]], return_counts=True))
             inds = get_best_inds(
                 p.topn // p.num_classes, all_similarities[i], all_imginds[i]
             )
