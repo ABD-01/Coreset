@@ -1,0 +1,747 @@
+2022-07-27 20:33:41,714: INFO: Hyperparameters
+{'augment': False,
+ 'backbone': 'alexnet',
+ 'batch_size': 1000,
+ 'class_balanced': True,
+ 'config': 'src/configs/cifar100.yml',
+ 'criterion': 'NLLLoss',
+ 'criterion_kwargs': None,
+ 'dataset': 'cifar100',
+ 'dataset_dir': './data',
+ 'dont_train': False,
+ 'early_stopping_kwargs': {'min_delta': 0.001,
+                           'min_epochs': 250,
+                           'patience': 50},
+ 'epochs': 1000,
+ 'input_shape': [3, 32, 32],
+ 'logdir': PosixPath('cifar100/n5000/with_train/logs'),
+ 'lr': 0.01,
+ 'num_classes': 100,
+ 'num_workers': 2,
+ 'optimizer': 'sgd',
+ 'optimizer_kwargs': {'momentum': 0.9, 'weight_decay': 0.01},
+ 'output_dir': PosixPath('cifar100/n5000/with_train'),
+ 'per_class': False,
+ 'random': False,
+ 'resume': None,
+ 'scheduler': None,
+ 'seed': 0,
+ 'test_model': None,
+ 'topn': 5000,
+ 'transformation_kwargs': {'normalize': {'mean': [0.5071, 0.4867, 0.4408],
+                                         'std': [0.2675, 0.2565, 0.2761]}},
+ 'use_saved_best_inds': None,
+ 'val_percent': 0.1,
+ 'wandb': False,
+ 'with_train': True}
+2022-07-27 20:33:42,727: INFO: Dataset
+Dataset CIFAR100
+    Number of datapoints: 50000
+    Root location: ./data
+    Split: Train
+    StandardTransform
+Transform: Compose(
+               ToTensor()
+               Normalize(mean=[0.5071, 0.4867, 0.4408], std=[0.2675, 0.2565, 0.2761])
+           )
+2022-07-27 20:33:43,616: INFO: Test Dataset
+Dataset CIFAR100
+    Number of datapoints: 10000
+    Root location: ./data
+    Split: Test
+    StandardTransform
+Transform: Compose(
+               ToTensor()
+               Normalize(mean=[0.5071, 0.4867, 0.4408], std=[0.2675, 0.2565, 0.2761])
+           )
+2022-07-27 20:33:43,620: INFO: Loading similarities from cifar100/all_similarities_withtrain.npy
+Loading imginds from cifar100/all_imginds_withtrain.npy
+2022-07-27 20:33:43,640: INFO: all_similarities.shape: (100, 50000), all_imginds.shape: (100, 50000)
+2022-07-27 20:33:50,581: INFO: Model Summary
+==========================================================================================
+Layer (type:depth-idx)                   Output Shape              Param #
+==========================================================================================
+├─Sequential: 1-1                        [-1, 1024]                --
+|    └─Conv2d: 2-1                       [-1, 64, 16, 16]          1,792
+|    └─MaxPool2d: 2-2                    [-1, 64, 8, 8]            --
+|    └─ReLU: 2-3                         [-1, 64, 8, 8]            --
+|    └─Conv2d: 2-4                       [-1, 192, 8, 8]           110,784
+|    └─MaxPool2d: 2-5                    [-1, 192, 4, 4]           --
+|    └─ReLU: 2-6                         [-1, 192, 4, 4]           --
+|    └─Conv2d: 2-7                       [-1, 384, 4, 4]           663,936
+|    └─ReLU: 2-8                         [-1, 384, 4, 4]           --
+|    └─Conv2d: 2-9                       [-1, 256, 4, 4]           884,992
+|    └─ReLU: 2-10                        [-1, 256, 4, 4]           --
+|    └─Conv2d: 2-11                      [-1, 256, 4, 4]           590,080
+|    └─MaxPool2d: 2-12                   [-1, 256, 2, 2]           --
+|    └─ReLU: 2-13                        [-1, 256, 2, 2]           --
+|    └─Flatten: 2-14                     [-1, 1024]                --
+├─Sequential: 1-2                        [-1, 100]                 --
+|    └─Dropout: 2-15                     [-1, 1024]                --
+|    └─Linear: 2-16                      [-1, 512]                 524,800
+|    └─ReLU: 2-17                        [-1, 512]                 --
+|    └─Dropout: 2-18                     [-1, 512]                 --
+|    └─Linear: 2-19                      [-1, 256]                 131,328
+|    └─ReLU: 2-20                        [-1, 256]                 --
+|    └─Linear: 2-21                      [-1, 100]                 25,700
+|    └─LogSoftmax: 2-22                  [-1, 100]                 --
+==========================================================================================
+Total params: 2,933,412
+Trainable params: 2,933,412
+Non-trainable params: 0
+Total mult-adds (M): 45.34
+==========================================================================================
+Input size (MB): 0.01
+Forward/backward pass size (MB): 0.33
+Params size (MB): 11.19
+Estimated Total Size (MB): 11.54
+==========================================================================================
+2022-07-27 20:33:59,274: INFO: Epoch[   1] Loss: 16.91	Accuracy: 1.044	Val_Loss: 6.015	Val_Acc: 1.000
+2022-07-27 20:33:59,274: INFO: Epoch[   1] Test Accuracy: 0.770
+2022-07-27 20:35:09,854: INFO: Epoch[  51] Loss: 4.60	Accuracy: 1.911	Val_Loss: 4.560	Val_Acc: 1.600
+2022-07-27 20:35:09,854: INFO: Epoch[  51] Test Accuracy: 1.650
+2022-07-27 20:36:19,830: INFO: Epoch[ 101] Loss: 4.48	Accuracy: 3.644	Val_Loss: 4.435	Val_Acc: 4.000
+2022-07-27 20:36:19,831: INFO: Epoch[ 101] Test Accuracy: 3.900
+2022-07-27 20:37:30,044: INFO: Epoch[ 151] Loss: 4.31	Accuracy: 4.867	Val_Loss: 4.297	Val_Acc: 6.200
+2022-07-27 20:37:30,044: INFO: Epoch[ 151] Test Accuracy: 6.320
+2022-07-27 20:38:39,782: INFO: Epoch[ 201] Loss: 4.15	Accuracy: 6.289	Val_Loss: 4.167	Val_Acc: 6.400
+2022-07-27 20:38:39,782: INFO: Epoch[ 201] Test Accuracy: 8.040
+2022-07-27 20:39:49,506: INFO: Epoch[ 251] Loss: 3.99	Accuracy: 7.933	Val_Loss: 4.044	Val_Acc: 8.400
+2022-07-27 20:39:49,506: INFO: Epoch[ 251] Test Accuracy: 9.550
+2022-07-27 20:39:52,155: INFO: Epoch: 253 Early stopping counter 1 of 50
+2022-07-27 20:39:53,470: INFO: Epoch: 254 Early stopping counter 2 of 50
+2022-07-27 20:40:00,190: INFO: Epoch: 259 Early stopping counter 1 of 50
+2022-07-27 20:40:01,530: INFO: Epoch: 260 Early stopping counter 2 of 50
+2022-07-27 20:40:08,349: INFO: Epoch: 265 Early stopping counter 1 of 50
+2022-07-27 20:40:10,303: INFO: Epoch: 266 Early stopping counter 2 of 50
+2022-07-27 20:40:15,019: INFO: Epoch: 269 Early stopping counter 1 of 50
+2022-07-27 20:40:22,037: INFO: Epoch: 274 Early stopping counter 1 of 50
+2022-07-27 20:40:23,404: INFO: Epoch: 275 Early stopping counter 2 of 50
+2022-07-27 20:40:27,541: INFO: Epoch: 278 Early stopping counter 1 of 50
+2022-07-27 20:40:28,946: INFO: Epoch: 279 Early stopping counter 2 of 50
+2022-07-27 20:40:30,363: INFO: Epoch: 280 Early stopping counter 3 of 50
+2022-07-27 20:40:34,460: INFO: Epoch: 283 Early stopping counter 1 of 50
+2022-07-27 20:40:35,775: INFO: Epoch: 284 Early stopping counter 2 of 50
+2022-07-27 20:40:37,073: INFO: Epoch: 285 Early stopping counter 3 of 50
+2022-07-27 20:40:38,358: INFO: Epoch: 286 Early stopping counter 4 of 50
+2022-07-27 20:40:42,275: INFO: Epoch: 289 Early stopping counter 1 of 50
+2022-07-27 20:40:43,607: INFO: Epoch: 290 Early stopping counter 2 of 50
+2022-07-27 20:40:44,925: INFO: Epoch: 291 Early stopping counter 3 of 50
+2022-07-27 20:40:48,920: INFO: Epoch: 294 Early stopping counter 1 of 50
+2022-07-27 20:40:50,258: INFO: Epoch: 295 Early stopping counter 2 of 50
+2022-07-27 20:40:51,619: INFO: Epoch: 296 Early stopping counter 3 of 50
+2022-07-27 20:40:54,291: INFO: Epoch: 298 Early stopping counter 1 of 50
+2022-07-27 20:40:55,600: INFO: Epoch: 299 Early stopping counter 2 of 50
+2022-07-27 20:40:56,952: INFO: Epoch: 300 Early stopping counter 3 of 50
+2022-07-27 20:41:00,250: INFO: Epoch[ 301] Loss: 3.91	Accuracy: 8.533	Val_Loss: 3.949	Val_Acc: 8.400
+2022-07-27 20:41:00,251: INFO: Epoch[ 301] Test Accuracy: 10.580
+2022-07-27 20:41:01,569: INFO: Epoch: 302 Early stopping counter 1 of 50
+2022-07-27 20:41:02,921: INFO: Epoch: 303 Early stopping counter 2 of 50
+2022-07-27 20:41:04,242: INFO: Epoch: 304 Early stopping counter 3 of 50
+2022-07-27 20:41:05,601: INFO: Epoch: 305 Early stopping counter 4 of 50
+2022-07-27 20:41:06,925: INFO: Epoch: 306 Early stopping counter 5 of 50
+2022-07-27 20:41:08,249: INFO: Epoch: 307 Early stopping counter 6 of 50
+2022-07-27 20:41:10,895: INFO: Epoch: 309 Early stopping counter 1 of 50
+2022-07-27 20:41:12,236: INFO: Epoch: 310 Early stopping counter 2 of 50
+2022-07-27 20:41:13,568: INFO: Epoch: 311 Early stopping counter 3 of 50
+2022-07-27 20:41:19,035: INFO: Epoch: 315 Early stopping counter 1 of 50
+2022-07-27 20:41:23,181: INFO: Epoch: 318 Early stopping counter 1 of 50
+2022-07-27 20:41:24,586: INFO: Epoch: 319 Early stopping counter 2 of 50
+2022-07-27 20:41:25,990: INFO: Epoch: 320 Early stopping counter 3 of 50
+2022-07-27 20:41:31,612: INFO: Epoch: 324 Early stopping counter 1 of 50
+2022-07-27 20:41:32,997: INFO: Epoch: 325 Early stopping counter 2 of 50
+2022-07-27 20:41:34,359: INFO: Epoch: 326 Early stopping counter 3 of 50
+2022-07-27 20:41:37,083: INFO: Epoch: 328 Early stopping counter 1 of 50
+2022-07-27 20:41:38,476: INFO: Epoch: 329 Early stopping counter 2 of 50
+2022-07-27 20:41:39,879: INFO: Epoch: 330 Early stopping counter 3 of 50
+2022-07-27 20:41:42,624: INFO: Epoch: 332 Early stopping counter 1 of 50
+2022-07-27 20:41:43,990: INFO: Epoch: 333 Early stopping counter 2 of 50
+2022-07-27 20:41:45,361: INFO: Epoch: 334 Early stopping counter 3 of 50
+2022-07-27 20:41:46,739: INFO: Epoch: 335 Early stopping counter 4 of 50
+2022-07-27 20:41:49,494: INFO: Epoch: 337 Early stopping counter 1 of 50
+2022-07-27 20:41:50,920: INFO: Epoch: 338 Early stopping counter 2 of 50
+2022-07-27 20:41:55,429: INFO: Epoch: 341 Early stopping counter 1 of 50
+2022-07-27 20:41:56,723: INFO: Epoch: 342 Early stopping counter 2 of 50
+2022-07-27 20:41:58,032: INFO: Epoch: 343 Early stopping counter 3 of 50
+2022-07-27 20:42:00,698: INFO: Epoch: 345 Early stopping counter 1 of 50
+2022-07-27 20:42:02,036: INFO: Epoch: 346 Early stopping counter 2 of 50
+2022-07-27 20:42:03,366: INFO: Epoch: 347 Early stopping counter 3 of 50
+2022-07-27 20:42:06,034: INFO: Epoch: 349 Early stopping counter 1 of 50
+2022-07-27 20:42:07,370: INFO: Epoch: 350 Early stopping counter 2 of 50
+2022-07-27 20:42:08,706: INFO: Epoch: 351 Early stopping counter 3 of 50
+2022-07-27 20:42:10,732: INFO: Epoch[ 351] Loss: 3.81	Accuracy: 10.422	Val_Loss: 3.870	Val_Acc: 9.200
+2022-07-27 20:42:10,732: INFO: Epoch[ 351] Test Accuracy: 11.440
+2022-07-27 20:42:12,055: INFO: Epoch: 352 Early stopping counter 4 of 50
+2022-07-27 20:42:13,429: INFO: Epoch: 353 Early stopping counter 5 of 50
+2022-07-27 20:42:14,820: INFO: Epoch: 354 Early stopping counter 6 of 50
+2022-07-27 20:42:16,195: INFO: Epoch: 355 Early stopping counter 7 of 50
+2022-07-27 20:42:17,601: INFO: Epoch: 356 Early stopping counter 8 of 50
+2022-07-27 20:42:19,011: INFO: Epoch: 357 Early stopping counter 9 of 50
+2022-07-27 20:42:20,422: INFO: Epoch: 358 Early stopping counter 10 of 50
+2022-07-27 20:42:21,815: INFO: Epoch: 359 Early stopping counter 11 of 50
+2022-07-27 20:42:23,208: INFO: Epoch: 360 Early stopping counter 12 of 50
+2022-07-27 20:42:24,609: INFO: Epoch: 361 Early stopping counter 13 of 50
+2022-07-27 20:42:26,013: INFO: Epoch: 362 Early stopping counter 14 of 50
+2022-07-27 20:42:27,409: INFO: Epoch: 363 Early stopping counter 15 of 50
+2022-07-27 20:42:28,790: INFO: Epoch: 364 Early stopping counter 16 of 50
+2022-07-27 20:42:30,207: INFO: Epoch: 365 Early stopping counter 17 of 50
+2022-07-27 20:42:35,697: INFO: Epoch: 369 Early stopping counter 1 of 50
+2022-07-27 20:42:37,089: INFO: Epoch: 370 Early stopping counter 2 of 50
+2022-07-27 20:42:38,480: INFO: Epoch: 371 Early stopping counter 3 of 50
+2022-07-27 20:42:41,247: INFO: Epoch: 373 Early stopping counter 1 of 50
+2022-07-27 20:42:42,632: INFO: Epoch: 374 Early stopping counter 2 of 50
+2022-07-27 20:42:43,995: INFO: Epoch: 375 Early stopping counter 3 of 50
+2022-07-27 20:42:46,755: INFO: Epoch: 377 Early stopping counter 1 of 50
+2022-07-27 20:42:48,149: INFO: Epoch: 378 Early stopping counter 2 of 50
+2022-07-27 20:42:49,458: INFO: Epoch: 379 Early stopping counter 3 of 50
+2022-07-27 20:42:52,084: INFO: Epoch: 381 Early stopping counter 1 of 50
+2022-07-27 20:42:53,379: INFO: Epoch: 382 Early stopping counter 2 of 50
+2022-07-27 20:42:54,688: INFO: Epoch: 383 Early stopping counter 3 of 50
+2022-07-27 20:42:57,273: INFO: Epoch: 385 Early stopping counter 1 of 50
+2022-07-27 20:42:58,622: INFO: Epoch: 386 Early stopping counter 2 of 50
+2022-07-27 20:43:00,002: INFO: Epoch: 387 Early stopping counter 3 of 50
+2022-07-27 20:43:04,006: INFO: Epoch: 390 Early stopping counter 1 of 50
+2022-07-27 20:43:06,694: INFO: Epoch: 392 Early stopping counter 1 of 50
+2022-07-27 20:43:09,366: INFO: Epoch: 394 Early stopping counter 1 of 50
+2022-07-27 20:43:13,398: INFO: Epoch: 397 Early stopping counter 1 of 50
+2022-07-27 20:43:14,703: INFO: Epoch: 398 Early stopping counter 2 of 50
+2022-07-27 20:43:16,008: INFO: Epoch: 399 Early stopping counter 3 of 50
+2022-07-27 20:43:17,325: INFO: Epoch: 400 Early stopping counter 4 of 50
+2022-07-27 20:43:18,651: INFO: Epoch: 401 Early stopping counter 5 of 50
+2022-07-27 20:43:20,631: INFO: Epoch[ 401] Loss: 3.77	Accuracy: 11.422	Val_Loss: 3.814	Val_Acc: 10.800
+2022-07-27 20:43:20,631: INFO: Epoch[ 401] Test Accuracy: 12.360
+2022-07-27 20:43:21,948: INFO: Epoch: 402 Early stopping counter 6 of 50
+2022-07-27 20:43:23,269: INFO: Epoch: 403 Early stopping counter 7 of 50
+2022-07-27 20:43:24,573: INFO: Epoch: 404 Early stopping counter 8 of 50
+2022-07-27 20:43:25,877: INFO: Epoch: 405 Early stopping counter 9 of 50
+2022-07-27 20:43:27,190: INFO: Epoch: 406 Early stopping counter 10 of 50
+2022-07-27 20:43:28,528: INFO: Epoch: 407 Early stopping counter 11 of 50
+2022-07-27 20:43:29,873: INFO: Epoch: 408 Early stopping counter 12 of 50
+2022-07-27 20:43:31,263: INFO: Epoch: 409 Early stopping counter 13 of 50
+2022-07-27 20:43:32,887: INFO: Epoch: 410 Early stopping counter 14 of 50
+2022-07-27 20:43:34,907: INFO: Epoch: 411 Early stopping counter 15 of 50
+2022-07-27 20:43:36,442: INFO: Epoch: 412 Early stopping counter 16 of 50
+2022-07-27 20:43:37,805: INFO: Epoch: 413 Early stopping counter 17 of 50
+2022-07-27 20:43:40,558: INFO: Epoch: 415 Early stopping counter 1 of 50
+2022-07-27 20:43:41,929: INFO: Epoch: 416 Early stopping counter 2 of 50
+2022-07-27 20:43:46,062: INFO: Epoch: 419 Early stopping counter 1 of 50
+2022-07-27 20:43:47,471: INFO: Epoch: 420 Early stopping counter 2 of 50
+2022-07-27 20:43:50,142: INFO: Epoch: 422 Early stopping counter 1 of 50
+2022-07-27 20:43:52,927: INFO: Epoch: 424 Early stopping counter 1 of 50
+2022-07-27 20:43:54,297: INFO: Epoch: 425 Early stopping counter 2 of 50
+2022-07-27 20:43:55,681: INFO: Epoch: 426 Early stopping counter 3 of 50
+2022-07-27 20:43:58,471: INFO: Epoch: 428 Early stopping counter 1 of 50
+2022-07-27 20:43:59,848: INFO: Epoch: 429 Early stopping counter 2 of 50
+2022-07-27 20:44:01,231: INFO: Epoch: 430 Early stopping counter 3 of 50
+2022-07-27 20:44:03,915: INFO: Epoch: 432 Early stopping counter 1 of 50
+2022-07-27 20:44:05,204: INFO: Epoch: 433 Early stopping counter 2 of 50
+2022-07-27 20:44:06,553: INFO: Epoch: 434 Early stopping counter 3 of 50
+2022-07-27 20:44:07,818: INFO: Epoch: 435 Early stopping counter 4 of 50
+2022-07-27 20:44:10,366: INFO: Epoch: 437 Early stopping counter 1 of 50
+2022-07-27 20:44:11,661: INFO: Epoch: 438 Early stopping counter 2 of 50
+2022-07-27 20:44:12,974: INFO: Epoch: 439 Early stopping counter 3 of 50
+2022-07-27 20:44:14,284: INFO: Epoch: 440 Early stopping counter 4 of 50
+2022-07-27 20:44:15,593: INFO: Epoch: 441 Early stopping counter 5 of 50
+2022-07-27 20:44:18,229: INFO: Epoch: 443 Early stopping counter 1 of 50
+2022-07-27 20:44:19,538: INFO: Epoch: 444 Early stopping counter 2 of 50
+2022-07-27 20:44:20,844: INFO: Epoch: 445 Early stopping counter 3 of 50
+2022-07-27 20:44:24,820: INFO: Epoch: 448 Early stopping counter 1 of 50
+2022-07-27 20:44:26,127: INFO: Epoch: 449 Early stopping counter 2 of 50
+2022-07-27 20:44:27,474: INFO: Epoch: 450 Early stopping counter 3 of 50
+2022-07-27 20:44:28,871: INFO: Epoch: 451 Early stopping counter 4 of 50
+2022-07-27 20:44:30,890: INFO: Epoch[ 451] Loss: 3.65	Accuracy: 12.911	Val_Loss: 3.783	Val_Acc: 12.800
+2022-07-27 20:44:30,890: INFO: Epoch[ 451] Test Accuracy: 12.650
+2022-07-27 20:44:32,262: INFO: Epoch: 452 Early stopping counter 5 of 50
+2022-07-27 20:44:33,616: INFO: Epoch: 453 Early stopping counter 6 of 50
+2022-07-27 20:44:34,983: INFO: Epoch: 454 Early stopping counter 7 of 50
+2022-07-27 20:44:36,353: INFO: Epoch: 455 Early stopping counter 8 of 50
+2022-07-27 20:44:37,743: INFO: Epoch: 456 Early stopping counter 9 of 50
+2022-07-27 20:44:39,135: INFO: Epoch: 457 Early stopping counter 10 of 50
+2022-07-27 20:44:40,494: INFO: Epoch: 458 Early stopping counter 11 of 50
+2022-07-27 20:44:41,882: INFO: Epoch: 459 Early stopping counter 12 of 50
+2022-07-27 20:44:43,251: INFO: Epoch: 460 Early stopping counter 13 of 50
+2022-07-27 20:44:44,631: INFO: Epoch: 461 Early stopping counter 14 of 50
+2022-07-27 20:44:45,960: INFO: Epoch: 462 Early stopping counter 15 of 50
+2022-07-27 20:44:47,291: INFO: Epoch: 463 Early stopping counter 16 of 50
+2022-07-27 20:44:48,658: INFO: Epoch: 464 Early stopping counter 17 of 50
+2022-07-27 20:44:50,042: INFO: Epoch: 465 Early stopping counter 18 of 50
+2022-07-27 20:44:51,431: INFO: Epoch: 466 Early stopping counter 19 of 50
+2022-07-27 20:44:52,789: INFO: Epoch: 467 Early stopping counter 20 of 50
+2022-07-27 20:44:54,159: INFO: Epoch: 468 Early stopping counter 21 of 50
+2022-07-27 20:44:55,532: INFO: Epoch: 469 Early stopping counter 22 of 50
+2022-07-27 20:44:56,890: INFO: Epoch: 470 Early stopping counter 23 of 50
+2022-07-27 20:44:59,617: INFO: Epoch: 472 Early stopping counter 1 of 50
+2022-07-27 20:45:00,989: INFO: Epoch: 473 Early stopping counter 2 of 50
+2022-07-27 20:45:02,425: INFO: Epoch: 474 Early stopping counter 3 of 50
+2022-07-27 20:45:05,187: INFO: Epoch: 476 Early stopping counter 1 of 50
+2022-07-27 20:45:06,577: INFO: Epoch: 477 Early stopping counter 2 of 50
+2022-07-27 20:45:07,952: INFO: Epoch: 478 Early stopping counter 3 of 50
+2022-07-27 20:45:09,227: INFO: Epoch: 479 Early stopping counter 4 of 50
+2022-07-27 20:45:10,523: INFO: Epoch: 480 Early stopping counter 5 of 50
+2022-07-27 20:45:11,841: INFO: Epoch: 481 Early stopping counter 6 of 50
+2022-07-27 20:45:13,136: INFO: Epoch: 482 Early stopping counter 7 of 50
+2022-07-27 20:45:14,414: INFO: Epoch: 483 Early stopping counter 8 of 50
+2022-07-27 20:45:16,154: INFO: Epoch: 484 Early stopping counter 9 of 50
+2022-07-27 20:45:17,896: INFO: Epoch: 485 Early stopping counter 10 of 50
+2022-07-27 20:45:20,525: INFO: Epoch: 487 Early stopping counter 1 of 50
+2022-07-27 20:45:21,831: INFO: Epoch: 488 Early stopping counter 2 of 50
+2022-07-27 20:45:23,152: INFO: Epoch: 489 Early stopping counter 3 of 50
+2022-07-27 20:45:25,806: INFO: Epoch: 491 Early stopping counter 1 of 50
+2022-07-27 20:45:27,084: INFO: Epoch: 492 Early stopping counter 2 of 50
+2022-07-27 20:45:29,629: INFO: Epoch: 494 Early stopping counter 1 of 50
+2022-07-27 20:45:30,912: INFO: Epoch: 495 Early stopping counter 2 of 50
+2022-07-27 20:45:32,225: INFO: Epoch: 496 Early stopping counter 3 of 50
+2022-07-27 20:45:33,524: INFO: Epoch: 497 Early stopping counter 4 of 50
+2022-07-27 20:45:34,836: INFO: Epoch: 498 Early stopping counter 5 of 50
+2022-07-27 20:45:37,451: INFO: Epoch: 500 Early stopping counter 1 of 50
+2022-07-27 20:45:40,660: INFO: Epoch[ 501] Loss: 3.54	Accuracy: 14.267	Val_Loss: 3.692	Val_Acc: 12.400
+2022-07-27 20:45:40,661: INFO: Epoch[ 501] Test Accuracy: 14.050
+2022-07-27 20:45:43,285: INFO: Epoch: 503 Early stopping counter 1 of 50
+2022-07-27 20:45:44,659: INFO: Epoch: 504 Early stopping counter 2 of 50
+2022-07-27 20:45:46,030: INFO: Epoch: 505 Early stopping counter 3 of 50
+2022-07-27 20:45:47,393: INFO: Epoch: 506 Early stopping counter 4 of 50
+2022-07-27 20:45:48,764: INFO: Epoch: 507 Early stopping counter 5 of 50
+2022-07-27 20:45:50,135: INFO: Epoch: 508 Early stopping counter 6 of 50
+2022-07-27 20:45:52,897: INFO: Epoch: 510 Early stopping counter 1 of 50
+2022-07-27 20:45:54,294: INFO: Epoch: 511 Early stopping counter 2 of 50
+2022-07-27 20:45:55,663: INFO: Epoch: 512 Early stopping counter 3 of 50
+2022-07-27 20:45:57,041: INFO: Epoch: 513 Early stopping counter 4 of 50
+2022-07-27 20:45:58,413: INFO: Epoch: 514 Early stopping counter 5 of 50
+2022-07-27 20:45:59,781: INFO: Epoch: 515 Early stopping counter 6 of 50
+2022-07-27 20:46:01,099: INFO: Epoch: 516 Early stopping counter 7 of 50
+2022-07-27 20:46:02,436: INFO: Epoch: 517 Early stopping counter 8 of 50
+2022-07-27 20:46:03,838: INFO: Epoch: 518 Early stopping counter 9 of 50
+2022-07-27 20:46:05,255: INFO: Epoch: 519 Early stopping counter 10 of 50
+2022-07-27 20:46:06,633: INFO: Epoch: 520 Early stopping counter 11 of 50
+2022-07-27 20:46:07,988: INFO: Epoch: 521 Early stopping counter 12 of 50
+2022-07-27 20:46:09,349: INFO: Epoch: 522 Early stopping counter 13 of 50
+2022-07-27 20:46:10,723: INFO: Epoch: 523 Early stopping counter 14 of 50
+2022-07-27 20:46:12,117: INFO: Epoch: 524 Early stopping counter 15 of 50
+2022-07-27 20:46:13,475: INFO: Epoch: 525 Early stopping counter 16 of 50
+2022-07-27 20:46:14,862: INFO: Epoch: 526 Early stopping counter 17 of 50
+2022-07-27 20:46:16,226: INFO: Epoch: 527 Early stopping counter 18 of 50
+2022-07-27 20:46:17,594: INFO: Epoch: 528 Early stopping counter 19 of 50
+2022-07-27 20:46:18,968: INFO: Epoch: 529 Early stopping counter 20 of 50
+2022-07-27 20:46:20,337: INFO: Epoch: 530 Early stopping counter 21 of 50
+2022-07-27 20:46:21,698: INFO: Epoch: 531 Early stopping counter 22 of 50
+2022-07-27 20:46:22,985: INFO: Epoch: 532 Early stopping counter 23 of 50
+2022-07-27 20:46:24,268: INFO: Epoch: 533 Early stopping counter 24 of 50
+2022-07-27 20:46:25,589: INFO: Epoch: 534 Early stopping counter 25 of 50
+2022-07-27 20:46:28,111: INFO: Epoch: 536 Early stopping counter 1 of 50
+2022-07-27 20:46:29,365: INFO: Epoch: 537 Early stopping counter 2 of 50
+2022-07-27 20:46:30,632: INFO: Epoch: 538 Early stopping counter 3 of 50
+2022-07-27 20:46:33,197: INFO: Epoch: 540 Early stopping counter 1 of 50
+2022-07-27 20:46:34,456: INFO: Epoch: 541 Early stopping counter 2 of 50
+2022-07-27 20:46:35,729: INFO: Epoch: 542 Early stopping counter 3 of 50
+2022-07-27 20:46:36,992: INFO: Epoch: 543 Early stopping counter 4 of 50
+2022-07-27 20:46:39,495: INFO: Epoch: 545 Early stopping counter 1 of 50
+2022-07-27 20:46:41,975: INFO: Epoch: 547 Early stopping counter 1 of 50
+2022-07-27 20:46:44,458: INFO: Epoch: 549 Early stopping counter 1 of 50
+2022-07-27 20:46:45,797: INFO: Epoch: 550 Early stopping counter 2 of 50
+2022-07-27 20:46:49,262: INFO: Epoch[ 551] Loss: 3.49	Accuracy: 15.289	Val_Loss: 3.648	Val_Acc: 14.200
+2022-07-27 20:46:49,262: INFO: Epoch[ 551] Test Accuracy: 14.460
+2022-07-27 20:46:50,658: INFO: Epoch: 552 Early stopping counter 1 of 50
+2022-07-27 20:46:52,056: INFO: Epoch: 553 Early stopping counter 2 of 50
+2022-07-27 20:46:53,442: INFO: Epoch: 554 Early stopping counter 3 of 50
+2022-07-27 20:46:54,866: INFO: Epoch: 555 Early stopping counter 4 of 50
+2022-07-27 20:46:56,820: INFO: Epoch: 556 Early stopping counter 5 of 50
+2022-07-27 20:46:58,673: INFO: Epoch: 557 Early stopping counter 6 of 50
+2022-07-27 20:47:00,072: INFO: Epoch: 558 Early stopping counter 7 of 50
+2022-07-27 20:47:01,471: INFO: Epoch: 559 Early stopping counter 8 of 50
+2022-07-27 20:47:02,855: INFO: Epoch: 560 Early stopping counter 9 of 50
+2022-07-27 20:47:05,571: INFO: Epoch: 562 Early stopping counter 1 of 50
+2022-07-27 20:47:06,967: INFO: Epoch: 563 Early stopping counter 2 of 50
+2022-07-27 20:47:08,369: INFO: Epoch: 564 Early stopping counter 3 of 50
+2022-07-27 20:47:11,136: INFO: Epoch: 566 Early stopping counter 1 of 50
+2022-07-27 20:47:13,769: INFO: Epoch: 568 Early stopping counter 1 of 50
+2022-07-27 20:47:15,076: INFO: Epoch: 569 Early stopping counter 2 of 50
+2022-07-27 20:47:16,376: INFO: Epoch: 570 Early stopping counter 3 of 50
+2022-07-27 20:47:17,695: INFO: Epoch: 571 Early stopping counter 4 of 50
+2022-07-27 20:47:19,015: INFO: Epoch: 572 Early stopping counter 5 of 50
+2022-07-27 20:47:20,351: INFO: Epoch: 573 Early stopping counter 6 of 50
+2022-07-27 20:47:21,691: INFO: Epoch: 574 Early stopping counter 7 of 50
+2022-07-27 20:47:23,006: INFO: Epoch: 575 Early stopping counter 8 of 50
+2022-07-27 20:47:24,316: INFO: Epoch: 576 Early stopping counter 9 of 50
+2022-07-27 20:47:25,638: INFO: Epoch: 577 Early stopping counter 10 of 50
+2022-07-27 20:47:26,976: INFO: Epoch: 578 Early stopping counter 11 of 50
+2022-07-27 20:47:28,297: INFO: Epoch: 579 Early stopping counter 12 of 50
+2022-07-27 20:47:29,639: INFO: Epoch: 580 Early stopping counter 13 of 50
+2022-07-27 20:47:30,970: INFO: Epoch: 581 Early stopping counter 14 of 50
+2022-07-27 20:47:32,306: INFO: Epoch: 582 Early stopping counter 15 of 50
+2022-07-27 20:47:33,665: INFO: Epoch: 583 Early stopping counter 16 of 50
+2022-07-27 20:47:34,975: INFO: Epoch: 584 Early stopping counter 17 of 50
+2022-07-27 20:47:36,295: INFO: Epoch: 585 Early stopping counter 18 of 50
+2022-07-27 20:47:37,672: INFO: Epoch: 586 Early stopping counter 19 of 50
+2022-07-27 20:47:38,999: INFO: Epoch: 587 Early stopping counter 20 of 50
+2022-07-27 20:47:41,639: INFO: Epoch: 589 Early stopping counter 1 of 50
+2022-07-27 20:47:42,960: INFO: Epoch: 590 Early stopping counter 2 of 50
+2022-07-27 20:47:44,288: INFO: Epoch: 591 Early stopping counter 3 of 50
+2022-07-27 20:47:46,920: INFO: Epoch: 593 Early stopping counter 1 of 50
+2022-07-27 20:47:49,566: INFO: Epoch: 595 Early stopping counter 1 of 50
+2022-07-27 20:47:50,877: INFO: Epoch: 596 Early stopping counter 2 of 50
+2022-07-27 20:47:52,190: INFO: Epoch: 597 Early stopping counter 3 of 50
+2022-07-27 20:47:54,818: INFO: Epoch: 599 Early stopping counter 1 of 50
+2022-07-27 20:47:56,149: INFO: Epoch: 600 Early stopping counter 2 of 50
+2022-07-27 20:47:57,462: INFO: Epoch: 601 Early stopping counter 3 of 50
+2022-07-27 20:47:59,435: INFO: Epoch[ 601] Loss: 3.43	Accuracy: 15.644	Val_Loss: 3.642	Val_Acc: 13.400
+2022-07-27 20:47:59,435: INFO: Epoch[ 601] Test Accuracy: 14.960
+2022-07-27 20:48:00,778: INFO: Epoch: 602 Early stopping counter 4 of 50
+2022-07-27 20:48:02,097: INFO: Epoch: 603 Early stopping counter 5 of 50
+2022-07-27 20:48:03,427: INFO: Epoch: 604 Early stopping counter 6 of 50
+2022-07-27 20:48:04,784: INFO: Epoch: 605 Early stopping counter 7 of 50
+2022-07-27 20:48:06,174: INFO: Epoch: 606 Early stopping counter 8 of 50
+2022-07-27 20:48:07,498: INFO: Epoch: 607 Early stopping counter 9 of 50
+2022-07-27 20:48:08,817: INFO: Epoch: 608 Early stopping counter 10 of 50
+2022-07-27 20:48:10,136: INFO: Epoch: 609 Early stopping counter 11 of 50
+2022-07-27 20:48:11,473: INFO: Epoch: 610 Early stopping counter 12 of 50
+2022-07-27 20:48:12,786: INFO: Epoch: 611 Early stopping counter 13 of 50
+2022-07-27 20:48:14,103: INFO: Epoch: 612 Early stopping counter 14 of 50
+2022-07-27 20:48:15,414: INFO: Epoch: 613 Early stopping counter 15 of 50
+2022-07-27 20:48:16,732: INFO: Epoch: 614 Early stopping counter 16 of 50
+2022-07-27 20:48:18,085: INFO: Epoch: 615 Early stopping counter 17 of 50
+2022-07-27 20:48:19,474: INFO: Epoch: 616 Early stopping counter 18 of 50
+2022-07-27 20:48:20,846: INFO: Epoch: 617 Early stopping counter 19 of 50
+2022-07-27 20:48:22,198: INFO: Epoch: 618 Early stopping counter 20 of 50
+2022-07-27 20:48:23,561: INFO: Epoch: 619 Early stopping counter 21 of 50
+2022-07-27 20:48:24,937: INFO: Epoch: 620 Early stopping counter 22 of 50
+2022-07-27 20:48:26,318: INFO: Epoch: 621 Early stopping counter 23 of 50
+2022-07-27 20:48:29,069: INFO: Epoch: 623 Early stopping counter 1 of 50
+2022-07-27 20:48:30,441: INFO: Epoch: 624 Early stopping counter 2 of 50
+2022-07-27 20:48:31,834: INFO: Epoch: 625 Early stopping counter 3 of 50
+2022-07-27 20:48:33,214: INFO: Epoch: 626 Early stopping counter 4 of 50
+2022-07-27 20:48:35,929: INFO: Epoch: 628 Early stopping counter 1 of 50
+2022-07-27 20:48:37,433: INFO: Epoch: 629 Early stopping counter 2 of 50
+2022-07-27 20:48:39,371: INFO: Epoch: 630 Early stopping counter 3 of 50
+2022-07-27 20:48:40,913: INFO: Epoch: 631 Early stopping counter 4 of 50
+2022-07-27 20:48:42,284: INFO: Epoch: 632 Early stopping counter 5 of 50
+2022-07-27 20:48:43,664: INFO: Epoch: 633 Early stopping counter 6 of 50
+2022-07-27 20:48:45,024: INFO: Epoch: 634 Early stopping counter 7 of 50
+2022-07-27 20:48:46,384: INFO: Epoch: 635 Early stopping counter 8 of 50
+2022-07-27 20:48:47,747: INFO: Epoch: 636 Early stopping counter 9 of 50
+2022-07-27 20:48:49,117: INFO: Epoch: 637 Early stopping counter 10 of 50
+2022-07-27 20:48:50,531: INFO: Epoch: 638 Early stopping counter 11 of 50
+2022-07-27 20:48:51,942: INFO: Epoch: 639 Early stopping counter 12 of 50
+2022-07-27 20:48:53,355: INFO: Epoch: 640 Early stopping counter 13 of 50
+2022-07-27 20:48:54,758: INFO: Epoch: 641 Early stopping counter 14 of 50
+2022-07-27 20:48:56,191: INFO: Epoch: 642 Early stopping counter 15 of 50
+2022-07-27 20:48:58,964: INFO: Epoch: 644 Early stopping counter 1 of 50
+2022-07-27 20:49:00,341: INFO: Epoch: 645 Early stopping counter 2 of 50
+2022-07-27 20:49:01,698: INFO: Epoch: 646 Early stopping counter 3 of 50
+2022-07-27 20:49:03,102: INFO: Epoch: 647 Early stopping counter 4 of 50
+2022-07-27 20:49:04,518: INFO: Epoch: 648 Early stopping counter 5 of 50
+2022-07-27 20:49:05,929: INFO: Epoch: 649 Early stopping counter 6 of 50
+2022-07-27 20:49:07,363: INFO: Epoch: 650 Early stopping counter 7 of 50
+2022-07-27 20:49:10,697: INFO: Epoch[ 651] Loss: 3.36	Accuracy: 17.711	Val_Loss: 3.593	Val_Acc: 14.600
+2022-07-27 20:49:10,697: INFO: Epoch[ 651] Test Accuracy: 15.200
+2022-07-27 20:49:12,083: INFO: Epoch: 652 Early stopping counter 1 of 50
+2022-07-27 20:49:13,444: INFO: Epoch: 653 Early stopping counter 2 of 50
+2022-07-27 20:49:14,793: INFO: Epoch: 654 Early stopping counter 3 of 50
+2022-07-27 20:49:16,184: INFO: Epoch: 655 Early stopping counter 4 of 50
+2022-07-27 20:49:17,555: INFO: Epoch: 656 Early stopping counter 5 of 50
+2022-07-27 20:49:18,928: INFO: Epoch: 657 Early stopping counter 6 of 50
+2022-07-27 20:49:20,287: INFO: Epoch: 658 Early stopping counter 7 of 50
+2022-07-27 20:49:21,653: INFO: Epoch: 659 Early stopping counter 8 of 50
+2022-07-27 20:49:23,027: INFO: Epoch: 660 Early stopping counter 9 of 50
+2022-07-27 20:49:25,778: INFO: Epoch: 662 Early stopping counter 1 of 50
+2022-07-27 20:49:27,065: INFO: Epoch: 663 Early stopping counter 2 of 50
+2022-07-27 20:49:28,365: INFO: Epoch: 664 Early stopping counter 3 of 50
+2022-07-27 20:49:30,911: INFO: Epoch: 666 Early stopping counter 1 of 50
+2022-07-27 20:49:32,215: INFO: Epoch: 667 Early stopping counter 2 of 50
+2022-07-27 20:49:33,502: INFO: Epoch: 668 Early stopping counter 3 of 50
+2022-07-27 20:49:34,813: INFO: Epoch: 669 Early stopping counter 4 of 50
+2022-07-27 20:49:36,141: INFO: Epoch: 670 Early stopping counter 5 of 50
+2022-07-27 20:49:37,488: INFO: Epoch: 671 Early stopping counter 6 of 50
+2022-07-27 20:49:40,148: INFO: Epoch: 673 Early stopping counter 1 of 50
+2022-07-27 20:49:41,498: INFO: Epoch: 674 Early stopping counter 2 of 50
+2022-07-27 20:49:42,829: INFO: Epoch: 675 Early stopping counter 3 of 50
+2022-07-27 20:49:45,504: INFO: Epoch: 677 Early stopping counter 1 of 50
+2022-07-27 20:49:46,875: INFO: Epoch: 678 Early stopping counter 2 of 50
+2022-07-27 20:49:48,208: INFO: Epoch: 679 Early stopping counter 3 of 50
+2022-07-27 20:49:49,513: INFO: Epoch: 680 Early stopping counter 4 of 50
+2022-07-27 20:49:50,821: INFO: Epoch: 681 Early stopping counter 5 of 50
+2022-07-27 20:49:53,487: INFO: Epoch: 683 Early stopping counter 1 of 50
+2022-07-27 20:49:54,793: INFO: Epoch: 684 Early stopping counter 2 of 50
+2022-07-27 20:49:56,114: INFO: Epoch: 685 Early stopping counter 3 of 50
+2022-07-27 20:49:57,419: INFO: Epoch: 686 Early stopping counter 4 of 50
+2022-07-27 20:50:00,060: INFO: Epoch: 688 Early stopping counter 1 of 50
+2022-07-27 20:50:01,385: INFO: Epoch: 689 Early stopping counter 2 of 50
+2022-07-27 20:50:02,696: INFO: Epoch: 690 Early stopping counter 3 of 50
+2022-07-27 20:50:04,012: INFO: Epoch: 691 Early stopping counter 4 of 50
+2022-07-27 20:50:05,344: INFO: Epoch: 692 Early stopping counter 5 of 50
+2022-07-27 20:50:06,693: INFO: Epoch: 693 Early stopping counter 6 of 50
+2022-07-27 20:50:08,053: INFO: Epoch: 694 Early stopping counter 7 of 50
+2022-07-27 20:50:09,367: INFO: Epoch: 695 Early stopping counter 8 of 50
+2022-07-27 20:50:10,693: INFO: Epoch: 696 Early stopping counter 9 of 50
+2022-07-27 20:50:12,048: INFO: Epoch: 697 Early stopping counter 10 of 50
+2022-07-27 20:50:13,379: INFO: Epoch: 698 Early stopping counter 11 of 50
+2022-07-27 20:50:14,708: INFO: Epoch: 699 Early stopping counter 12 of 50
+2022-07-27 20:50:16,020: INFO: Epoch: 700 Early stopping counter 13 of 50
+2022-07-27 20:50:17,410: INFO: Epoch: 701 Early stopping counter 14 of 50
+2022-07-27 20:50:20,290: INFO: Epoch[ 701] Loss: 3.42	Accuracy: 16.489	Val_Loss: 3.596	Val_Acc: 15.800
+2022-07-27 20:50:20,290: INFO: Epoch[ 701] Test Accuracy: 14.770
+2022-07-27 20:50:21,610: INFO: Epoch: 702 Early stopping counter 15 of 50
+2022-07-27 20:50:23,003: INFO: Epoch: 703 Early stopping counter 16 of 50
+2022-07-27 20:50:24,315: INFO: Epoch: 704 Early stopping counter 17 of 50
+2022-07-27 20:50:25,616: INFO: Epoch: 705 Early stopping counter 18 of 50
+2022-07-27 20:50:26,930: INFO: Epoch: 706 Early stopping counter 19 of 50
+2022-07-27 20:50:29,540: INFO: Epoch: 708 Early stopping counter 1 of 50
+2022-07-27 20:50:30,836: INFO: Epoch: 709 Early stopping counter 2 of 50
+2022-07-27 20:50:32,141: INFO: Epoch: 710 Early stopping counter 3 of 50
+2022-07-27 20:50:33,465: INFO: Epoch: 711 Early stopping counter 4 of 50
+2022-07-27 20:50:34,856: INFO: Epoch: 712 Early stopping counter 5 of 50
+2022-07-27 20:50:36,243: INFO: Epoch: 713 Early stopping counter 6 of 50
+2022-07-27 20:50:37,633: INFO: Epoch: 714 Early stopping counter 7 of 50
+2022-07-27 20:50:39,007: INFO: Epoch: 715 Early stopping counter 8 of 50
+2022-07-27 20:50:40,403: INFO: Epoch: 716 Early stopping counter 9 of 50
+2022-07-27 20:50:41,775: INFO: Epoch: 717 Early stopping counter 10 of 50
+2022-07-27 20:50:43,158: INFO: Epoch: 718 Early stopping counter 11 of 50
+2022-07-27 20:50:44,560: INFO: Epoch: 719 Early stopping counter 12 of 50
+2022-07-27 20:50:45,915: INFO: Epoch: 720 Early stopping counter 13 of 50
+2022-07-27 20:50:47,298: INFO: Epoch: 721 Early stopping counter 14 of 50
+2022-07-27 20:50:48,702: INFO: Epoch: 722 Early stopping counter 15 of 50
+2022-07-27 20:50:50,077: INFO: Epoch: 723 Early stopping counter 16 of 50
+2022-07-27 20:50:51,455: INFO: Epoch: 724 Early stopping counter 17 of 50
+2022-07-27 20:50:52,744: INFO: Epoch: 725 Early stopping counter 18 of 50
+2022-07-27 20:50:54,074: INFO: Epoch: 726 Early stopping counter 19 of 50
+2022-07-27 20:50:55,439: INFO: Epoch: 727 Early stopping counter 20 of 50
+2022-07-27 20:50:56,818: INFO: Epoch: 728 Early stopping counter 21 of 50
+2022-07-27 20:50:58,209: INFO: Epoch: 729 Early stopping counter 22 of 50
+2022-07-27 20:50:59,571: INFO: Epoch: 730 Early stopping counter 23 of 50
+2022-07-27 20:51:00,966: INFO: Epoch: 731 Early stopping counter 24 of 50
+2022-07-27 20:51:02,325: INFO: Epoch: 732 Early stopping counter 25 of 50
+2022-07-27 20:51:03,695: INFO: Epoch: 733 Early stopping counter 26 of 50
+2022-07-27 20:51:05,069: INFO: Epoch: 734 Early stopping counter 27 of 50
+2022-07-27 20:51:06,451: INFO: Epoch: 735 Early stopping counter 28 of 50
+2022-07-27 20:51:07,854: INFO: Epoch: 736 Early stopping counter 29 of 50
+2022-07-27 20:51:09,285: INFO: Epoch: 737 Early stopping counter 30 of 50
+2022-07-27 20:51:10,689: INFO: Epoch: 738 Early stopping counter 31 of 50
+2022-07-27 20:51:12,038: INFO: Epoch: 739 Early stopping counter 32 of 50
+2022-07-27 20:51:13,402: INFO: Epoch: 740 Early stopping counter 33 of 50
+2022-07-27 20:51:14,779: INFO: Epoch: 741 Early stopping counter 34 of 50
+2022-07-27 20:51:16,129: INFO: Epoch: 742 Early stopping counter 35 of 50
+2022-07-27 20:51:17,499: INFO: Epoch: 743 Early stopping counter 36 of 50
+2022-07-27 20:51:18,847: INFO: Epoch: 744 Early stopping counter 37 of 50
+2022-07-27 20:51:20,206: INFO: Epoch: 745 Early stopping counter 38 of 50
+2022-07-27 20:51:24,363: INFO: Epoch: 748 Early stopping counter 1 of 50
+2022-07-27 20:51:25,711: INFO: Epoch: 749 Early stopping counter 2 of 50
+2022-07-27 20:51:28,422: INFO: Epoch: 751 Early stopping counter 1 of 50
+2022-07-27 20:51:30,536: INFO: Epoch[ 751] Loss: 3.25	Accuracy: 19.400	Val_Loss: 3.568	Val_Acc: 15.400
+2022-07-27 20:51:30,537: INFO: Epoch[ 751] Test Accuracy: 15.710
+2022-07-27 20:51:31,929: INFO: Epoch: 752 Early stopping counter 2 of 50
+2022-07-27 20:51:33,307: INFO: Epoch: 753 Early stopping counter 3 of 50
+2022-07-27 20:51:34,702: INFO: Epoch: 754 Early stopping counter 4 of 50
+2022-07-27 20:51:36,067: INFO: Epoch: 755 Early stopping counter 5 of 50
+2022-07-27 20:51:37,436: INFO: Epoch: 756 Early stopping counter 6 of 50
+2022-07-27 20:51:38,829: INFO: Epoch: 757 Early stopping counter 7 of 50
+2022-07-27 20:51:40,210: INFO: Epoch: 758 Early stopping counter 8 of 50
+2022-07-27 20:51:41,586: INFO: Epoch: 759 Early stopping counter 9 of 50
+2022-07-27 20:51:43,000: INFO: Epoch: 760 Early stopping counter 10 of 50
+2022-07-27 20:51:44,391: INFO: Epoch: 761 Early stopping counter 11 of 50
+2022-07-27 20:51:45,769: INFO: Epoch: 762 Early stopping counter 12 of 50
+2022-07-27 20:51:47,149: INFO: Epoch: 763 Early stopping counter 13 of 50
+2022-07-27 20:51:48,445: INFO: Epoch: 764 Early stopping counter 14 of 50
+2022-07-27 20:51:51,043: INFO: Epoch: 766 Early stopping counter 1 of 50
+2022-07-27 20:51:52,344: INFO: Epoch: 767 Early stopping counter 2 of 50
+2022-07-27 20:51:54,947: INFO: Epoch: 769 Early stopping counter 1 of 50
+2022-07-27 20:51:56,278: INFO: Epoch: 770 Early stopping counter 2 of 50
+2022-07-27 20:51:57,627: INFO: Epoch: 771 Early stopping counter 3 of 50
+2022-07-27 20:51:59,480: INFO: Epoch: 772 Early stopping counter 4 of 50
+2022-07-27 20:52:01,203: INFO: Epoch: 773 Early stopping counter 5 of 50
+2022-07-27 20:52:02,562: INFO: Epoch: 774 Early stopping counter 6 of 50
+2022-07-27 20:52:03,903: INFO: Epoch: 775 Early stopping counter 7 of 50
+2022-07-27 20:52:05,245: INFO: Epoch: 776 Early stopping counter 8 of 50
+2022-07-27 20:52:06,641: INFO: Epoch: 777 Early stopping counter 9 of 50
+2022-07-27 20:52:07,947: INFO: Epoch: 778 Early stopping counter 10 of 50
+2022-07-27 20:52:09,257: INFO: Epoch: 779 Early stopping counter 11 of 50
+2022-07-27 20:52:10,662: INFO: Epoch: 780 Early stopping counter 12 of 50
+2022-07-27 20:52:11,968: INFO: Epoch: 781 Early stopping counter 13 of 50
+2022-07-27 20:52:13,268: INFO: Epoch: 782 Early stopping counter 14 of 50
+2022-07-27 20:52:14,565: INFO: Epoch: 783 Early stopping counter 15 of 50
+2022-07-27 20:52:15,864: INFO: Epoch: 784 Early stopping counter 16 of 50
+2022-07-27 20:52:17,173: INFO: Epoch: 785 Early stopping counter 17 of 50
+2022-07-27 20:52:18,479: INFO: Epoch: 786 Early stopping counter 18 of 50
+2022-07-27 20:52:19,804: INFO: Epoch: 787 Early stopping counter 19 of 50
+2022-07-27 20:52:21,104: INFO: Epoch: 788 Early stopping counter 20 of 50
+2022-07-27 20:52:22,398: INFO: Epoch: 789 Early stopping counter 21 of 50
+2022-07-27 20:52:23,714: INFO: Epoch: 790 Early stopping counter 22 of 50
+2022-07-27 20:52:25,018: INFO: Epoch: 791 Early stopping counter 23 of 50
+2022-07-27 20:52:26,319: INFO: Epoch: 792 Early stopping counter 24 of 50
+2022-07-27 20:52:27,634: INFO: Epoch: 793 Early stopping counter 25 of 50
+2022-07-27 20:52:28,943: INFO: Epoch: 794 Early stopping counter 26 of 50
+2022-07-27 20:52:30,259: INFO: Epoch: 795 Early stopping counter 27 of 50
+2022-07-27 20:52:31,583: INFO: Epoch: 796 Early stopping counter 28 of 50
+2022-07-27 20:52:32,910: INFO: Epoch: 797 Early stopping counter 29 of 50
+2022-07-27 20:52:34,231: INFO: Epoch: 798 Early stopping counter 30 of 50
+2022-07-27 20:52:35,541: INFO: Epoch: 799 Early stopping counter 31 of 50
+2022-07-27 20:52:36,856: INFO: Epoch: 800 Early stopping counter 32 of 50
+2022-07-27 20:52:38,169: INFO: Epoch: 801 Early stopping counter 33 of 50
+2022-07-27 20:52:40,135: INFO: Epoch[ 801] Loss: 3.20	Accuracy: 20.067	Val_Loss: 3.542	Val_Acc: 16.600
+2022-07-27 20:52:40,135: INFO: Epoch[ 801] Test Accuracy: 15.980
+2022-07-27 20:52:41,439: INFO: Epoch: 802 Early stopping counter 34 of 50
+2022-07-27 20:52:42,780: INFO: Epoch: 803 Early stopping counter 35 of 50
+2022-07-27 20:52:44,101: INFO: Epoch: 804 Early stopping counter 36 of 50
+2022-07-27 20:52:45,413: INFO: Epoch: 805 Early stopping counter 37 of 50
+2022-07-27 20:52:46,722: INFO: Epoch: 806 Early stopping counter 38 of 50
+2022-07-27 20:52:48,034: INFO: Epoch: 807 Early stopping counter 39 of 50
+2022-07-27 20:52:49,324: INFO: Epoch: 808 Early stopping counter 40 of 50
+2022-07-27 20:52:52,091: INFO: Epoch: 810 Early stopping counter 1 of 50
+2022-07-27 20:52:54,870: INFO: Epoch: 812 Early stopping counter 1 of 50
+2022-07-27 20:52:57,663: INFO: Epoch: 814 Early stopping counter 1 of 50
+2022-07-27 20:52:59,021: INFO: Epoch: 815 Early stopping counter 2 of 50
+2022-07-27 20:53:00,425: INFO: Epoch: 816 Early stopping counter 3 of 50
+2022-07-27 20:53:01,815: INFO: Epoch: 817 Early stopping counter 4 of 50
+2022-07-27 20:53:03,213: INFO: Epoch: 818 Early stopping counter 5 of 50
+2022-07-27 20:53:04,611: INFO: Epoch: 819 Early stopping counter 6 of 50
+2022-07-27 20:53:06,012: INFO: Epoch: 820 Early stopping counter 7 of 50
+2022-07-27 20:53:07,400: INFO: Epoch: 821 Early stopping counter 8 of 50
+2022-07-27 20:53:08,694: INFO: Epoch: 822 Early stopping counter 9 of 50
+2022-07-27 20:53:10,078: INFO: Epoch: 823 Early stopping counter 10 of 50
+2022-07-27 20:53:11,448: INFO: Epoch: 824 Early stopping counter 11 of 50
+2022-07-27 20:53:12,829: INFO: Epoch: 825 Early stopping counter 12 of 50
+2022-07-27 20:53:14,206: INFO: Epoch: 826 Early stopping counter 13 of 50
+2022-07-27 20:53:15,586: INFO: Epoch: 827 Early stopping counter 14 of 50
+2022-07-27 20:53:16,958: INFO: Epoch: 828 Early stopping counter 15 of 50
+2022-07-27 20:53:18,349: INFO: Epoch: 829 Early stopping counter 16 of 50
+2022-07-27 20:53:19,720: INFO: Epoch: 830 Early stopping counter 17 of 50
+2022-07-27 20:53:21,102: INFO: Epoch: 831 Early stopping counter 18 of 50
+2022-07-27 20:53:22,382: INFO: Epoch: 832 Early stopping counter 19 of 50
+2022-07-27 20:53:24,960: INFO: Epoch: 834 Early stopping counter 1 of 50
+2022-07-27 20:53:26,245: INFO: Epoch: 835 Early stopping counter 2 of 50
+2022-07-27 20:53:28,959: INFO: Epoch: 837 Early stopping counter 1 of 50
+2022-07-27 20:53:30,299: INFO: Epoch: 838 Early stopping counter 2 of 50
+2022-07-27 20:53:33,023: INFO: Epoch: 840 Early stopping counter 1 of 50
+2022-07-27 20:53:34,416: INFO: Epoch: 841 Early stopping counter 2 of 50
+2022-07-27 20:53:37,226: INFO: Epoch: 843 Early stopping counter 1 of 50
+2022-07-27 20:53:38,805: INFO: Epoch: 844 Early stopping counter 2 of 50
+2022-07-27 20:53:40,741: INFO: Epoch: 845 Early stopping counter 3 of 50
+2022-07-27 20:53:42,324: INFO: Epoch: 846 Early stopping counter 4 of 50
+2022-07-27 20:53:43,698: INFO: Epoch: 847 Early stopping counter 5 of 50
+2022-07-27 20:53:45,073: INFO: Epoch: 848 Early stopping counter 6 of 50
+2022-07-27 20:53:46,405: INFO: Epoch: 849 Early stopping counter 7 of 50
+2022-07-27 20:53:47,786: INFO: Epoch: 850 Early stopping counter 8 of 50
+2022-07-27 20:53:49,176: INFO: Epoch: 851 Early stopping counter 9 of 50
+2022-07-27 20:53:51,255: INFO: Epoch[ 851] Loss: 3.19	Accuracy: 20.778	Val_Loss: 3.554	Val_Acc: 15.400
+2022-07-27 20:53:51,255: INFO: Epoch[ 851] Test Accuracy: 15.290
+2022-07-27 20:53:52,654: INFO: Epoch: 852 Early stopping counter 10 of 50
+2022-07-27 20:53:54,055: INFO: Epoch: 853 Early stopping counter 11 of 50
+2022-07-27 20:53:55,459: INFO: Epoch: 854 Early stopping counter 12 of 50
+2022-07-27 20:53:56,856: INFO: Epoch: 855 Early stopping counter 13 of 50
+2022-07-27 20:53:58,228: INFO: Epoch: 856 Early stopping counter 14 of 50
+2022-07-27 20:53:59,605: INFO: Epoch: 857 Early stopping counter 15 of 50
+2022-07-27 20:54:00,894: INFO: Epoch: 858 Early stopping counter 16 of 50
+2022-07-27 20:54:02,192: INFO: Epoch: 859 Early stopping counter 17 of 50
+2022-07-27 20:54:03,518: INFO: Epoch: 860 Early stopping counter 18 of 50
+2022-07-27 20:54:04,795: INFO: Epoch: 861 Early stopping counter 19 of 50
+2022-07-27 20:54:06,076: INFO: Epoch: 862 Early stopping counter 20 of 50
+2022-07-27 20:54:07,415: INFO: Epoch: 863 Early stopping counter 21 of 50
+2022-07-27 20:54:08,700: INFO: Epoch: 864 Early stopping counter 22 of 50
+2022-07-27 20:54:09,980: INFO: Epoch: 865 Early stopping counter 23 of 50
+2022-07-27 20:54:11,332: INFO: Epoch: 866 Early stopping counter 24 of 50
+2022-07-27 20:54:12,671: INFO: Epoch: 867 Early stopping counter 25 of 50
+2022-07-27 20:54:15,346: INFO: Epoch: 869 Early stopping counter 1 of 50
+2022-07-27 20:54:16,685: INFO: Epoch: 870 Early stopping counter 2 of 50
+2022-07-27 20:54:18,062: INFO: Epoch: 871 Early stopping counter 3 of 50
+2022-07-27 20:54:19,400: INFO: Epoch: 872 Early stopping counter 4 of 50
+2022-07-27 20:54:20,742: INFO: Epoch: 873 Early stopping counter 5 of 50
+2022-07-27 20:54:22,111: INFO: Epoch: 874 Early stopping counter 6 of 50
+2022-07-27 20:54:23,484: INFO: Epoch: 875 Early stopping counter 7 of 50
+2022-07-27 20:54:24,807: INFO: Epoch: 876 Early stopping counter 8 of 50
+2022-07-27 20:54:26,122: INFO: Epoch: 877 Early stopping counter 9 of 50
+2022-07-27 20:54:27,418: INFO: Epoch: 878 Early stopping counter 10 of 50
+2022-07-27 20:54:28,744: INFO: Epoch: 879 Early stopping counter 11 of 50
+2022-07-27 20:54:30,051: INFO: Epoch: 880 Early stopping counter 12 of 50
+2022-07-27 20:54:31,365: INFO: Epoch: 881 Early stopping counter 13 of 50
+2022-07-27 20:54:32,687: INFO: Epoch: 882 Early stopping counter 14 of 50
+2022-07-27 20:54:34,016: INFO: Epoch: 883 Early stopping counter 15 of 50
+2022-07-27 20:54:35,320: INFO: Epoch: 884 Early stopping counter 16 of 50
+2022-07-27 20:54:36,637: INFO: Epoch: 885 Early stopping counter 17 of 50
+2022-07-27 20:54:37,952: INFO: Epoch: 886 Early stopping counter 18 of 50
+2022-07-27 20:54:39,281: INFO: Epoch: 887 Early stopping counter 19 of 50
+2022-07-27 20:54:40,586: INFO: Epoch: 888 Early stopping counter 20 of 50
+2022-07-27 20:54:41,896: INFO: Epoch: 889 Early stopping counter 21 of 50
+2022-07-27 20:54:43,203: INFO: Epoch: 890 Early stopping counter 22 of 50
+2022-07-27 20:54:44,508: INFO: Epoch: 891 Early stopping counter 23 of 50
+2022-07-27 20:54:45,814: INFO: Epoch: 892 Early stopping counter 24 of 50
+2022-07-27 20:54:47,114: INFO: Epoch: 893 Early stopping counter 25 of 50
+2022-07-27 20:54:48,417: INFO: Epoch: 894 Early stopping counter 26 of 50
+2022-07-27 20:54:51,032: INFO: Epoch: 896 Early stopping counter 1 of 50
+2022-07-27 20:54:52,357: INFO: Epoch: 897 Early stopping counter 2 of 50
+2022-07-27 20:54:53,652: INFO: Epoch: 898 Early stopping counter 3 of 50
+2022-07-27 20:54:54,963: INFO: Epoch: 899 Early stopping counter 4 of 50
+2022-07-27 20:54:56,287: INFO: Epoch: 900 Early stopping counter 5 of 50
+2022-07-27 20:54:57,594: INFO: Epoch: 901 Early stopping counter 6 of 50
+2022-07-27 20:54:59,639: INFO: Epoch[ 901] Loss: 3.08	Accuracy: 23.289	Val_Loss: 3.510	Val_Acc: 18.800
+2022-07-27 20:54:59,640: INFO: Epoch[ 901] Test Accuracy: 17.080
+2022-07-27 20:55:00,992: INFO: Epoch: 902 Early stopping counter 7 of 50
+2022-07-27 20:55:02,296: INFO: Epoch: 903 Early stopping counter 8 of 50
+2022-07-27 20:55:03,703: INFO: Epoch: 904 Early stopping counter 9 of 50
+2022-07-27 20:55:05,090: INFO: Epoch: 905 Early stopping counter 10 of 50
+2022-07-27 20:55:06,474: INFO: Epoch: 906 Early stopping counter 11 of 50
+2022-07-27 20:55:07,868: INFO: Epoch: 907 Early stopping counter 12 of 50
+2022-07-27 20:55:09,251: INFO: Epoch: 908 Early stopping counter 13 of 50
+2022-07-27 20:55:12,032: INFO: Epoch: 910 Early stopping counter 1 of 50
+2022-07-27 20:55:13,419: INFO: Epoch: 911 Early stopping counter 2 of 50
+2022-07-27 20:55:14,799: INFO: Epoch: 912 Early stopping counter 3 of 50
+2022-07-27 20:55:17,975: INFO: Epoch: 914 Early stopping counter 1 of 50
+2022-07-27 20:55:19,884: INFO: Epoch: 915 Early stopping counter 2 of 50
+2022-07-27 20:55:21,176: INFO: Epoch: 916 Early stopping counter 3 of 50
+2022-07-27 20:55:22,516: INFO: Epoch: 917 Early stopping counter 4 of 50
+2022-07-27 20:55:26,666: INFO: Epoch: 920 Early stopping counter 1 of 50
+2022-07-27 20:55:28,044: INFO: Epoch: 921 Early stopping counter 2 of 50
+2022-07-27 20:55:29,428: INFO: Epoch: 922 Early stopping counter 3 of 50
+2022-07-27 20:55:30,808: INFO: Epoch: 923 Early stopping counter 4 of 50
+2022-07-27 20:55:32,192: INFO: Epoch: 924 Early stopping counter 5 of 50
+2022-07-27 20:55:33,577: INFO: Epoch: 925 Early stopping counter 6 of 50
+2022-07-27 20:55:34,864: INFO: Epoch: 926 Early stopping counter 7 of 50
+2022-07-27 20:55:36,165: INFO: Epoch: 927 Early stopping counter 8 of 50
+2022-07-27 20:55:37,481: INFO: Epoch: 928 Early stopping counter 9 of 50
+2022-07-27 20:55:38,731: INFO: Epoch: 929 Early stopping counter 10 of 50
+2022-07-27 20:55:39,990: INFO: Epoch: 930 Early stopping counter 11 of 50
+2022-07-27 20:55:41,253: INFO: Epoch: 931 Early stopping counter 12 of 50
+2022-07-27 20:55:42,531: INFO: Epoch: 932 Early stopping counter 13 of 50
+2022-07-27 20:55:43,893: INFO: Epoch: 933 Early stopping counter 14 of 50
+2022-07-27 20:55:45,257: INFO: Epoch: 934 Early stopping counter 15 of 50
+2022-07-27 20:55:46,661: INFO: Epoch: 935 Early stopping counter 16 of 50
+2022-07-27 20:55:48,061: INFO: Epoch: 936 Early stopping counter 17 of 50
+2022-07-27 20:55:49,457: INFO: Epoch: 937 Early stopping counter 18 of 50
+2022-07-27 20:55:50,847: INFO: Epoch: 938 Early stopping counter 19 of 50
+2022-07-27 20:55:52,246: INFO: Epoch: 939 Early stopping counter 20 of 50
+2022-07-27 20:55:53,668: INFO: Epoch: 940 Early stopping counter 21 of 50
+2022-07-27 20:55:55,071: INFO: Epoch: 941 Early stopping counter 22 of 50
+2022-07-27 20:55:56,481: INFO: Epoch: 942 Early stopping counter 23 of 50
+2022-07-27 20:55:57,865: INFO: Epoch: 943 Early stopping counter 24 of 50
+2022-07-27 20:55:59,275: INFO: Epoch: 944 Early stopping counter 25 of 50
+2022-07-27 20:56:00,650: INFO: Epoch: 945 Early stopping counter 26 of 50
+2022-07-27 20:56:01,930: INFO: Epoch: 946 Early stopping counter 27 of 50
+2022-07-27 20:56:03,315: INFO: Epoch: 947 Early stopping counter 28 of 50
+2022-07-27 20:56:04,692: INFO: Epoch: 948 Early stopping counter 29 of 50
+2022-07-27 20:56:06,074: INFO: Epoch: 949 Early stopping counter 30 of 50
+2022-07-27 20:56:07,482: INFO: Epoch: 950 Early stopping counter 31 of 50
+2022-07-27 20:56:08,876: INFO: Epoch: 951 Early stopping counter 32 of 50
+2022-07-27 20:56:10,980: INFO: Epoch[ 951] Loss: 3.07	Accuracy: 22.822	Val_Loss: 3.452	Val_Acc: 18.400
+2022-07-27 20:56:10,981: INFO: Epoch[ 951] Test Accuracy: 17.280
+2022-07-27 20:56:12,378: INFO: Epoch: 952 Early stopping counter 33 of 50
+2022-07-27 20:56:13,777: INFO: Epoch: 953 Early stopping counter 34 of 50
+2022-07-27 20:56:15,151: INFO: Epoch: 954 Early stopping counter 35 of 50
+2022-07-27 20:56:16,527: INFO: Epoch: 955 Early stopping counter 36 of 50
+2022-07-27 20:56:17,831: INFO: Epoch: 956 Early stopping counter 37 of 50
+2022-07-27 20:56:19,141: INFO: Epoch: 957 Early stopping counter 38 of 50
+2022-07-27 20:56:20,434: INFO: Epoch: 958 Early stopping counter 39 of 50
+2022-07-27 20:56:21,704: INFO: Epoch: 959 Early stopping counter 40 of 50
+2022-07-27 20:56:22,981: INFO: Epoch: 960 Early stopping counter 41 of 50
+2022-07-27 20:56:24,240: INFO: Epoch: 961 Early stopping counter 42 of 50
+2022-07-27 20:56:25,515: INFO: Epoch: 962 Early stopping counter 43 of 50
+2022-07-27 20:56:26,799: INFO: Epoch: 963 Early stopping counter 44 of 50
+2022-07-27 20:56:28,084: INFO: Epoch: 964 Early stopping counter 45 of 50
+2022-07-27 20:56:29,401: INFO: Epoch: 965 Early stopping counter 46 of 50
+2022-07-27 20:56:30,748: INFO: Epoch: 966 Early stopping counter 47 of 50
+2022-07-27 20:56:32,065: INFO: Epoch: 967 Early stopping counter 48 of 50
+2022-07-27 20:56:33,391: INFO: Epoch: 968 Early stopping counter 49 of 50
+2022-07-27 20:56:34,809: INFO: Epoch: 969 Early stopping counter 50 of 50
+2022-07-27 20:56:34,809: INFO: Early stopping
+2022-07-27 20:56:34,865: INFO: Trained for 969 Epochs.
+2022-07-27 20:56:36,156: INFO: ('Accuracy on Train Set', 24.311111867427826)
+2022-07-27 20:56:38,116: INFO: (1520, 'correctly labeled out of', 10000)
+2022-07-27 20:56:38,116: INFO: ('Accuracy on Test Set:', 15.2)
+2022-07-27 20:56:38,138: INFO: Saved model at cifar100/n5000/with_train/Greedy_Model_5000n_Epochs_1000_Early_Stop_969_Test_Acc_15_clsbalanced.pth
+2022-07-27 20:56:38,139: INFO: Training Complete

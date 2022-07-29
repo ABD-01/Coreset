@@ -120,7 +120,7 @@ def train_loop(p, best_inds: torch.Tensor, data, test_data) -> None:
     if p.scheduler:
         scheduler = get_scheduler(p, optimizer)
 
-    # early_stopping = EarlyStopping(**p.early_stopping_kwargs)
+    early_stopping = EarlyStopping(**p.early_stopping_kwargs)
     losses, accs, val_losses, val_accs = [], [], [], []
     lrs = []
     for epoch in trange(p.epochs, position=0, leave=True):
@@ -133,10 +133,10 @@ def train_loop(p, best_inds: torch.Tensor, data, test_data) -> None:
         val_loss, val_acc = validate(val_loader, model, criterion, device)
         val_losses.append(val_loss.item())
         val_accs.append(val_acc)
-        # early_stopping(-val_loss)
+        early_stopping(-val_loss)
         if scheduler is not None:
-            scheduler.step()
-            # scheduler.step(val_loss.item())
+            # scheduler.step()
+            scheduler.step(val_loss.item())
             lrs.append(optimizer.param_groups[0]["lr"])
         # logger.info(f"Epoch[{epoch+1:4}] Val_Loss: {val_loss:.3f}\tVal_Acc: {val_acc:.3f}")
         gc.collect()
@@ -149,9 +149,9 @@ def train_loop(p, best_inds: torch.Tensor, data, test_data) -> None:
             logger.info(
                 f"Epoch[{epoch+1:4}] Test Accuracy: {(correct / len(test_data))*100 :.3f}"
             )
-        # if early_stopping.early_stop:
-        # logger.info(f"Trained for {epoch+1} Epochs.")
-        # break
+        if early_stopping.early_stop:
+            logger.info(f"Trained for {epoch+1} Epochs.")
+            break
 
     suffix = str("_augment" if p.augment else "") + str(
         "_clsbalanced" if p.class_balanced else "_perclass" if p.per_class else ""
@@ -241,16 +241,19 @@ def main(args):
         ), f"Given best indices shape {best_inds.shape[0]} and no. of best samples {p.topn} does not match."
 
     elif p.per_class:
-        all_similarities = np.load(Path(p.dataset) / f"all_similarities_perclass.npy")
-        all_imginds = np.load(Path(p.dataset) / f"all_imginds_perclass.npy").squeeze(
+        all_similarities = np.load(Path(p.dataset) / f"all_similarities_perclass{'_withtrain' if p.with_train else ''}.npy")
+        all_imginds = np.load(Path(p.dataset) / f"all_imginds_perclass{'_withtrain' if p.with_train else ''}.npy").squeeze(
             axis=-1
         )
+        if p.with_train:
+            all_similarities = all_similarities.swapaxes(0,1)
+            all_imginds = all_imginds.swapaxes(0,1)
         logger.info(
             f"all_similarities_perclass.shape: {all_similarities.shape}, all_imginds_perclass.shape: {all_imginds.shape}"
         )
         best_inds = []
         for i in range(all_similarities.shape[0]):
-            logger.debug(np.unique(train_labels[all_imginds[i]], return_counts=True))
+            # logger.debug(np.unique(train_labels[all_imginds[i]], return_counts=True))
             inds = get_best_inds(
                 p.topn // p.num_classes, all_similarities[i], all_imginds[i]
             )
@@ -309,8 +312,11 @@ def main(args):
         )
 
     else:
-        all_similarities = np.load(Path(p.dataset) / f"all_similarities.npy")
-        all_imginds = np.load(Path(p.dataset) / f"all_imginds.npy")
+        all_sim_path = Path(p.dataset) / f"all_similarities{'_withtrain' if p.with_train else ''}.npy"
+        all_ind_path = Path(p.dataset) / f"all_imginds{'_withtrain' if p.with_train else ''}.npy"
+        logger.info(f"Loading similarities from {all_sim_path}\nLoading imginds from {all_ind_path}")
+        all_similarities = np.load(all_sim_path)
+        all_imginds = np.load(all_ind_path)
         logger.info(
             f"all_similarities.shape: {all_similarities.shape}, all_imginds.shape: {all_imginds.shape}"
         )

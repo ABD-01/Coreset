@@ -19,30 +19,20 @@ transformation_kwargs:
 
 # Hyperparameters
 optimizer: sgd
-lr: 0.001
+lr: 0.01
 optimizer_kwargs:
    momentum: 0.9
    weight_decay: 0.01
 
-epochs: 300
+epochs: 1000
 batch_size: 500
 num_workers: 2
 
 # Scheduler
-# scheduler: reduceonplateau 
-# scheduler_kwargs:
-#   patience: 10
-#   factor: 0.2
-#   min_lr: 0.0000001
-#   threshold: 0.001
-scheduler: onecyclelr 
-scheduler_kwargs:
-  min_lr: 0.00001
-  max_lr: 0.01
-  len_loader: 1
+scheduler:
 
 
-# early_stopping_kwargs:
-#    patience: 12
-#    min_delta: 0.001
-#    min_epochs: 250
+early_stopping_kwargs:
+   patience: 50
+   min_delta: 0.001
+   min_epochs: 250
