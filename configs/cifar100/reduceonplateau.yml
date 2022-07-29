@@ -1,0 +1,48 @@
+# Loss
+criterion: NLLLoss
+criterion_kwargs:
+
+# Model
+backbone: alexnet
+
+# Dataset
+dataset: CIFAR100
+num_classes: 100
+input_shape: [3, 32, 32]
+
+transformation_kwargs:
+  #  crop_size: [128, 98]
+  #  resize: 224
+   normalize:
+      mean: [0.5071, 0.4867, 0.4408]
+      std: [0.2675, 0.2565, 0.2761]
+
+# Hyperparameters
+optimizer: sgd
+lr: 0.01
+optimizer_kwargs:
+   momentum: 0.9
+   weight_decay: 0.01
+
+epochs: 1000
+batch_size: 500
+num_workers: 2
+
+# Scheduler
+scheduler: reduceonplateau 
+scheduler_kwargs:
+  patience: 50
+  factor: 0.2
+  min_lr: 0.0000001
+  threshold: 0.001
+# scheduler: onecyclelr 
+# scheduler_kwargs:
+#   min_lr: 0.00001
+#   max_lr: 0.01
+#   len_loader: 1
+
+
+early_stopping_kwargs:
+   patience: 100
+   min_delta: 0.001
+   min_epochs: 250
