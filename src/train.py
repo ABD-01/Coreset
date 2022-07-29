@@ -241,13 +241,17 @@ def main(args):
         ), f"Given best indices shape {best_inds.shape[0]} and no. of best samples {p.topn} does not match."
 
     elif p.per_class:
-        all_similarities = np.load(Path(p.dataset) / f"all_similarities_perclass{'_withtrain' if p.with_train else ''}.npy")
-        all_imginds = np.load(Path(p.dataset) / f"all_imginds_perclass{'_withtrain' if p.with_train else ''}.npy").squeeze(
-            axis=-1
+        all_similarities = np.load(
+            Path(p.dataset)
+            / f"all_similarities_perclass{'_withtrain' if p.with_train else ''}.npy"
         )
+        all_imginds = np.load(
+            Path(p.dataset)
+            / f"all_imginds_perclass{'_withtrain' if p.with_train else ''}.npy"
+        ).squeeze(axis=-1)
         if p.with_train:
-            all_similarities = all_similarities.swapaxes(0,1)
-            all_imginds = all_imginds.swapaxes(0,1)
+            all_similarities = all_similarities.swapaxes(0, 1)
+            all_imginds = all_imginds.swapaxes(0, 1)
         logger.info(
             f"all_similarities_perclass.shape: {all_similarities.shape}, all_imginds_perclass.shape: {all_imginds.shape}"
         )
@@ -312,9 +316,16 @@ def main(args):
         )
 
     else:
-        all_sim_path = Path(p.dataset) / f"all_similarities{'_withtrain' if p.with_train else ''}.npy"
-        all_ind_path = Path(p.dataset) / f"all_imginds{'_withtrain' if p.with_train else ''}.npy"
-        logger.info(f"Loading similarities from {all_sim_path}\nLoading imginds from {all_ind_path}")
+        all_sim_path = (
+            Path(p.dataset)
+            / f"all_similarities{'_withtrain' if p.with_train else ''}.npy"
+        )
+        all_ind_path = (
+            Path(p.dataset) / f"all_imginds{'_withtrain' if p.with_train else ''}.npy"
+        )
+        logger.info(
+            f"Loading similarities from {all_sim_path}\nLoading imginds from {all_ind_path}"
+        )
         all_similarities = np.load(all_sim_path)
         all_imginds = np.load(all_ind_path)
         logger.info(
