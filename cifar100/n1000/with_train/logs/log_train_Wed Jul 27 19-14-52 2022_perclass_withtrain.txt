@@ -1,0 +1,206 @@
+2022-07-27 19:14:52,285: INFO: Hyperparameters
+{'augment': False,
+ 'backbone': 'alexnet',
+ 'batch_size': 1000,
+ 'class_balanced': False,
+ 'config': 'src/configs/cifar100.yml',
+ 'criterion': 'NLLLoss',
+ 'criterion_kwargs': None,
+ 'dataset': 'cifar100',
+ 'dataset_dir': './data',
+ 'dont_train': False,
+ 'early_stopping_kwargs': {'min_delta': 0.001,
+                           'min_epochs': 250,
+                           'patience': 50},
+ 'epochs': 1000,
+ 'input_shape': [3, 32, 32],
+ 'logdir': PosixPath('cifar100/n1000/with_train/logs'),
+ 'lr': 0.01,
+ 'num_classes': 100,
+ 'num_workers': 2,
+ 'optimizer': 'sgd',
+ 'optimizer_kwargs': {'momentum': 0.9, 'weight_decay': 0.01},
+ 'output_dir': PosixPath('cifar100/n1000/with_train'),
+ 'per_class': True,
+ 'random': False,
+ 'resume': None,
+ 'scheduler': None,
+ 'seed': 0,
+ 'test_model': None,
+ 'topn': 1000,
+ 'transformation_kwargs': {'normalize': {'mean': [0.5071, 0.4867, 0.4408],
+                                         'std': [0.2675, 0.2565, 0.2761]}},
+ 'use_saved_best_inds': None,
+ 'val_percent': 0.1,
+ 'wandb': False,
+ 'with_train': True}
+2022-07-27 19:14:53,325: INFO: Dataset
+Dataset CIFAR100
+    Number of datapoints: 50000
+    Root location: ./data
+    Split: Train
+    StandardTransform
+Transform: Compose(
+               ToTensor()
+               Normalize(mean=[0.5071, 0.4867, 0.4408], std=[0.2675, 0.2565, 0.2761])
+           )
+2022-07-27 19:14:54,166: INFO: Test Dataset
+Dataset CIFAR100
+    Number of datapoints: 10000
+    Root location: ./data
+    Split: Test
+    StandardTransform
+Transform: Compose(
+               ToTensor()
+               Normalize(mean=[0.5071, 0.4867, 0.4408], std=[0.2675, 0.2565, 0.2761])
+           )
+2022-07-27 19:14:54,189: INFO: all_similarities_perclass.shape: (100, 100, 500), all_imginds_perclass.shape: (100, 100, 500)
+2022-07-27 19:15:00,378: INFO: Model Summary
+==========================================================================================
+Layer (type:depth-idx)                   Output Shape              Param #
+==========================================================================================
+├─Sequential: 1-1                        [-1, 1024]                --
+|    └─Conv2d: 2-1                       [-1, 64, 16, 16]          1,792
+|    └─MaxPool2d: 2-2                    [-1, 64, 8, 8]            --
+|    └─ReLU: 2-3                         [-1, 64, 8, 8]            --
+|    └─Conv2d: 2-4                       [-1, 192, 8, 8]           110,784
+|    └─MaxPool2d: 2-5                    [-1, 192, 4, 4]           --
+|    └─ReLU: 2-6                         [-1, 192, 4, 4]           --
+|    └─Conv2d: 2-7                       [-1, 384, 4, 4]           663,936
+|    └─ReLU: 2-8                         [-1, 384, 4, 4]           --
+|    └─Conv2d: 2-9                       [-1, 256, 4, 4]           884,992
+|    └─ReLU: 2-10                        [-1, 256, 4, 4]           --
+|    └─Conv2d: 2-11                      [-1, 256, 4, 4]           590,080
+|    └─MaxPool2d: 2-12                   [-1, 256, 2, 2]           --
+|    └─ReLU: 2-13                        [-1, 256, 2, 2]           --
+|    └─Flatten: 2-14                     [-1, 1024]                --
+├─Sequential: 1-2                        [-1, 100]                 --
+|    └─Dropout: 2-15                     [-1, 1024]                --
+|    └─Linear: 2-16                      [-1, 512]                 524,800
+|    └─ReLU: 2-17                        [-1, 512]                 --
+|    └─Dropout: 2-18                     [-1, 512]                 --
+|    └─Linear: 2-19                      [-1, 256]                 131,328
+|    └─ReLU: 2-20                        [-1, 256]                 --
+|    └─Linear: 2-21                      [-1, 100]                 25,700
+|    └─LogSoftmax: 2-22                  [-1, 100]                 --
+==========================================================================================
+Total params: 2,933,412
+Trainable params: 2,933,412
+Non-trainable params: 0
+Total mult-adds (M): 45.34
+==========================================================================================
+Input size (MB): 0.01
+Forward/backward pass size (MB): 0.33
+Params size (MB): 11.19
+Estimated Total Size (MB): 11.54
+==========================================================================================
+2022-07-27 19:15:04,933: INFO: Epoch[   1] Loss: 16.28	Accuracy: 1.000	Val_Loss: 5.764	Val_Acc: 1.000
+2022-07-27 19:15:04,933: INFO: Epoch[   1] Test Accuracy: 0.880
+2022-07-27 19:15:24,764: INFO: Epoch[  51] Loss: 4.47	Accuracy: 3.444	Val_Loss: 4.444	Val_Acc: 3.000
+2022-07-27 19:15:24,764: INFO: Epoch[  51] Test Accuracy: 2.970
+2022-07-27 19:15:43,770: INFO: Epoch[ 101] Loss: 3.86	Accuracy: 8.444	Val_Loss: 3.785	Val_Acc: 8.000
+2022-07-27 19:15:43,770: INFO: Epoch[ 101] Test Accuracy: 4.730
+2022-07-27 19:16:03,561: INFO: Epoch[ 151] Loss: 3.16	Accuracy: 18.222	Val_Loss: 3.163	Val_Acc: 17.000
+2022-07-27 19:16:03,561: INFO: Epoch[ 151] Test Accuracy: 7.200
+2022-07-27 19:16:22,354: INFO: Epoch[ 201] Loss: 2.60	Accuracy: 27.222	Val_Loss: 2.890	Val_Acc: 20.000
+2022-07-27 19:16:22,355: INFO: Epoch[ 201] Test Accuracy: 8.870
+2022-07-27 19:16:40,013: INFO: Epoch: 251 Early stopping counter 1 of 50
+2022-07-27 19:16:42,244: INFO: Epoch[ 251] Loss: 2.20	Accuracy: 36.111	Val_Loss: 2.796	Val_Acc: 25.000
+2022-07-27 19:16:42,245: INFO: Epoch[ 251] Test Accuracy: 9.990
+2022-07-27 19:16:43,236: INFO: Epoch: 254 Early stopping counter 1 of 50
+2022-07-27 19:16:43,599: INFO: Epoch: 255 Early stopping counter 2 of 50
+2022-07-27 19:16:43,942: INFO: Epoch: 256 Early stopping counter 3 of 50
+2022-07-27 19:16:44,293: INFO: Epoch: 257 Early stopping counter 4 of 50
+2022-07-27 19:16:44,652: INFO: Epoch: 258 Early stopping counter 5 of 50
+2022-07-27 19:16:45,007: INFO: Epoch: 259 Early stopping counter 6 of 50
+2022-07-27 19:16:45,706: INFO: Epoch: 261 Early stopping counter 1 of 50
+2022-07-27 19:16:46,406: INFO: Epoch: 263 Early stopping counter 1 of 50
+2022-07-27 19:16:47,126: INFO: Epoch: 265 Early stopping counter 1 of 50
+2022-07-27 19:16:47,475: INFO: Epoch: 266 Early stopping counter 2 of 50
+2022-07-27 19:16:47,839: INFO: Epoch: 267 Early stopping counter 3 of 50
+2022-07-27 19:16:48,192: INFO: Epoch: 268 Early stopping counter 4 of 50
+2022-07-27 19:16:48,554: INFO: Epoch: 269 Early stopping counter 5 of 50
+2022-07-27 19:16:49,256: INFO: Epoch: 271 Early stopping counter 1 of 50
+2022-07-27 19:16:49,604: INFO: Epoch: 272 Early stopping counter 2 of 50
+2022-07-27 19:16:49,966: INFO: Epoch: 273 Early stopping counter 3 of 50
+2022-07-27 19:16:50,317: INFO: Epoch: 274 Early stopping counter 4 of 50
+2022-07-27 19:16:50,681: INFO: Epoch: 275 Early stopping counter 5 of 50
+2022-07-27 19:16:51,373: INFO: Epoch: 277 Early stopping counter 1 of 50
+2022-07-27 19:16:51,727: INFO: Epoch: 278 Early stopping counter 2 of 50
+2022-07-27 19:16:52,073: INFO: Epoch: 279 Early stopping counter 3 of 50
+2022-07-27 19:16:52,403: INFO: Epoch: 280 Early stopping counter 4 of 50
+2022-07-27 19:16:52,740: INFO: Epoch: 281 Early stopping counter 5 of 50
+2022-07-27 19:16:53,080: INFO: Epoch: 282 Early stopping counter 6 of 50
+2022-07-27 19:16:53,415: INFO: Epoch: 283 Early stopping counter 7 of 50
+2022-07-27 19:16:53,744: INFO: Epoch: 284 Early stopping counter 8 of 50
+2022-07-27 19:16:54,067: INFO: Epoch: 285 Early stopping counter 9 of 50
+2022-07-27 19:16:54,400: INFO: Epoch: 286 Early stopping counter 10 of 50
+2022-07-27 19:16:54,731: INFO: Epoch: 287 Early stopping counter 11 of 50
+2022-07-27 19:16:55,059: INFO: Epoch: 288 Early stopping counter 12 of 50
+2022-07-27 19:16:55,384: INFO: Epoch: 289 Early stopping counter 13 of 50
+2022-07-27 19:16:55,709: INFO: Epoch: 290 Early stopping counter 14 of 50
+2022-07-27 19:16:56,051: INFO: Epoch: 291 Early stopping counter 15 of 50
+2022-07-27 19:16:56,403: INFO: Epoch: 292 Early stopping counter 16 of 50
+2022-07-27 19:16:56,729: INFO: Epoch: 293 Early stopping counter 17 of 50
+2022-07-27 19:16:57,063: INFO: Epoch: 294 Early stopping counter 18 of 50
+2022-07-27 19:16:57,387: INFO: Epoch: 295 Early stopping counter 19 of 50
+2022-07-27 19:16:57,706: INFO: Epoch: 296 Early stopping counter 20 of 50
+2022-07-27 19:16:58,369: INFO: Epoch: 298 Early stopping counter 1 of 50
+2022-07-27 19:16:58,698: INFO: Epoch: 299 Early stopping counter 2 of 50
+2022-07-27 19:16:59,027: INFO: Epoch: 300 Early stopping counter 3 of 50
+2022-07-27 19:16:59,350: INFO: Epoch: 301 Early stopping counter 4 of 50
+2022-07-27 19:17:01,372: INFO: Epoch[ 301] Loss: 1.97	Accuracy: 43.889	Val_Loss: 2.679	Val_Acc: 31.000
+2022-07-27 19:17:01,373: INFO: Epoch[ 301] Test Accuracy: 10.200
+2022-07-27 19:17:01,649: INFO: Epoch: 302 Early stopping counter 5 of 50
+2022-07-27 19:17:02,007: INFO: Epoch: 303 Early stopping counter 6 of 50
+2022-07-27 19:17:02,340: INFO: Epoch: 304 Early stopping counter 7 of 50
+2022-07-27 19:17:02,668: INFO: Epoch: 305 Early stopping counter 8 of 50
+2022-07-27 19:17:03,018: INFO: Epoch: 306 Early stopping counter 9 of 50
+2022-07-27 19:17:03,355: INFO: Epoch: 307 Early stopping counter 10 of 50
+2022-07-27 19:17:03,709: INFO: Epoch: 308 Early stopping counter 11 of 50
+2022-07-27 19:17:04,062: INFO: Epoch: 309 Early stopping counter 12 of 50
+2022-07-27 19:17:04,405: INFO: Epoch: 310 Early stopping counter 13 of 50
+2022-07-27 19:17:04,751: INFO: Epoch: 311 Early stopping counter 14 of 50
+2022-07-27 19:17:05,118: INFO: Epoch: 312 Early stopping counter 15 of 50
+2022-07-27 19:17:05,444: INFO: Epoch: 313 Early stopping counter 16 of 50
+2022-07-27 19:17:05,776: INFO: Epoch: 314 Early stopping counter 17 of 50
+2022-07-27 19:17:06,125: INFO: Epoch: 315 Early stopping counter 18 of 50
+2022-07-27 19:17:06,461: INFO: Epoch: 316 Early stopping counter 19 of 50
+2022-07-27 19:17:06,788: INFO: Epoch: 317 Early stopping counter 20 of 50
+2022-07-27 19:17:07,138: INFO: Epoch: 318 Early stopping counter 21 of 50
+2022-07-27 19:17:07,467: INFO: Epoch: 319 Early stopping counter 22 of 50
+2022-07-27 19:17:07,807: INFO: Epoch: 320 Early stopping counter 23 of 50
+2022-07-27 19:17:08,160: INFO: Epoch: 321 Early stopping counter 24 of 50
+2022-07-27 19:17:08,488: INFO: Epoch: 322 Early stopping counter 25 of 50
+2022-07-27 19:17:08,818: INFO: Epoch: 323 Early stopping counter 26 of 50
+2022-07-27 19:17:09,167: INFO: Epoch: 324 Early stopping counter 27 of 50
+2022-07-27 19:17:09,500: INFO: Epoch: 325 Early stopping counter 28 of 50
+2022-07-27 19:17:09,841: INFO: Epoch: 326 Early stopping counter 29 of 50
+2022-07-27 19:17:10,194: INFO: Epoch: 327 Early stopping counter 30 of 50
+2022-07-27 19:17:10,546: INFO: Epoch: 328 Early stopping counter 31 of 50
+2022-07-27 19:17:10,887: INFO: Epoch: 329 Early stopping counter 32 of 50
+2022-07-27 19:17:11,258: INFO: Epoch: 330 Early stopping counter 33 of 50
+2022-07-27 19:17:11,589: INFO: Epoch: 331 Early stopping counter 34 of 50
+2022-07-27 19:17:11,944: INFO: Epoch: 332 Early stopping counter 35 of 50
+2022-07-27 19:17:12,306: INFO: Epoch: 333 Early stopping counter 36 of 50
+2022-07-27 19:17:12,654: INFO: Epoch: 334 Early stopping counter 37 of 50
+2022-07-27 19:17:13,008: INFO: Epoch: 335 Early stopping counter 38 of 50
+2022-07-27 19:17:13,380: INFO: Epoch: 336 Early stopping counter 39 of 50
+2022-07-27 19:17:13,729: INFO: Epoch: 337 Early stopping counter 40 of 50
+2022-07-27 19:17:14,090: INFO: Epoch: 338 Early stopping counter 41 of 50
+2022-07-27 19:17:14,458: INFO: Epoch: 339 Early stopping counter 42 of 50
+2022-07-27 19:17:14,800: INFO: Epoch: 340 Early stopping counter 43 of 50
+2022-07-27 19:17:15,146: INFO: Epoch: 341 Early stopping counter 44 of 50
+2022-07-27 19:17:15,501: INFO: Epoch: 342 Early stopping counter 45 of 50
+2022-07-27 19:17:15,859: INFO: Epoch: 343 Early stopping counter 46 of 50
+2022-07-27 19:17:16,219: INFO: Epoch: 344 Early stopping counter 47 of 50
+2022-07-27 19:17:16,579: INFO: Epoch: 345 Early stopping counter 48 of 50
+2022-07-27 19:17:16,927: INFO: Epoch: 346 Early stopping counter 49 of 50
+2022-07-27 19:17:17,285: INFO: Epoch: 347 Early stopping counter 50 of 50
+2022-07-27 19:17:17,285: INFO: Early stopping
+2022-07-27 19:17:17,344: INFO: Trained for 347 Epochs.
+2022-07-27 19:17:17,878: INFO: ('Accuracy on Train Set', 64.55555558204651)
+2022-07-27 19:17:20,016: INFO: (1044, 'correctly labeled out of', 10000)
+2022-07-27 19:17:20,016: INFO: ('Accuracy on Test Set:', 10.440000000000001)
+2022-07-27 19:17:20,038: INFO: Saved model at cifar100/n1000/with_train/Greedy_Model_1000n_Epochs_1000_Early_Stop_347_Test_Acc_10_perclass.pth
+2022-07-27 19:17:20,038: INFO: Training Complete
