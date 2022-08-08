@@ -330,6 +330,11 @@ if __name__ == "__main__":
         help="No. of epochs to train before finding Gmean",
     )
     parser.add_argument(
+        "--temp",
+        action="store_true",
+        help="Specify whether to use temp folder",
+    )
+    parser.add_argument(
         "--use_all_params",
         help="Specify if all model parameters' gradients to be used. Defaults: (FC layers only)",
         action="store_true",
@@ -340,6 +345,8 @@ if __name__ == "__main__":
 
     args = parser.parse_args()
     args.output_dir = pathlib.Path(args.dataset)
+    if args.temp:
+        args.output_dir = args.output_dir / f"temp"
     args.logdir = pathlib.Path(args.dataset) / "logs"
     args.logdir.mkdir(parents=True, exist_ok=True)
 

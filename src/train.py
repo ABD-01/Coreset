@@ -24,6 +24,7 @@ from utils import (
     get_test_dataset,
     get_train_dataset,
     seed_everything,
+    ParseKwargs
 )
 
 
@@ -40,11 +41,15 @@ def get_train_val_inds(p, best_inds: torch.Tensor):
 
     if not (p.class_balanced or p.per_class):
         val_size = int(best_inds.shape[0] * p.val_percent)
+        if val_size == 0:
+            return best_inds, None
         sections = (best_inds.shape[0] - val_size, val_size)
         train_inds, val_inds = torch.split(best_inds, sections)
     else:
         topn_per_class = p.topn // p.num_classes
         val_size = int(topn_per_class * p.val_percent)
+        if val_size == 0:
+            return best_inds, None
         val_inds = np.zeros(topn_per_class, dtype=bool)
         val_inds[-val_size:] = True
         val_inds = np.tile(val_inds, best_inds.shape[0] // topn_per_class)
@@ -102,9 +107,11 @@ def train_loop(p, best_inds: torch.Tensor, data, test_data) -> None:
     train_loader = DataLoader(
         Subset(data, train_inds), train_inds.shape[0], shuffle=True
     )
-    val_loader = DataLoader(
-        Subset(get_train_dataset(p, val=True), val_inds), val_inds.shape[0]
-    )
+    val_loader = None
+    if val_inds is not None:
+        val_loader = DataLoader(
+            Subset(get_train_dataset(p, val=True), val_inds), val_inds.shape[0]
+        )
     test_loader = DataLoader(test_data, p.batch_size)
 
     # model
@@ -122,6 +129,7 @@ def train_loop(p, best_inds: torch.Tensor, data, test_data) -> None:
 
     early_stopping = EarlyStopping(**p.early_stopping_kwargs)
     losses, accs, val_losses, val_accs = [], [], [], []
+    val_loss, val_acc = 0, 0
     lrs = []
     for epoch in trange(p.epochs, position=0, leave=True):
         model.train()
@@ -130,18 +138,19 @@ def train_loop(p, best_inds: torch.Tensor, data, test_data) -> None:
         )
         losses.append(loss.item())
         accs.append(acc)
-        val_loss, val_acc = validate(val_loader, model, criterion, device)
-        val_losses.append(val_loss.item())
-        val_accs.append(val_acc)
-        early_stopping(-val_loss)
+        if val_loader is not None:
+            val_loss, val_acc = validate(val_loader, model, criterion, device)
+            val_losses.append(val_loss.item())
+            val_accs.append(val_acc)
+            early_stopping(-val_loss)
         if scheduler is not None:
-            # scheduler.step()
-            scheduler.step(val_loss.item())
+            scheduler.step()
+            # scheduler.step(val_loss)
             lrs.append(optimizer.param_groups[0]["lr"])
         # logger.info(f"Epoch[{epoch+1:4}] Val_Loss: {val_loss:.3f}\tVal_Acc: {val_acc:.3f}")
         gc.collect()
         torch.cuda.empty_cache()
-        if epoch % 50 == 0:
+        if epoch % 5 == 0:
             correct = test(test_loader, model, device)
             logger.info(
                 f"Epoch[{epoch+1:4}] Loss: {loss.item():.2f}\tAccuracy: {acc*100 :.3f}\tVal_Loss: {val_loss:.3f}\tVal_Acc: {val_acc*100:.3f}"
@@ -409,12 +418,20 @@ if __name__ == "__main__":
         help="No. of epochs to train before finding Gmean",
     )
     parser.add_argument(
+        "--temp",
+        action="store_true",
+        help="Specify whether to use temp folder",
+    )
+    parser.add_argument(
         "--resume", default=None, help="path to checkpoint from where to resume"
     )
     parser.add_argument("--wandb", default=False, type=bool, help="Log using wandb")
+    parser.add_argument('-k', '--kwargs', nargs='*', action=ParseKwargs)
 
     args = parser.parse_args()
     args.output_dir = Path(args.dataset) / f"n{args.topn}"
+    if args.temp:
+        args.output_dir = args.output_dir / f"temp"
     if args.with_train:
         args.output_dir = args.output_dir / f"with_train"
     args.logdir = args.output_dir / "logs"

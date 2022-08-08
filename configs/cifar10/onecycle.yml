@@ -24,16 +24,19 @@ optimizer_kwargs:
    momentum: 0.9
    weight_decay: 0.01
 
-epochs: 1000
+epochs: 500
 batch_size: 1000
 num_workers: 2
 
-
 # Scheduler
-scheduler:
+scheduler: onecyclelr 
+scheduler_kwargs:
+  min_lr: 0.00001
+  max_lr: 0.005
+  len_loader: 1
 
 
 early_stopping_kwargs:
    patience: 50
    min_delta: 0.001
-   min_epochs: 200
+   min_epochs: 500
