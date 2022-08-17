@@ -113,7 +113,7 @@ def train_loop(p, best_inds: torch.Tensor, data, test_data) -> None:
         + str(summary(model, data[1][0].shape, verbose=0, device=device))
     )
 
-    criterion = nn.NLLLoss()
+    criterion = nn.CrossEntropyLoss().to(device)
     optimizer = get_optimizer(p, model)
     scheduler = None
     if p.scheduler:

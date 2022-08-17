@@ -107,7 +107,7 @@ def plot_distribution(topn: int, best_labels: np.ndarray, classes: list, path) -
     fig = plt.figure(figsize=(width, height))
     unique_and_counts = np.unique(best_labels, return_counts=True)
     plt.bar(*unique_and_counts)
-    plt.xticks(unique_and_counts[0], classes, rotation=45)
+    plt.xticks(np.arange(len(classes)), classes, rotation=45)
     plt.xlabel("Classes")
     plt.ylabel("Number of occurance")
     plt.title(f"Distribution of classes in selected {topn}")

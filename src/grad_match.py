@@ -149,6 +149,7 @@ def get_mean_gradients(p, model, loader, criterion, optimizer):
     progress_bar = tqdm(
         loader, total=num_iter, desc="Mean Gradients", leave=False, position=2
     )
+    model.eval()
     model.no_grad = True
     with model.embedding_recorder:
         for i, batch in enumerate(progress_bar):
