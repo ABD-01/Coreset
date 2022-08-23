@@ -19,7 +19,7 @@ transformation_kwargs:
 
 # Hyperparameters
 optimizer: sgd
-lr: 0.01
+lr: 0.001
 optimizer_kwargs:
    momentum: 0.9
    weight_decay: 0.01
@@ -29,7 +29,11 @@ batch_size: 500
 num_workers: 2
 
 # Scheduler
-scheduler:
+scheduler: onecyclelr 
+scheduler_kwargs:
+  min_lr: 0.00001
+  max_lr: 0.01
+  len_loader: 1
 
 
 early_stopping_kwargs:
