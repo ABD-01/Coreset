@@ -283,15 +283,17 @@ def get_logger(p, script="train"):
 def get_time_str():
     return time.asctime().replace(":", "-")
 
+
 class ParseKwargs(argparse.Action):
     def __call__(self, parser, namespace, values, option_string=None):
         setattr(namespace, self.dest, dict())
         for value in values:
-            key, value = value.split('=')
-            if key in ['epochs', 'batch_size']:
+            key, value = value.split("=")
+            if key in ["epochs", "batch_size"]:
                 getattr(namespace, self.dest)[key] = int(value)
                 continue
-            getattr(namespace, self.dest)[key] = float( value )
+            getattr(namespace, self.dest)[key] = float(value)
+
 
 def create_config(config_file_exp, args):
 
