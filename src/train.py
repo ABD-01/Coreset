@@ -24,7 +24,7 @@ from utils import (
     get_test_dataset,
     get_train_dataset,
     seed_everything,
-    ParseKwargs
+    ParseKwargs,
 )
 
 
@@ -437,7 +437,7 @@ if __name__ == "__main__":
         "--resume", default=None, help="path to checkpoint from where to resume"
     )
     parser.add_argument("--wandb", default=False, type=bool, help="Log using wandb")
-    parser.add_argument('-k', '--kwargs', nargs='*', action=ParseKwargs)
+    parser.add_argument("-k", "--kwargs", nargs="*", action=ParseKwargs)
 
     args = parser.parse_args()
     args.output_dir = Path(args.dataset) / f"n{args.topn}"
