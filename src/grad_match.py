@@ -14,7 +14,7 @@ import numpy as np
 import torch
 import torch.nn as nn
 import torch.nn.functional as F
-# from functorch import grad, make_functional_with_buffers, vmap
+from functorch import grad, make_functional_with_buffers, vmap
 from torch.utils.data import DataLoader, Subset
 from torchsummary import summary
 from tqdm.auto import trange
@@ -125,13 +125,24 @@ def get_similarities(model, dataset, batch_size, mean_gradients, use_all_params=
     return np.concatenate(similarities), np.concatenate(img_indices)
 
 
+def cosinesimilarity(a,b):
+    return np.divide(np.dot(a, b.T), (np.linalg.norm(a, axis=-1, keepdims=True) * np.linalg.norm(b, keepdims=True)))
+
+def get_sims(gradients):
+    mean_gradients = gradients.mean(axis=0, keepdims=True)
+    return cosinesimilarity(gradients, mean_gradients)
+
+
 def get_mean_gradients(p, model, loader, criterion, optimizer):
     num_params = len(list(model.fc.parameters()))
     num_iter = len(loader)
     embedding_dim = model.get_last_layer().in_features
     sample_num = len(loader.dataset)
-    gradients = torch.zeros([sample_num, p.num_classes * (embedding_dim + 1)],
-                                requires_grad=False, device='cpu')
+    # gradients = torch.zeros([sample_num, p.num_classes * (embedding_dim + 1)],
+    #                             requires_grad=False, device='cpu')
+    # img_indices = torch.zeros([sample_num], requires_grad=False, device='cpu')
+    gradients = np.zeros([sample_num, p.num_classes * (embedding_dim + 1)])
+    img_indices = np.zeros(sample_num)
     progress_bar = tqdm(
         loader, total=num_iter, desc="Mean Gradients", leave=False, position=2
     )
@@ -139,7 +150,7 @@ def get_mean_gradients(p, model, loader, criterion, optimizer):
     with model.embedding_recorder:
         for i, batch in enumerate(progress_bar):
             optimizer.zero_grad(set_to_none=True)
-            images, labels, _ = batch
+            images, labels, inds = batch
             torch.cuda.empty_cache()
             images, labels = images.to(device), labels.to(device)
             output = model(images).requires_grad_(True)
@@ -150,9 +161,10 @@ def get_mean_gradients(p, model, loader, criterion, optimizer):
                 weight_parameters_grads = model.embedding_recorder.embedding.cpu().view(batch_num, 1, embedding_dim).repeat(1, p.num_classes, 1) *\
                                             bias_parameters_grads.view(batch_num, p.num_classes, 1).repeat(1, 1, embedding_dim)
                 
-                gradients[i*p.batch_size:min((i+1)*p.batch_size, sample_num)] = torch.cat((bias_parameters_grads, weight_parameters_grads.flatten(1)), dim=1)
+                gradients[i*p.batch_size:min((i+1)*p.batch_size, sample_num)] = torch.cat((bias_parameters_grads, weight_parameters_grads.flatten(1)), dim=1).numpy()
+            img_indices[i*p.batch_size:min((i+1)*p.batch_size, sample_num)] = inds.numpy()
 
-    return gradients
+    return gradients, img_indices
 
 
 def train_epoch(
@@ -270,10 +282,11 @@ def gradient_mathcing(p, data, logger):
                 pin_memory=True,
                 drop_last=True,
             )
-            mean_gradients = get_mean_gradients(p, model, loader, criterion, optimizer) 
-            similarities, img_indices = get_similarities(
-                model, data, p.batch_size, mean_gradients
-            )
+            mean_gradients, img_indices = get_mean_gradients(p, model, loader, criterion, optimizer) 
+            # similarities, img_indices = get_similarities(
+            #     model, data, p.batch_size, mean_gradients
+            # )
+            similarities = get_sims(mean_gradients)
         elif p.per_class:
             similarities, img_indices = [], []
             for dataset in tqdm(
