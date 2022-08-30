@@ -4,7 +4,7 @@ import pathlib
 
 import matplotlib.pyplot as plt
 
-from train import test
+# from train import test
 
 plt.style.use("ggplot")
 import gc
@@ -14,7 +14,7 @@ import numpy as np
 import torch
 import torch.nn as nn
 import torch.nn.functional as F
-from functorch import grad, make_functional_with_buffers, vmap
+# from functorch import grad, make_functional_with_buffers, vmap
 from torch.utils.data import DataLoader, Subset
 from torchsummary import summary
 from tqdm.auto import trange
@@ -22,45 +22,49 @@ from tqdm.auto import tqdm
 
 from utils import (
     AlexNet,
+    DatasetwithIndices,
     create_config,
+    get_dataset,
     get_dataset_with_indices,
     get_logger,
+    get_model,
     get_optimizer,
+    get_parser,
     get_test_dataset,
     get_train_dataset,
     seed_everything,
 )
 
 
-def get_mean_gradients(model, loader, use_all_params=False):
-    num_params = len(
-        list(model.parameters() if use_all_params else model.fc.parameters())
-    )
-    mean_gradients = [None for i in range(num_params)]
-    num_iter = len(loader)
-    progress_bar = tqdm(
-        loader, total=num_iter, desc="Mean Gradients", leave=False, position=2
-    )
-    for batch in progress_bar:
-        images, labels, _ = batch
-        torch.cuda.empty_cache()
-        images, labels = images.to(device), labels.to(device)
-        output = model(images)
-        gradient = torch.autograd.grad(
-            F.nll_loss(output, labels),
-            model.parameters() if use_all_params else model.fc.parameters(),
-        )
-        if mean_gradients[0] is not None:
-            for j in range(num_params):
-                mean_gradients[j] += gradient[j].detach()  # .cpu().numpy()
-        else:
-            for j in range(len(gradient)):
-                mean_gradients[j] = gradient[j].detach()  # .cpu().numpy()
+# def get_mean_gradients(model, loader, use_all_params=False):
+#     num_params = len(
+#         list(model.parameters() if use_all_params else model.fc.parameters())
+#     )
+#     mean_gradients = [None for i in range(num_params)]
+#     num_iter = len(loader)
+#     progress_bar = tqdm(
+#         loader, total=num_iter, desc="Mean Gradients", leave=False, position=2
+#     )
+#     for batch in progress_bar:
+#         images, labels, _ = batch
+#         torch.cuda.empty_cache()
+#         images, labels = images.to(device), labels.to(device)
+#         output = model(images)
+#         gradient = torch.autograd.grad(
+#             F.nll_loss(output, labels),
+#             model.parameters() if use_all_params else model.fc.parameters(),
+#         )
+#         if mean_gradients[0] is not None:
+#             for j in range(num_params):
+#                 mean_gradients[j] += gradient[j].detach()  # .cpu().numpy()
+#         else:
+#             for j in range(len(gradient)):
+#                 mean_gradients[j] = gradient[j].detach()  # .cpu().numpy()
 
-        for j in range(len(gradient)):
-            mean_gradients[j] /= num_iter
+#         for j in range(len(gradient)):
+#             mean_gradients[j] /= num_iter
 
-    return mean_gradients
+#     return mean_gradients
 
 
 def get_similarities(model, dataset, batch_size, mean_gradients, use_all_params=False):
@@ -119,6 +123,36 @@ def get_similarities(model, dataset, batch_size, mean_gradients, use_all_params=
         similarities.append(sim)
         img_indices.append(inds)
     return np.concatenate(similarities), np.concatenate(img_indices)
+
+
+def get_mean_gradients(p, model, loader, criterion, optimizer):
+    num_params = len(list(model.fc.parameters()))
+    num_iter = len(loader)
+    embedding_dim = model.get_last_layer().in_features
+    sample_num = len(loader.dataset)
+    gradients = torch.zeros([sample_num, p.num_classes * (embedding_dim + 1)],
+                                requires_grad=False, device='cpu')
+    progress_bar = tqdm(
+        loader, total=num_iter, desc="Mean Gradients", leave=False, position=2
+    )
+    model.no_grad = True
+    with model.embedding_recorder:
+        for i, batch in enumerate(progress_bar):
+            optimizer.zero_grad(set_to_none=True)
+            images, labels, _ = batch
+            torch.cuda.empty_cache()
+            images, labels = images.to(device), labels.to(device)
+            output = model(images).requires_grad_(True)
+            loss = criterion(F.softmax(output, dim=1), labels).sum()
+            batch_num = labels.shape[0]
+            with torch.no_grad():
+                bias_parameters_grads = torch.autograd.grad(loss, output, retain_graph=True)[0].cpu()
+                weight_parameters_grads = model.embedding_recorder.embedding.cpu().view(batch_num, 1, embedding_dim).repeat(1, p.num_classes, 1) *\
+                                            bias_parameters_grads.view(batch_num, p.num_classes, 1).repeat(1, 1, embedding_dim)
+                
+                gradients[i*p.batch_size:min((i+1)*p.batch_size, sample_num)] = torch.cat((bias_parameters_grads, weight_parameters_grads.flatten(1)), dim=1)
+
+    return gradients
 
 
 def train_epoch(
@@ -206,13 +240,17 @@ def gradient_mathcing(p, data, logger):
         logger.info("Finding Mean Gradients for whole dataset at once.")
 
     seed_everything(p.seed)
-    model = AlexNet(p.num_classes, False).to(device)
-    if p.with_train:
-        train_loader = DataLoader(
-            data, p.batch_size, shuffle=True, num_workers=2, pin_memory=True
-        )
-        criterion = nn.NLLLoss()
-        optimizer = get_optimizer(p, model)
+    model = get_model(p, device)
+    logger.info(
+        "Model Summary\n"
+        + str(summary(model, (p.channel, *p.im_size), verbose=0, device=device))
+    )
+
+    train_loader = DataLoader(
+        data, p.batch_size, shuffle=True, num_workers=2, pin_memory=True
+    )
+    criterion = nn.CrossEntropyLoss().to(device)
+    optimizer = get_optimizer(p, model)
 
     all_similarities, all_imginds = [], []
     for k in trange(iterations, desc="Iterations", position=0, leave=False):
@@ -220,7 +258,7 @@ def gradient_mathcing(p, data, logger):
         # moving to the end of loop
         if not p.with_train:
             seed_everything(p.seed + k)
-            model = AlexNet(p.num_classes, False).to(device)
+            model = get_model(p, device)
             # slmodel, params, buffers = make_functional_with_buffers(model.fc)
 
         if not p.per_class:
@@ -232,9 +270,9 @@ def gradient_mathcing(p, data, logger):
                 pin_memory=True,
                 drop_last=True,
             )
-            mean_gradients = get_mean_gradients(model, loader, p.use_all_params)
+            mean_gradients = get_mean_gradients(p, model, loader, criterion, optimizer) 
             similarities, img_indices = get_similarities(
-                model, data, p.batch_size, mean_gradients, p.use_all_params
+                model, data, p.batch_size, mean_gradients
             )
         elif p.per_class:
             similarities, img_indices = [], []
@@ -249,9 +287,9 @@ def gradient_mathcing(p, data, logger):
                     pin_memory=True,
                     drop_last=True,
                 )
-                mean_gradients = get_mean_gradients(model, loader, p.use_all_params)
+                mean_gradients = get_mean_gradients(p, model, loader, criterion, optimizer)
                 cls_all_sims, cls_all_inds = get_similarities(
-                    model, dataset, p.batch_size, mean_gradients, p.use_all_params
+                    model, dataset, p.batch_size, mean_gradients, 
                 )
                 similarities.append(cls_all_sims)
                 img_indices.append(cls_all_inds)
@@ -271,9 +309,9 @@ def gradient_mathcing(p, data, logger):
 
 def main(p, logger):
 
-    p = create_config(args.config, args)
+    # p = create_config(args.config, args)
 
-    logger.info("Hyperparameters\n" + pformat(vars(p)))
+    # logger.info("Hyperparameters\n" + pformat(vars(p)))
 
     global device
     if torch.cuda.is_available:
@@ -285,10 +323,13 @@ def main(p, logger):
     seed_everything(p.seed)
 
     # dataset
-    train_data = get_dataset_with_indices(p)
+    train_data, _ = get_dataset(p)
+    train_data = DatasetwithIndices(train_data)
     logger.info(f"Dataset\n{str(train_data)}")
-    p.num_classes = len(train_data.classes)
-    logger.debug(f"Num Classes: {p.num_classes}")
+
+    logger.info("Hyperparameters\n" + pformat(vars(p)))
+    # p.num_classes = len(train_data.classes)
+    # logger.debug(f"Num Classes: {p.num_classes}")
 
     all_similarities, all_imginds = gradient_mathcing(p, train_data, logger)
     logger.info(
@@ -307,47 +348,49 @@ def main(p, logger):
 
 
 if __name__ == "__main__":
-    parser = argparse.ArgumentParser(
-        description="Getting gradient similarity for each sample."
-    )
-    parser.add_argument("--config", help="Location of config file", required=True)
-    parser.add_argument("--seed", default=0, help="Seed")
-    parser.add_argument("--dataset", default="cifar100", help="Dataset to use")
-    parser.add_argument("--dataset_dir", default="./data", help="Dataset directory")
-    parser.add_argument("--topn", default=1000, type=int, help="Size of Coreset")
-    parser.add_argument(
-        "--iter", default=100, type=int, help="Number of iterations for finding coreset"
-    )
-    parser.add_argument("-bs", "--batch_size", default=1000, help="BatchSize", type=int)
-    parser.add_argument(
-        "--per_class",
-        action="store_true",
-        help="Specify whether to find Mean Gradients classwise",
-    )
-    parser.add_argument(
-        "--with_train",
-        action="store_true",
-        help="No. of epochs to train before finding Gmean",
-    )
-    parser.add_argument(
-        "--temp",
-        action="store_true",
-        help="Specify whether to use temp folder",
-    )
-    parser.add_argument(
-        "--use_all_params",
-        help="Specify if all model parameters' gradients to be used. Defaults: (FC layers only)",
-        action="store_true",
-    )
-    parser.add_argument(
-        "--resume", default=None, help="path to checkpoint from where to resume"
-    )
+    # parser = argparse.ArgumentParser(
+    #     description="Getting gradient similarity for each sample."
+    # )
+    # parser.add_argument("--config", help="Location of config file", required=True)
+    # parser.add_argument("--seed", default=0, help="Seed")
+    # parser.add_argument("--dataset", default="cifar100", help="Dataset to use")
+    # parser.add_argument("--dataset_dir", default="./data", help="Dataset directory")
+    # parser.add_argument("--topn", default=1000, type=int, help="Size of Coreset")
+    # parser.add_argument(
+    #     "--iter", default=100, type=int, help="Number of iterations for finding coreset"
+    # )
+    # parser.add_argument("-bs", "--batch_size", default=1000, help="BatchSize", type=int)
+    # parser.add_argument(
+    #     "--per_class",
+    #     action="store_true",
+    #     help="Specify whether to find Mean Gradients classwise",
+    # )
+    # parser.add_argument(
+    #     "--with_train",
+    #     action="store_true",
+    #     help="No. of epochs to train before finding Gmean",
+    # )
+    # parser.add_argument(
+    #     "--temp",
+    #     action="store_true",
+    #     help="Specify whether to use temp folder",
+    # )
+    # parser.add_argument(
+    #     "--use_all_params",
+    #     help="Specify if all model parameters' gradients to be used. Defaults: (FC layers only)",
+    #     action="store_true",
+    # )
+    # parser.add_argument(
+    #     "--resume", default=None, help="path to checkpoint from where to resume"
+    # )
+
+    parser = get_parser()
 
     args = parser.parse_args()
-    args.output_dir = pathlib.Path(args.dataset)
+    args.output_dir = pathlib.Path(args.dataset.lower())
     if args.temp:
         args.output_dir = args.output_dir / f"temp"
-    args.logdir = pathlib.Path(args.dataset) / "logs"
+    args.logdir = args.output_dir / "logs"
     args.logdir.mkdir(parents=True, exist_ok=True)
 
     # temporary fix

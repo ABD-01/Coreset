@@ -15,11 +15,14 @@ from torch.utils.data import DataLoader, Subset
 from torchsummary import summary
 
 from train_utils import *
+
+import nets
 from utils import (
     AlexNet,
     create_config,
     get_logger,
     get_optimizer,
+    get_parser,
     get_scheduler,
     get_test_dataset,
     get_train_dataset,
@@ -107,6 +110,7 @@ def train_loop(p, best_inds: torch.Tensor, data, test_data) -> None:
     train_loader = DataLoader(
         Subset(data, train_inds), train_inds.shape[0], shuffle=True
     )
+    p.len_loader = len(train_loader)
     val_loader = None
     if val_inds is not None:
         val_loader = DataLoader(
@@ -115,7 +119,7 @@ def train_loop(p, best_inds: torch.Tensor, data, test_data) -> None:
     test_loader = DataLoader(test_data, p.batch_size)
 
     # model
-    model = AlexNet(output_dim=p.num_classes, dropout=True).to(device)
+    model = nets.__dict__[p.model](p.input_shape[0], p.num_classes, im_size=p.input_shape[1:]).to(device)
     logger.info(
         "Model Summary\n"
         + str(summary(model, data[1][0].shape, verbose=0, device=device))
@@ -371,74 +375,75 @@ def main(args):
 
 
 if __name__ == "__main__":
-    parser = argparse.ArgumentParser(
-        description="Getting gradient similarity for each sample."
-    )
-    parser.add_argument("--config", required=True, help="Location of config file")
-    parser.add_argument("--seed", default=0, type=int, help="Seed")
-    parser.add_argument(
-        "--dataset", default="cifar100", required=True, help="Dataset Location"
-    )
-    parser.add_argument("--dataset_dir", default="./data", help="Dataset directory")
-    parser.add_argument("--topn", default=1000, type=int, help="Size of Coreset")
-    parser.add_argument(
-        "--class_balanced",
-        action="store_true",
-        help="Specify to use class balanced distribution for training",
-    )
-    parser.add_argument(
-        "--per_class",
-        action="store_true",
-        help="Specify whether to find Mean Gradients classwise",
-    )
-    parser.add_argument(
-        "-bi",
-        "--use_saved_best_inds",
-        default=None,
-        help="Specify path of already retreived best indices",
-    )
-    parser.add_argument(
-        "--test_model", default=None, help="Specify path of model which is to be tested"
-    )
-    parser.add_argument(
-        "--random",
-        action="store_true",
-        help="Specify if randomly chosen coreset to be used for training",
-    )
-    parser.add_argument(
-        "--dont_train",
-        action="store_true",
-        help="Specify is model need not to be trained",
-    )
-    parser.add_argument("-bs", "--batch_size", default=1000, type=int, help="BatchSize")
-    parser.add_argument(
-        "-v",
-        "--val_percent",
-        default=0.1,
-        type=float,
-        help="Percentage[0-1] split of Validation set. (Default: 0.1)",
-    )
-    parser.add_argument(
-        "--augment",
-        action="store_true",
-        help="Specify to use augmentation during training",
-    )
-    parser.add_argument(
-        "--with_train",
-        action="store_true",
-        help="No. of epochs to train before finding Gmean",
-    )
-    parser.add_argument(
-        "--temp",
-        action="store_true",
-        help="Specify whether to use temp folder",
-    )
-    parser.add_argument(
-        "--resume", default=None, help="path to checkpoint from where to resume"
-    )
-    parser.add_argument("--wandb", default=False, type=bool, help="Log using wandb")
-    parser.add_argument("-k", "--kwargs", nargs="*", action=ParseKwargs)
+    # parser = argparse.ArgumentParser(
+    #     description="Getting gradient similarity for each sample."
+    # )
+    # parser.add_argument("--config", required=True, help="Location of config file")
+    # parser.add_argument("--seed", default=0, type=int, help="Seed")
+    # parser.add_argument(
+    #     "--dataset", default="cifar100", required=True, help="Dataset Location"
+    # )
+    # parser.add_argument("--dataset_dir", default="./data", help="Dataset directory")
+    # parser.add_argument("--topn", default=1000, type=int, help="Size of Coreset")
+    # parser.add_argument(
+    #     "--class_balanced",
+    #     action="store_true",
+    #     help="Specify to use class balanced distribution for training",
+    # )
+    # parser.add_argument(
+    #     "--per_class",
+    #     action="store_true",
+    #     help="Specify whether to find Mean Gradients classwise",
+    # )
+    # parser.add_argument(
+    #     "-bi",
+    #     "--use_saved_best_inds",
+    #     default=None,
+    #     help="Specify path of already retreived best indices",
+    # )
+    # parser.add_argument(
+    #     "--test_model", default=None, help="Specify path of model which is to be tested"
+    # )
+    # parser.add_argument(
+    #     "--random",
+    #     action="store_true",
+    #     help="Specify if randomly chosen coreset to be used for training",
+    # )
+    # parser.add_argument(
+    #     "--dont_train",
+    #     action="store_true",
+    #     help="Specify is model need not to be trained",
+    # )
+    # parser.add_argument("-bs", "--batch_size", default=1000, type=int, help="BatchSize")
+    # parser.add_argument(
+    #     "-v",
+    #     "--val_percent",
+    #     default=0.1,
+    #     type=float,
+    #     help="Percentage[0-1] split of Validation set. (Default: 0.1)",
+    # )
+    # parser.add_argument(
+    #     "--augment",
+    #     action="store_true",
+    #     help="Specify to use augmentation during training",
+    # )
+    # parser.add_argument(
+    #     "--with_train",
+    #     action="store_true",
+    #     help="No. of epochs to train before finding Gmean",
+    # )
+    # parser.add_argument(
+    #     "--temp",
+    #     action="store_true",
+    #     help="Specify whether to use temp folder",
+    # )
+    # parser.add_argument(
+    #     "--resume", default=None, help="path to checkpoint from where to resume"
+    # )
+    # parser.add_argument("--wandb", default=False, type=bool, help="Log using wandb")
+    # parser.add_argument("-k", "--kwargs", nargs="*", action=ParseKwargs)
 
+    parser = get_parser()
     args = parser.parse_args()
     args.output_dir = Path(args.dataset) / f"n{args.topn}"
     if args.temp:

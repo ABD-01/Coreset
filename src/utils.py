@@ -16,6 +16,11 @@ from easydict import EasyDict
 from torch.utils.data import Dataset
 from torchvision.datasets import CIFAR10, CIFAR100, MNIST
 
+# add import for nets directory just outside the src direcory
+sys.path.append(str(pathlib.Path(__file__).parent.parent))
+import nets
+import datasets
+
 
 def seed_everything(seed: int):
     random.seed(seed)
@@ -188,26 +193,43 @@ class AlexNet(nn.Module):
         x = self.fc(h)
         return x  # , h
 
+def get_dataset(p):
+    channel, im_size, num_classes, class_names, mean, std, dst_train, dst_test = datasets.__dict__[p.dataset](p.dataset_dir)
+    p.channel, p.im_size, p.num_classes, p.class_names, p.mean, p.std = channel, im_size, num_classes, class_names, mean, std
+    return dst_train, dst_test
+
+def get_model(p, device):
+    model = nets.__dict__[p.model](p.channel, p.num_classes, im_size=p.im_size).to(device)
+    if device == "cpu":
+        print("Using CPU.")
+    elif p.gpu is not None:
+        torch.cuda.set_device(p.gpu[0])
+        model = nets.nets_utils.MyDataParallel(model, device_ids=p.gpu)
+    elif torch.cuda.device_count() > 1:
+        model = nets.nets_utils.MyDataParallel(model).cuda()
+
+    return model
 
 def get_optimizer(p, model):
     if p.optimizer == "sgd":
         optimizer = optim.SGD(
             model.parameters(),
             lr=p.lr,
-            momentum=p.optimizer_kwargs.momentum,
-            weight_decay=p.optimizer_kwargs.weight_decay,
+            momentum=p.momentum,
+            weight_decay=p.weight_decay,
+            nesterov=p.nesterov,
         )
     elif p.optimizer == "rms":
         optimizer = optim.RMSprop(
             model.parameters(),
             lr=p.lr,
-            momentum=p.optimizer_kwargs.momentum,
-            weight_decay=p.optimizer_kwargs.weight_decay,
+            momentum=p.momentum,
+            weight_decay=p.weight_decay,
         )
     elif p.optimizer == "adam":
-        optimizer = optim.Adam(model.parameters(), lr=p.lr)
+        optimizer = optim.Adam(model.parameters(), lr=p.lr, weight_decay=p.weight_decay)
     elif p.optimizer == "adamw":
-        optimizer = optim.AdamW(model.parameters(), lr=p.lr)
+        optimizer = optim.AdamW(model.parameters(), lr=p.lr, weight_decay=p.weight_decay)
     else:
         msg = f"Unknown value '{p.optimizer}' for argument optimizer"
         raise ValueError(msg)
@@ -217,28 +239,15 @@ def get_optimizer(p, model):
 
 def get_scheduler(p, optimizer):
     if p.scheduler == "reduceonplateau":
-        scheduler = optim.lr_scheduler.ReduceLROnPlateau(
-            optimizer, verbose=True, **p.scheduler_kwargs
-        )
+        scheduler = optim.lr_scheduler.ReduceLROnPlateau(optimizer,factor=p.factor, patience=p.patience, verbose=True)
     elif p.scheduler == "onecyclelr":
-        scheduler = optim.lr_scheduler.OneCycleLR(
-            optimizer,
-            max_lr=p.scheduler_kwargs.max_lr,
-            epochs=p.epochs,
-            steps_per_epoch=p.scheduler_kwargs.len_loader,
-            div_factor=p.scheduler_kwargs.max_lr / p.lr,
-            final_div_factor=p.lr / p.scheduler_kwargs.min_lr,
-            verbose=False,
-        )
+        scheduler = optim.lr_scheduler.OneCycleLR(optimizer, max_lr=p.max_lr, epochs=p.epochs, steps_per_epoch=p.len_loader, div_factor=p.max_lr/p.lr, final_div_factor=p.lr/p.min_lr, verbose=True)
     elif p.scheduler == "exponentiallr":
-        scheduler = optim.lr_scheduler.ExponentialLR(
-            optimizer, gamma=p.scheduler_kwargs.gamma, verbose=True
-        )
+        scheduler = optim.lr_scheduler.ExponentialLR(optimizer, gamma=p.gamma, verbose=True)
     elif p.scheduler == "steplr":
-        scheduler = optim.lr_scheduler.StepLR(
-            optimizer,
-            step_size=p.scheduler_kwargs.step_size,
-            gamma=p.scheduler_kwargs.gamma,
+        scheduler = optim.lr_scheduler.StepLR(optimizer,
+            step_size=p.step_size,
+            gamma=p.gamma,
             verbose=True,
         )
     else:
@@ -312,3 +321,59 @@ def create_config(config_file_exp, args):
     #     cfg[k] = v
 
     return cfg
+
+
+def str_to_bool(v):
+    # Handle boolean type in arguments.
+    if isinstance(v, bool):
+        return v
+    if v.lower() in ('yes', 'true', 't', 'y', '1'):
+        return True
+    elif v.lower() in ('no', 'false', 'f', 'n', '0'):
+        return False
+    else:
+        raise argparse.ArgumentTypeError('Boolean value expected.')
+
+def get_parser():
+    parser = argparse.ArgumentParser(description="")
+    # General parameters
+    parser.add_argument('--dataset', type=str, default='CIFAR10', help='dataset')
+    parser.add_argument('--model', type=str, default='AlexNet', help='model')
+    parser.add_argument('--dataset_dir', type=str, default='data', help='dataset path')
+    parser.add_argument('--gpu', type=int, nargs='+', default=None, help='gpu id')
+    parser.add_argument('--topn', type=int, default=1000, help='Size of Coreset')
+    parser.add_argument('--iter', '--num_iter', type=int, default=100, help='Number of iterations for each coreset')
+    parser.add_argument('--batch_size', '-bs', type=int, default=1000, help='Batch size')
+    parser.add_argument('--epochs', type=int, default=200, help='Number of epochs')
+    parser.add_argument('--r', type=int, default=2, help='Number of workers')
+    parser.add_argument('--seed', type=int, default=0, help='Seed')
+    # Optimizer and Scheduler parameters
+    parser.add_argument('--optimizer', type=str, default='sgd', help='optimizer')
+    parser.add_argument('--lr', type=float, default=0.01, help='learning rate')
+    parser.add_argument('--min_lr', type=float, default=0.00001, help='min learning rate')
+    parser.add_argument('--momentum', type=float, default=0.9, help='momentum')
+    parser.add_argument('-wd', '--weight_decay', type=float, default=0.01, help='weight decay (default: 0.01')
+    parser.add_argument('--nesterov', type=str_to_bool, default=False, help='nesterov')
+    parser.add_argument('--scheduler', type=str, default='reduceonplateau', help='scheduler')
+    parser.add_argument('--patience', type=int, default=50, help='Patienece for ReduceOnPlateau')
+    parser.add_argument('--factor', type=float, default=0.2, help='Factor for ReduceOnPlateau')
+    parser.add_argument('--step_size', type=int, default=30, help='Step size for StepLR')
+    parser.add_argument('--gamma', type=float, default=0.1, help='Gamma for StepLR')
+    parser.add_argument('--max_lr', type=float, default=0.005, help='Max learning rate')
+    # Early Stopping parameters
+    parser.add_argument('--early_stopping_patience', type=int, default=0, help='Early Stopping Patience (default: 0 i.e no early stopping)')
+    parser.add_argument('--early_stopping_delta', type=float, default=0.001, help='Early Stopping Delta (default: 0.001)')
+    parser.add_argument('--early_stopping_min_epochs', type=int, default=0, help='Minimum number of epochs for early stopping (default: 0)')
+    # Misc parameters
+    # params if specified true: per_class, class_balanced, with_train, augment
+    parser.add_argument('--per_class', type=str_to_bool, default=False, help='Specify if per class mean gradients or not')
+    parser.add_argument('--class_balanced', type=str_to_bool, default=False, help='whether to use class balanced sampling')
+    parser.add_argument('--with_train', type=str_to_bool, default=False, help='With train')
+    parser.add_argument('--random', type=str_to_bool, default=False, help='whether to use random sampling for coreset')
+    parser.add_argument('--augment', type=str_to_bool, default=False, help='Augment')
+    parser.add_argument('--temp', type=str_to_bool, default=False, help='whether to use temp folder')
+    # parameters for train.py
+    parser.add_argument('--train', type=str_to_bool, default=True, help='whether to train')
+    parser.add_argument('--test_model', type=str, default=None, help='path to test model')
+
+    return parser
