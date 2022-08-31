@@ -102,7 +102,7 @@ def train_loop(p, best_inds: torch.Tensor, data, test_data) -> None:
     val_loader = None
     if val_inds is not None:
         val_loader = DataLoader(
-            Subset(get_train_dataset(p, val=True), val_inds), val_inds.shape[0]
+            Subset(data, val_inds), val_inds.shape[0]
         )
     test_loader = DataLoader(test_data, p.batch_size)
 
@@ -119,7 +119,10 @@ def train_loop(p, best_inds: torch.Tensor, data, test_data) -> None:
     if p.scheduler:
         scheduler = get_scheduler(p, optimizer)
 
-    early_stopping = EarlyStopping(**p.early_stopping_kwargs)
+    if p.early_stopping_patience == 0:
+        early_stopping = None
+    else:
+        early_stopping = EarlyStopping(p.early_stopping_patience, p.early_stopping_delta, p.early_stopping_min_epochs)
     losses, accs, val_losses, val_accs = [], [], [], []
     val_loss, val_acc = 0, 0
     lrs = []
@@ -134,10 +137,11 @@ def train_loop(p, best_inds: torch.Tensor, data, test_data) -> None:
             val_loss, val_acc = validate(val_loader, model, criterion, device)
             val_losses.append(val_loss.item())
             val_accs.append(val_acc)
-            early_stopping(-val_loss)
+            if early_stopping is not None:
+                early_stopping(-val_loss)
         if scheduler is not None:
-            scheduler.step()
-            # scheduler.step(val_loss)
+            # scheduler.step()
+            scheduler.step(val_loss)
             lrs.append(optimizer.param_groups[0]["lr"])
         # logger.info(f"Epoch[{epoch+1:4}] Val_Loss: {val_loss:.3f}\tVal_Acc: {val_acc:.3f}")
         gc.collect()
@@ -150,9 +154,10 @@ def train_loop(p, best_inds: torch.Tensor, data, test_data) -> None:
             logger.info(
                 f"Epoch[{epoch+1:4}] Test Accuracy: {(correct / len(test_data))*100 :.3f}"
             )
-        if early_stopping.early_stop:
-            logger.info(f"Trained for {epoch+1} Epochs.")
-            break
+        if early_stopping is not None:
+            if early_stopping.early_stop:
+                logger.info(f"Trained for {epoch+1} Epochs.")
+                break
 
     suffix = str("_augment" if p.augment else "") + str(
         "_clsbalanced" if p.class_balanced else "_perclass" if p.per_class else ""
@@ -340,7 +345,7 @@ def main(p):
                 p.output_dir / f"freq_{p.topn}_clsbalanced",
             )
         else:
-            best_inds = get_best_inds(p.topn, all_similarities, all_imginds)
+            best_inds = get_best_inds(p.topn, all_similarities, all_imginds).astype(int)
             plot_distribution(
                 p.topn,
                 train_labels[best_inds],
@@ -349,7 +354,7 @@ def main(p):
             )
         np.save(p.output_dir / f"best_inds_{p.topn}.npy", best_inds)
 
-    if not (p.dont_train or p.random):
+    if not (not p.train or p.random):
         best_inds = torch.from_numpy(best_inds)
         train_loop(p, best_inds, data, test_data)
 
@@ -452,6 +457,8 @@ if __name__ == "__main__":
 
     global logger
     logger = get_logger(args, "train")
+
+    args.val_percent = 0.1
     try:
         main(args)
     except Exception:
