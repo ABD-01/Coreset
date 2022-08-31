@@ -16,19 +16,7 @@ from torchsummary import summary
 
 from train_utils import *
 
-import nets
-from utils import (
-    AlexNet,
-    create_config,
-    get_logger,
-    get_optimizer,
-    get_parser,
-    get_scheduler,
-    get_test_dataset,
-    get_train_dataset,
-    seed_everything,
-    ParseKwargs,
-)
+from utils import *
 
 
 def get_train_val_inds(p, best_inds: torch.Tensor):
@@ -119,7 +107,7 @@ def train_loop(p, best_inds: torch.Tensor, data, test_data) -> None:
     test_loader = DataLoader(test_data, p.batch_size)
 
     # model
-    model = nets.__dict__[p.model](p.input_shape[0], p.num_classes, im_size=p.input_shape[1:]).to(device)
+    model = get_model(p, device)
     logger.info(
         "Model Summary\n"
         + str(summary(model, data[1][0].shape, verbose=0, device=device))
@@ -211,9 +199,7 @@ def train_loop(p, best_inds: torch.Tensor, data, test_data) -> None:
     return train_acc * 100, test_acc
 
 
-def main(args):
-
-    p = create_config(args.config, args)
+def main(p):
 
     logger.info("Hyperparameters\n" + pformat(p))
 
@@ -227,11 +213,9 @@ def main(args):
     seed_everything(p.seed)
 
     # dataset
-    data = get_train_dataset(p)
+    data, test_data = get_dataset(p)
     logger.info(f"Dataset\n{str(data)}")
-    test_data = get_test_dataset(p)
     logger.info(f"Test Dataset\n{str(test_data)}")
-    p.num_classes = len(data.classes)
     train_labels = np.array(data.targets)
 
     if p.test_model is not None:
@@ -255,11 +239,11 @@ def main(args):
 
     elif p.per_class:
         all_similarities = np.load(
-            Path(p.dataset)
+            Path(p.dataset.lower())
             / f"all_similarities_perclass{'_withtrain' if p.with_train else ''}.npy"
         )
         all_imginds = np.load(
-            Path(p.dataset)
+            Path(p.dataset.lower())
             / f"all_imginds_perclass{'_withtrain' if p.with_train else ''}.npy"
         ).squeeze(axis=-1)
         if p.with_train:
@@ -330,16 +314,16 @@ def main(args):
 
     else:
         all_sim_path = (
-            Path(p.dataset)
+            Path(p.dataset.lower())
             / f"all_similarities{'_withtrain' if p.with_train else ''}.npy"
         )
         all_ind_path = (
-            Path(p.dataset) / f"all_imginds{'_withtrain' if p.with_train else ''}.npy"
+            Path(p.dataset.lower()) / f"all_imginds{'_withtrain' if p.with_train else ''}.npy"
         )
         logger.info(
             f"Loading similarities from {all_sim_path}\nLoading imginds from {all_ind_path}"
         )
-        all_similarities = np.load(all_sim_path)
+        all_similarities = np.load(all_sim_path).squeeze()
         all_imginds = np.load(all_ind_path)
         logger.info(
             f"all_similarities.shape: {all_similarities.shape}, all_imginds.shape: {all_imginds.shape}"
@@ -445,7 +429,7 @@ if __name__ == "__main__":
 
     parser = get_parser()
     args = parser.parse_args()
-    args.output_dir = Path(args.dataset) / f"n{args.topn}"
+    args.output_dir = Path(args.dataset.lower()) / f"n{args.topn}"
     if args.temp:
         args.output_dir = args.output_dir / f"temp"
     if args.with_train:
@@ -456,6 +440,7 @@ if __name__ == "__main__":
     if args.test_model is not None and not Path(args.test_model).is_file():
         raise ValueError("Provided path to model does not exists.")
 
+    args.use_saved_best_inds = None
     if (
         args.use_saved_best_inds is not None
         and not Path(args.use_saved_best_inds).is_file()

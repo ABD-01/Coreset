@@ -125,11 +125,14 @@ def get_similarities(model, dataset, batch_size, mean_gradients, use_all_params=
     return np.concatenate(similarities), np.concatenate(img_indices)
 
 
+# def cosinesimilarity(a,b):
+#     return np.divide(np.dot(a, b.T), (np.linalg.norm(a, axis=-1, keepdims=True) * np.linalg.norm(b, keepdims=True)))
+
 def cosinesimilarity(a,b):
-    return np.divide(np.dot(a, b.T), (np.linalg.norm(a, axis=-1, keepdims=True) * np.linalg.norm(b, keepdims=True)))
+    return torch.divide(torch.mm(a, b.T), (torch.linalg.norm(a, dim=-1, keepdims=True) * torch.linalg.norm(b, keepdims=True)))
 
 def get_sims(gradients):
-    mean_gradients = gradients.mean(axis=0, keepdims=True)
+    mean_gradients = gradients.mean(dim=0, keepdims=True)
     return cosinesimilarity(gradients, mean_gradients)
 
 
@@ -138,11 +141,11 @@ def get_mean_gradients(p, model, loader, criterion, optimizer):
     num_iter = len(loader)
     embedding_dim = model.get_last_layer().in_features
     sample_num = len(loader.dataset)
-    # gradients = torch.zeros([sample_num, p.num_classes * (embedding_dim + 1)],
-    #                             requires_grad=False, device='cpu')
-    # img_indices = torch.zeros([sample_num], requires_grad=False, device='cpu')
-    gradients = np.zeros([sample_num, p.num_classes * (embedding_dim + 1)])
-    img_indices = np.zeros(sample_num)
+    gradients = torch.zeros([sample_num, p.num_classes * (embedding_dim + 1)],
+                                requires_grad=False, device='cuda')
+    img_indices = torch.zeros([sample_num], requires_grad=False, device='cuda')
+    # gradients = np.zeros([sample_num, p.num_classes * (embedding_dim + 1)])
+    # img_indices = np.zeros(sample_num)
     progress_bar = tqdm(
         loader, total=num_iter, desc="Mean Gradients", leave=False, position=2
     )
@@ -152,8 +155,9 @@ def get_mean_gradients(p, model, loader, criterion, optimizer):
             optimizer.zero_grad(set_to_none=True)
             images, labels, inds = batch
             torch.cuda.empty_cache()
-            images, labels = images.to(device), labels.to(device)
+            images, labels = images.to(device), labels.squeeze().to(device)
             output = model(images).requires_grad_(True)
+            # logger.info((output.shape, labels.shape, inds.shape))
             loss = criterion(F.softmax(output, dim=1), labels).sum()
             batch_num = labels.shape[0]
             with torch.no_grad():
@@ -161,8 +165,8 @@ def get_mean_gradients(p, model, loader, criterion, optimizer):
                 weight_parameters_grads = model.embedding_recorder.embedding.cpu().view(batch_num, 1, embedding_dim).repeat(1, p.num_classes, 1) *\
                                             bias_parameters_grads.view(batch_num, p.num_classes, 1).repeat(1, 1, embedding_dim)
                 
-                gradients[i*p.batch_size:min((i+1)*p.batch_size, sample_num)] = torch.cat((bias_parameters_grads, weight_parameters_grads.flatten(1)), dim=1).numpy()
-            img_indices[i*p.batch_size:min((i+1)*p.batch_size, sample_num)] = inds.numpy()
+                gradients[i*p.batch_size:min((i+1)*p.batch_size, sample_num)] = torch.cat((bias_parameters_grads, weight_parameters_grads.flatten(1)), dim=1)
+            img_indices[i*p.batch_size:min((i+1)*p.batch_size, sample_num)] = inds.squeeze()
 
     return gradients, img_indices
 
@@ -282,11 +286,12 @@ def gradient_mathcing(p, data, logger):
                 pin_memory=True,
                 drop_last=True,
             )
-            mean_gradients, img_indices = get_mean_gradients(p, model, loader, criterion, optimizer) 
+            gradients, img_indices = get_mean_gradients(p, model, loader, criterion, optimizer) 
             # similarities, img_indices = get_similarities(
             #     model, data, p.batch_size, mean_gradients
             # )
-            similarities = get_sims(mean_gradients)
+            similarities = get_sims(gradients).cpu().numpy()
+            img_indices = img_indices.cpu().numpy()
         elif p.per_class:
             similarities, img_indices = [], []
             for dataset in tqdm(
@@ -300,10 +305,12 @@ def gradient_mathcing(p, data, logger):
                     pin_memory=True,
                     drop_last=True,
                 )
-                mean_gradients = get_mean_gradients(p, model, loader, criterion, optimizer)
-                cls_all_sims, cls_all_inds = get_similarities(
-                    model, dataset, p.batch_size, mean_gradients, 
-                )
+                gradients, cls_all_inds = get_mean_gradients(p, model, loader, criterion, optimizer)
+                # cls_all_sims, cls_all_inds = get_similarities(
+                #     model, dataset, p.batch_size, mean_gradients, 
+                # )
+                cls_all_sims = get_sims(gradients).cpu().numpy()
+                cls_all_inds = cls_all_inds.cpu().numpy()
                 similarities.append(cls_all_sims)
                 img_indices.append(cls_all_inds)
             similarities, img_indices = np.stack(similarities), np.stack(img_indices)
