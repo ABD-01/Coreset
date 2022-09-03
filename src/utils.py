@@ -241,7 +241,7 @@ def get_scheduler(p, optimizer):
     if p.scheduler == "reduceonplateau":
         scheduler = optim.lr_scheduler.ReduceLROnPlateau(optimizer,factor=p.factor, patience=p.patience, verbose=True)
     elif p.scheduler == "onecyclelr":
-        scheduler = optim.lr_scheduler.OneCycleLR(optimizer, max_lr=p.max_lr, epochs=p.epochs, steps_per_epoch=p.len_loader, div_factor=p.max_lr/p.lr, final_div_factor=p.lr/p.min_lr, verbose=True)
+        scheduler = optim.lr_scheduler.OneCycleLR(optimizer, max_lr=p.max_lr, epochs=p.epochs, steps_per_epoch=p.len_loader, div_factor=p.max_lr/p.lr, final_div_factor=p.lr/p.min_lr, verbose=False)
     elif p.scheduler == "exponentiallr":
         scheduler = optim.lr_scheduler.ExponentialLR(optimizer, gamma=p.gamma, verbose=True)
     elif p.scheduler == "steplr":
@@ -250,6 +250,11 @@ def get_scheduler(p, optimizer):
             gamma=p.gamma,
             verbose=True,
         )
+    # add  elif for cosine annealing lr
+    elif p.scheduler == "cosineannealinglr":
+        scheduler = optim.lr_scheduler.CosineAnnealingLR(optimizer, T_max=p.T_max, eta_min=p.min_lr, verbose=False)
+    elif p.scheduler == "cosineannealingwarmrestarts":
+        scheduler = optim.lr_scheduler.CosineAnnealingWarmRestarts(optimizer, T_0=p.T_max, T_mult=p.T_mult, eta_min=p.min_lr, verbose=False)
     else:
         msg = f"Unknown value '{p.scheduler}' for argument scheduler"
         raise ValueError(msg)
@@ -343,14 +348,15 @@ def get_parser():
     parser.add_argument('--gpu', type=int, nargs='+', default=None, help='gpu id')
     parser.add_argument('--topn', type=int, default=1000, help='Size of Coreset')
     parser.add_argument('--iter', '--num_iter', type=int, default=100, help='Number of iterations for each coreset')
-    parser.add_argument('--batch_size', '-bs', type=int, default=1000, help='Batch size')
+    parser.add_argument('--batch_size', '-bs', type=int, default=500, help='Batch size')
+    parser.add_argument('--val_batch_size', '-vbs', type=int, default=100, help='Validation batch size')
     parser.add_argument('--epochs', type=int, default=200, help='Number of epochs')
     parser.add_argument('--r', type=int, default=2, help='Number of workers')
     parser.add_argument('--seed', type=int, default=0, help='Seed')
     # Optimizer and Scheduler parameters
     parser.add_argument('--optimizer', type=str, default='sgd', help='optimizer')
     parser.add_argument('--lr', type=float, default=0.01, help='learning rate')
-    parser.add_argument('--min_lr', type=float, default=0.00001, help='min learning rate')
+    parser.add_argument('--min_lr', type=float, default=0.0001, help='min learning rate')
     parser.add_argument('--momentum', type=float, default=0.9, help='momentum')
     parser.add_argument('-wd', '--weight_decay', type=float, default=0.01, help='weight decay (default: 0.01')
     parser.add_argument('--nesterov', type=str_to_bool, default=False, help='nesterov')
@@ -360,10 +366,12 @@ def get_parser():
     parser.add_argument('--step_size', type=int, default=30, help='Step size for StepLR')
     parser.add_argument('--gamma', type=float, default=0.1, help='Gamma for StepLR')
     parser.add_argument('--max_lr', type=float, default=0.005, help='Max learning rate')
+    parser.add_argument('--T_max', type=int, default=50, help='T_max for CosineAnnealingLR')
+    parser.add_argument('--T_mult', type=int, default=1, help='T_mult for CosineAnnealingLR')
     # Early Stopping parameters
-    parser.add_argument('--early_stopping_patience', type=int, default=0, help='Early Stopping Patience (default: 0 i.e no early stopping)')
-    parser.add_argument('--early_stopping_delta', type=float, default=0.001, help='Early Stopping Delta (default: 0.001)')
-    parser.add_argument('--early_stopping_min_epochs', type=int, default=0, help='Minimum number of epochs for early stopping (default: 0)')
+    parser.add_argument('-esp','--early_stopping_patience', type=int, default=-1, help='Early Stopping Patience (default: -1 i.e no early stopping)')
+    parser.add_argument('-esd','--early_stopping_delta', type=float, default=0.001, help='Early Stopping Delta (default: 0.001)')
+    parser.add_argument('-esm','--early_stopping_min_epochs', type=int, default=100, help='Minimum number of epochs for early stopping (default: 100)')
     # Misc parameters
     # params if specified true: per_class, class_balanced, with_train, augment
     parser.add_argument('--per_class', type=str_to_bool, default=False, help='Specify if per class mean gradients or not')

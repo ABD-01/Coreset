@@ -279,15 +279,7 @@ def gradient_mathcing(p, data, logger):
             # slmodel, params, buffers = make_functional_with_buffers(model.fc)
 
         if not p.per_class:
-            loader = DataLoader(
-                data,
-                p.batch_size,
-                shuffle=True,
-                num_workers=2,
-                pin_memory=True,
-                drop_last=True,
-            )
-            gradients, img_indices = get_mean_gradients(p, model, loader, criterion, optimizer) 
+            gradients, img_indices = get_mean_gradients(p, model, train_loader, criterion, optimizer) 
             # similarities, img_indices = get_similarities(
             #     model, data, p.batch_size, mean_gradients
             # )

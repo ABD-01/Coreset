@@ -1,3 +1,4 @@
+from cgi import test
 import logging
 
 import matplotlib.pyplot as plt
@@ -158,27 +159,60 @@ class EarlyStopping:
     # ref : https://debuggercafe.com/using-learning-rate-scheduler-and-early-stopping-with-pytorch/
 
 
-def plot_learning_curves(
-    losses: list, accs: list, val_losses: list, val_accs: list, topn: int, path
+# write a function to plot the epoch loss and accuracry along with validation loss and accuracy wrt epochs np.araneg(len(loss))
+# update function to include test_accs
+
+def plot_loss_acc(
+    train_loss: list,
+    train_acc: list,
+    val_loss: list,
+    val_acc: list,
+    test_acc: list,
+    path,
 ) -> None:
-    """Plots Learning Curves
+    """Plots loss and accuracy for train and validation set
 
     Args:
-        losses (list): Train Losses
-        accs (list): Train Accuracies
-        val_losses (list): Validation Losses
-        val_accs (list): Validation Accuracies
-        topn (int): no. of best samples
+        train_loss (list): list of train loss
+        train_acc (list): list of train accuracy
+        val_loss (list): list of validation loss
+        val_acc (list): list of validation accuracy
         path (pathlib.Path): directory to save plots
     """
-    fig, (ax1, ax2) = plt.subplots(2, figsize=(8, 5 * 2))
-    ax1.plot(losses, label="Train Loss")
-    ax1.plot(val_losses, label="Val Loss")
-    ax1.set_title(f"LossCurve_greedy{topn}")
-    ax2.plot(accs, label="Train Acc")
-    ax2.plot(val_accs, label="Val Acc")
-    ax2.set_title(f"AccCurve_greedy{topn}")
-    ax1.legend()
-    ax2.legend()
+    fig = plt.figure(figsize=(5, 10))
+    plt.title("Loss and Accuracy")
+    plt.subplot(2, 1, 1)
+    plt.plot(np.arange(len(train_loss)), train_loss, label="train")
+    plt.plot(np.arange(0, len(train_loss), len(train_loss) / len(val_loss)), val_loss, label="val")
+    plt.xlabel("Epochs")
+    plt.ylabel("Loss")
+    plt.legend()
+    plt.grid(linestyle="--")
+
+    plt.subplot(2, 1, 2)
+    plt.plot(np.arange(len(train_acc)), train_acc, label="train")
+    plt.plot(np.arange(0, len(train_acc), len(train_acc) / len(val_acc)), val_acc, label="val")    
+    plt.plot(np.arange(0, len(train_acc), len(train_acc) / len(test_acc)), test_acc, label="test")
+    plt.xlabel("Epochs")
+    plt.ylabel("Accuracy")
+    plt.legend()
+    plt.grid(linestyle="--")
+    plt.savefig(path)
+    # plt.show()
+
+# define plot_lr function to plot the learning rate wrt epochs
+def plot_lr(lrs: list, path) -> None:
+    """Plots learning rate for each epoch
+
+    Args:
+        lrs (list): list of learning rates
+        path (pathlib.Path): directory to save plots
+    """
+    fig = plt.figure()
+    plt.plot(np.arange(len(lrs)), lrs)
+    plt.xlabel("Epochs")
+    plt.ylabel("Learning rate")
+    plt.title("Learning rate wrt epochs")
+    plt.grid(linestyle="--")
     plt.savefig(path)
     # plt.show()
