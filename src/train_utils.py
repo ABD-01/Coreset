@@ -183,7 +183,8 @@ def plot_loss_acc(
     plt.title("Loss and Accuracy")
     plt.subplot(2, 1, 1)
     plt.plot(np.arange(len(train_loss)), train_loss, label="train")
-    plt.plot(np.arange(0, len(train_loss), len(train_loss) / len(val_loss)), val_loss, label="val")
+    if val_loss:
+        plt.plot(np.arange(0, len(train_loss), len(train_loss) / len(val_loss)), val_loss, label="val")
     plt.xlabel("Epochs")
     plt.ylabel("Loss")
     plt.legend()
@@ -191,8 +192,14 @@ def plot_loss_acc(
 
     plt.subplot(2, 1, 2)
     plt.plot(np.arange(len(train_acc)), train_acc, label="train")
-    plt.plot(np.arange(0, len(train_acc), len(train_acc) / len(val_acc)), val_acc, label="val")    
-    plt.plot(np.arange(0, len(train_acc), len(train_acc) / len(test_acc)), test_acc, label="test")
+    if len(val_acc) > 0:
+        plt.plot(
+            np.arange(0, len(train_acc), len(train_acc) / len(val_acc)), val_acc, label="val"
+        )
+    if len(test_acc) > 0:
+        plt.plot(
+            np.arange(0, len(train_acc), len(train_acc) / len(test_acc)), test_acc, label="test"
+        )
     plt.xlabel("Epochs")
     plt.ylabel("Accuracy")
     plt.legend()

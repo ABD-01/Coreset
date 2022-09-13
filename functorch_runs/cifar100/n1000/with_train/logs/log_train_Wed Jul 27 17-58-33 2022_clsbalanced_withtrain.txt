@@ -1,0 +1,167 @@
+2022-07-27 17:58:33,913: INFO: Hyperparameters
+{'augment': False,
+ 'backbone': 'alexnet',
+ 'batch_size': 1000,
+ 'class_balanced': True,
+ 'config': 'src/configs/cifar100.yml',
+ 'criterion': 'NLLLoss',
+ 'criterion_kwargs': None,
+ 'dataset': 'cifar100',
+ 'dataset_dir': './data',
+ 'dont_train': False,
+ 'early_stopping_kwargs': {'min_delta': 0.001,
+                           'min_epochs': 250,
+                           'patience': 50},
+ 'epochs': 1000,
+ 'input_shape': [3, 32, 32],
+ 'logdir': PosixPath('cifar100/n1000/with_train/logs'),
+ 'lr': 0.01,
+ 'num_classes': 100,
+ 'num_workers': 2,
+ 'optimizer': 'sgd',
+ 'optimizer_kwargs': {'momentum': 0.9, 'weight_decay': 0.01},
+ 'output_dir': PosixPath('cifar100/n1000/with_train'),
+ 'per_class': False,
+ 'random': False,
+ 'resume': None,
+ 'scheduler': None,
+ 'seed': 0,
+ 'test_model': None,
+ 'topn': 1000,
+ 'transformation_kwargs': {'normalize': {'mean': [0.5071, 0.4867, 0.4408],
+                                         'std': [0.2675, 0.2565, 0.2761]}},
+ 'use_saved_best_inds': None,
+ 'val_percent': 0.1,
+ 'wandb': False,
+ 'with_train': True}
+2022-07-27 17:58:34,949: INFO: Dataset
+Dataset CIFAR100
+    Number of datapoints: 50000
+    Root location: ./data
+    Split: Train
+    StandardTransform
+Transform: Compose(
+               ToTensor()
+               Normalize(mean=[0.5071, 0.4867, 0.4408], std=[0.2675, 0.2565, 0.2761])
+           )
+2022-07-27 17:58:35,808: INFO: Test Dataset
+Dataset CIFAR100
+    Number of datapoints: 10000
+    Root location: ./data
+    Split: Test
+    StandardTransform
+Transform: Compose(
+               ToTensor()
+               Normalize(mean=[0.5071, 0.4867, 0.4408], std=[0.2675, 0.2565, 0.2761])
+           )
+2022-07-27 17:58:35,811: INFO: Loading similarities from cifar100/all_similarities_withtrain.npy
+Loading imginds from cifar100/all_imginds_withtrain.npy
+2022-07-27 17:58:35,832: INFO: all_similarities.shape: (100, 50000), all_imginds.shape: (100, 50000)
+2022-07-27 17:58:42,592: INFO: Model Summary
+==========================================================================================
+Layer (type:depth-idx)                   Output Shape              Param #
+==========================================================================================
+├─Sequential: 1-1                        [-1, 1024]                --
+|    └─Conv2d: 2-1                       [-1, 64, 16, 16]          1,792
+|    └─MaxPool2d: 2-2                    [-1, 64, 8, 8]            --
+|    └─ReLU: 2-3                         [-1, 64, 8, 8]            --
+|    └─Conv2d: 2-4                       [-1, 192, 8, 8]           110,784
+|    └─MaxPool2d: 2-5                    [-1, 192, 4, 4]           --
+|    └─ReLU: 2-6                         [-1, 192, 4, 4]           --
+|    └─Conv2d: 2-7                       [-1, 384, 4, 4]           663,936
+|    └─ReLU: 2-8                         [-1, 384, 4, 4]           --
+|    └─Conv2d: 2-9                       [-1, 256, 4, 4]           884,992
+|    └─ReLU: 2-10                        [-1, 256, 4, 4]           --
+|    └─Conv2d: 2-11                      [-1, 256, 4, 4]           590,080
+|    └─MaxPool2d: 2-12                   [-1, 256, 2, 2]           --
+|    └─ReLU: 2-13                        [-1, 256, 2, 2]           --
+|    └─Flatten: 2-14                     [-1, 1024]                --
+├─Sequential: 1-2                        [-1, 100]                 --
+|    └─Dropout: 2-15                     [-1, 1024]                --
+|    └─Linear: 2-16                      [-1, 512]                 524,800
+|    └─ReLU: 2-17                        [-1, 512]                 --
+|    └─Dropout: 2-18                     [-1, 512]                 --
+|    └─Linear: 2-19                      [-1, 256]                 131,328
+|    └─ReLU: 2-20                        [-1, 256]                 --
+|    └─Linear: 2-21                      [-1, 100]                 25,700
+|    └─LogSoftmax: 2-22                  [-1, 100]                 --
+==========================================================================================
+Total params: 2,933,412
+Trainable params: 2,933,412
+Non-trainable params: 0
+Total mult-adds (M): 45.34
+==========================================================================================
+Input size (MB): 0.01
+Forward/backward pass size (MB): 0.33
+Params size (MB): 11.19
+Estimated Total Size (MB): 11.54
+==========================================================================================
+2022-07-27 17:58:47,451: INFO: Epoch[   1] Loss: 17.36	Accuracy: 0.889	Val_Loss: 6.005	Val_Acc: 1.000
+2022-07-27 17:58:47,451: INFO: Epoch[   1] Test Accuracy: 0.830
+2022-07-27 17:59:06,798: INFO: Epoch[  51] Loss: 4.59	Accuracy: 1.889	Val_Loss: 4.556	Val_Acc: 3.000
+2022-07-27 17:59:06,798: INFO: Epoch[  51] Test Accuracy: 1.510
+2022-07-27 17:59:25,327: INFO: Epoch[ 101] Loss: 4.42	Accuracy: 3.667	Val_Loss: 4.407	Val_Acc: 5.000
+2022-07-27 17:59:25,327: INFO: Epoch[ 101] Test Accuracy: 3.570
+2022-07-27 17:59:43,973: INFO: Epoch[ 151] Loss: 4.19	Accuracy: 5.111	Val_Loss: 4.269	Val_Acc: 7.000
+2022-07-27 17:59:43,974: INFO: Epoch[ 151] Test Accuracy: 5.370
+2022-07-27 18:00:02,413: INFO: Epoch[ 201] Loss: 3.91	Accuracy: 10.778	Val_Loss: 4.164	Val_Acc: 9.000
+2022-07-27 18:00:02,414: INFO: Epoch[ 201] Test Accuracy: 6.260
+2022-07-27 18:00:19,974: INFO: Epoch: 251 Early stopping counter 1 of 50
+2022-07-27 18:00:22,145: INFO: Epoch[ 251] Loss: 3.65	Accuracy: 15.222	Val_Loss: 4.197	Val_Acc: 6.000
+2022-07-27 18:00:22,146: INFO: Epoch[ 251] Test Accuracy: 7.000
+2022-07-27 18:00:22,440: INFO: Epoch: 252 Early stopping counter 2 of 50
+2022-07-27 18:00:22,787: INFO: Epoch: 253 Early stopping counter 3 of 50
+2022-07-27 18:00:23,129: INFO: Epoch: 254 Early stopping counter 4 of 50
+2022-07-27 18:00:23,473: INFO: Epoch: 255 Early stopping counter 5 of 50
+2022-07-27 18:00:23,794: INFO: Epoch: 256 Early stopping counter 6 of 50
+2022-07-27 18:00:24,124: INFO: Epoch: 257 Early stopping counter 7 of 50
+2022-07-27 18:00:24,452: INFO: Epoch: 258 Early stopping counter 8 of 50
+2022-07-27 18:00:24,772: INFO: Epoch: 259 Early stopping counter 9 of 50
+2022-07-27 18:00:25,111: INFO: Epoch: 260 Early stopping counter 10 of 50
+2022-07-27 18:00:25,466: INFO: Epoch: 261 Early stopping counter 11 of 50
+2022-07-27 18:00:25,813: INFO: Epoch: 262 Early stopping counter 12 of 50
+2022-07-27 18:00:26,167: INFO: Epoch: 263 Early stopping counter 13 of 50
+2022-07-27 18:00:26,506: INFO: Epoch: 264 Early stopping counter 14 of 50
+2022-07-27 18:00:26,860: INFO: Epoch: 265 Early stopping counter 15 of 50
+2022-07-27 18:00:27,206: INFO: Epoch: 266 Early stopping counter 16 of 50
+2022-07-27 18:00:27,544: INFO: Epoch: 267 Early stopping counter 17 of 50
+2022-07-27 18:00:27,891: INFO: Epoch: 268 Early stopping counter 18 of 50
+2022-07-27 18:00:28,235: INFO: Epoch: 269 Early stopping counter 19 of 50
+2022-07-27 18:00:28,593: INFO: Epoch: 270 Early stopping counter 20 of 50
+2022-07-27 18:00:28,952: INFO: Epoch: 271 Early stopping counter 21 of 50
+2022-07-27 18:00:29,284: INFO: Epoch: 272 Early stopping counter 22 of 50
+2022-07-27 18:00:29,640: INFO: Epoch: 273 Early stopping counter 23 of 50
+2022-07-27 18:00:29,994: INFO: Epoch: 274 Early stopping counter 24 of 50
+2022-07-27 18:00:30,327: INFO: Epoch: 275 Early stopping counter 25 of 50
+2022-07-27 18:00:30,681: INFO: Epoch: 276 Early stopping counter 26 of 50
+2022-07-27 18:00:31,026: INFO: Epoch: 277 Early stopping counter 27 of 50
+2022-07-27 18:00:31,378: INFO: Epoch: 278 Early stopping counter 28 of 50
+2022-07-27 18:00:31,721: INFO: Epoch: 279 Early stopping counter 29 of 50
+2022-07-27 18:00:32,066: INFO: Epoch: 280 Early stopping counter 30 of 50
+2022-07-27 18:00:32,421: INFO: Epoch: 281 Early stopping counter 31 of 50
+2022-07-27 18:00:32,777: INFO: Epoch: 282 Early stopping counter 32 of 50
+2022-07-27 18:00:33,106: INFO: Epoch: 283 Early stopping counter 33 of 50
+2022-07-27 18:00:33,457: INFO: Epoch: 284 Early stopping counter 34 of 50
+2022-07-27 18:00:33,818: INFO: Epoch: 285 Early stopping counter 35 of 50
+2022-07-27 18:00:34,159: INFO: Epoch: 286 Early stopping counter 36 of 50
+2022-07-27 18:00:34,519: INFO: Epoch: 287 Early stopping counter 37 of 50
+2022-07-27 18:00:34,881: INFO: Epoch: 288 Early stopping counter 38 of 50
+2022-07-27 18:00:35,213: INFO: Epoch: 289 Early stopping counter 39 of 50
+2022-07-27 18:00:35,564: INFO: Epoch: 290 Early stopping counter 40 of 50
+2022-07-27 18:00:35,926: INFO: Epoch: 291 Early stopping counter 41 of 50
+2022-07-27 18:00:36,272: INFO: Epoch: 292 Early stopping counter 42 of 50
+2022-07-27 18:00:36,628: INFO: Epoch: 293 Early stopping counter 43 of 50
+2022-07-27 18:00:36,979: INFO: Epoch: 294 Early stopping counter 44 of 50
+2022-07-27 18:00:37,313: INFO: Epoch: 295 Early stopping counter 45 of 50
+2022-07-27 18:00:37,662: INFO: Epoch: 296 Early stopping counter 46 of 50
+2022-07-27 18:00:38,015: INFO: Epoch: 297 Early stopping counter 47 of 50
+2022-07-27 18:00:38,338: INFO: Epoch: 298 Early stopping counter 48 of 50
+2022-07-27 18:00:38,658: INFO: Epoch: 299 Early stopping counter 49 of 50
+2022-07-27 18:00:38,987: INFO: Epoch: 300 Early stopping counter 50 of 50
+2022-07-27 18:00:38,987: INFO: Early stopping
+2022-07-27 18:00:39,044: INFO: Trained for 300 Epochs.
+2022-07-27 18:00:39,515: INFO: ('Accuracy on Train Set', 24.11111146211624)
+2022-07-27 18:00:41,481: INFO: (781, 'correctly labeled out of', 10000)
+2022-07-27 18:00:41,482: INFO: ('Accuracy on Test Set:', 7.8100000000000005)
+2022-07-27 18:00:41,502: INFO: Saved model at cifar100/n1000/with_train/Greedy_Model_1000n_Epochs_1000_Early_Stop_300_Test_Acc_7_clsbalanced.pth
+2022-07-27 18:00:41,502: INFO: Training Complete

@@ -1,0 +1,231 @@
+2022-07-04 08:29:02,209: INFO: Hyperparameters
+{'backbone': 'alexnet',
+ 'batch_size': 1000,
+ 'class_balanced': False,
+ 'config': 'src/configs/cifar100.yml',
+ 'criterion': 'NLLLoss',
+ 'criterion_kwargs': None,
+ 'dataset': 'cifar100',
+ 'dataset_dir': './data',
+ 'dont_train': False,
+ 'early_stopping_kwargs': {'min_delta': 0.001,
+                           'min_epochs': 250,
+                           'patience': 12},
+ 'epochs': 1000,
+ 'logdir': PosixPath('cifar100/n1000/logs'),
+ 'lr': 0.01,
+ 'num_classes': 100,
+ 'num_workers': 2,
+ 'optimizer': 'sgd',
+ 'optimizer_kwargs': {'momentum': 0.9, 'weight_decay': 0.01},
+ 'output_dir': PosixPath('cifar100/n1000'),
+ 'per_class': True,
+ 'random': False,
+ 'resume': None,
+ 'scheduler': 'reduceonplateau',
+ 'scheduler_kwargs': {'factor': 0.2,
+                      'min_lr': 1e-07,
+                      'patience': 10,
+                      'threshold': 0.001},
+ 'seed': 0,
+ 'test_model': None,
+ 'topn': 1000,
+ 'transformation_kwargs': {'normalize': {'mean': [0.5071, 0.4867, 0.4408],
+                                         'std': [0.2675, 0.2565, 0.2761]}},
+ 'use_saved_best_inds': None,
+ 'val_percent': 0.1,
+ 'wandb': False}
+2022-07-04 08:29:03,190: INFO: Dataset
+Dataset CIFAR100
+    Number of datapoints: 50000
+    Root location: ./data
+    Split: Train
+    StandardTransform
+Transform: Compose(
+               ToTensor()
+               Normalize(mean=[0.5071, 0.4867, 0.4408], std=[0.2675, 0.2565, 0.2761])
+           )
+2022-07-04 08:29:03,982: INFO: Test Dataset
+Dataset CIFAR100
+    Number of datapoints: 10000
+    Root location: ./data
+    Split: Test
+    StandardTransform
+Transform: Compose(
+               ToTensor()
+               Normalize(mean=[0.5071, 0.4867, 0.4408], std=[0.2675, 0.2565, 0.2761])
+           )
+2022-07-04 08:29:04,006: INFO: all_similarities_perclass.shape: (100, 100, 500), all_imginds_perclass.shape: (100, 100, 500)
+2022-07-04 08:29:04,007: DEBUG: (array([0]), array([50000]))
+2022-07-04 08:29:04,011: DEBUG: (array([1]), array([50000]))
+2022-07-04 08:29:04,014: DEBUG: (array([2]), array([50000]))
+2022-07-04 08:29:04,017: DEBUG: (array([3]), array([50000]))
+2022-07-04 08:29:04,020: DEBUG: (array([4]), array([50000]))
+2022-07-04 08:29:04,022: DEBUG: (array([5]), array([50000]))
+2022-07-04 08:29:04,025: DEBUG: (array([6]), array([50000]))
+2022-07-04 08:29:04,028: DEBUG: (array([7]), array([50000]))
+2022-07-04 08:29:04,030: DEBUG: (array([8]), array([50000]))
+2022-07-04 08:29:04,033: DEBUG: (array([9]), array([50000]))
+2022-07-04 08:29:04,035: DEBUG: (array([10]), array([50000]))
+2022-07-04 08:29:04,038: DEBUG: (array([11]), array([50000]))
+2022-07-04 08:29:04,041: DEBUG: (array([12]), array([50000]))
+2022-07-04 08:29:04,043: DEBUG: (array([13]), array([50000]))
+2022-07-04 08:29:04,046: DEBUG: (array([14]), array([50000]))
+2022-07-04 08:29:04,049: DEBUG: (array([15]), array([50000]))
+2022-07-04 08:29:04,051: DEBUG: (array([16]), array([50000]))
+2022-07-04 08:29:04,054: DEBUG: (array([17]), array([50000]))
+2022-07-04 08:29:04,056: DEBUG: (array([18]), array([50000]))
+2022-07-04 08:29:04,059: DEBUG: (array([19]), array([50000]))
+2022-07-04 08:29:04,061: DEBUG: (array([20]), array([50000]))
+2022-07-04 08:29:04,064: DEBUG: (array([21]), array([50000]))
+2022-07-04 08:29:04,066: DEBUG: (array([22]), array([50000]))
+2022-07-04 08:29:04,069: DEBUG: (array([23]), array([50000]))
+2022-07-04 08:29:04,071: DEBUG: (array([24]), array([50000]))
+2022-07-04 08:29:04,074: DEBUG: (array([25]), array([50000]))
+2022-07-04 08:29:04,077: DEBUG: (array([26]), array([50000]))
+2022-07-04 08:29:04,079: DEBUG: (array([27]), array([50000]))
+2022-07-04 08:29:04,081: DEBUG: (array([28]), array([50000]))
+2022-07-04 08:29:04,084: DEBUG: (array([29]), array([50000]))
+2022-07-04 08:29:04,086: DEBUG: (array([30]), array([50000]))
+2022-07-04 08:29:04,089: DEBUG: (array([31]), array([50000]))
+2022-07-04 08:29:04,091: DEBUG: (array([32]), array([50000]))
+2022-07-04 08:29:04,094: DEBUG: (array([33]), array([50000]))
+2022-07-04 08:29:04,096: DEBUG: (array([34]), array([50000]))
+2022-07-04 08:29:04,099: DEBUG: (array([35]), array([50000]))
+2022-07-04 08:29:04,101: DEBUG: (array([36]), array([50000]))
+2022-07-04 08:29:04,104: DEBUG: (array([37]), array([50000]))
+2022-07-04 08:29:04,106: DEBUG: (array([38]), array([50000]))
+2022-07-04 08:29:04,109: DEBUG: (array([39]), array([50000]))
+2022-07-04 08:29:04,111: DEBUG: (array([40]), array([50000]))
+2022-07-04 08:29:04,114: DEBUG: (array([41]), array([50000]))
+2022-07-04 08:29:04,116: DEBUG: (array([42]), array([50000]))
+2022-07-04 08:29:04,119: DEBUG: (array([43]), array([50000]))
+2022-07-04 08:29:04,121: DEBUG: (array([44]), array([50000]))
+2022-07-04 08:29:04,124: DEBUG: (array([45]), array([50000]))
+2022-07-04 08:29:04,127: DEBUG: (array([46]), array([50000]))
+2022-07-04 08:29:04,129: DEBUG: (array([47]), array([50000]))
+2022-07-04 08:29:04,132: DEBUG: (array([48]), array([50000]))
+2022-07-04 08:29:04,134: DEBUG: (array([49]), array([50000]))
+2022-07-04 08:29:04,137: DEBUG: (array([50]), array([50000]))
+2022-07-04 08:29:04,139: DEBUG: (array([51]), array([50000]))
+2022-07-04 08:29:04,142: DEBUG: (array([52]), array([50000]))
+2022-07-04 08:29:04,144: DEBUG: (array([53]), array([50000]))
+2022-07-04 08:29:04,147: DEBUG: (array([54]), array([50000]))
+2022-07-04 08:29:04,149: DEBUG: (array([55]), array([50000]))
+2022-07-04 08:29:04,152: DEBUG: (array([56]), array([50000]))
+2022-07-04 08:29:04,155: DEBUG: (array([57]), array([50000]))
+2022-07-04 08:29:04,158: DEBUG: (array([58]), array([50000]))
+2022-07-04 08:29:04,161: DEBUG: (array([59]), array([50000]))
+2022-07-04 08:29:04,164: DEBUG: (array([60]), array([50000]))
+2022-07-04 08:29:04,167: DEBUG: (array([61]), array([50000]))
+2022-07-04 08:29:04,169: DEBUG: (array([62]), array([50000]))
+2022-07-04 08:29:04,172: DEBUG: (array([63]), array([50000]))
+2022-07-04 08:29:04,174: DEBUG: (array([64]), array([50000]))
+2022-07-04 08:29:04,177: DEBUG: (array([65]), array([50000]))
+2022-07-04 08:29:04,179: DEBUG: (array([66]), array([50000]))
+2022-07-04 08:29:04,182: DEBUG: (array([67]), array([50000]))
+2022-07-04 08:29:04,184: DEBUG: (array([68]), array([50000]))
+2022-07-04 08:29:04,187: DEBUG: (array([69]), array([50000]))
+2022-07-04 08:29:04,189: DEBUG: (array([70]), array([50000]))
+2022-07-04 08:29:04,192: DEBUG: (array([71]), array([50000]))
+2022-07-04 08:29:04,194: DEBUG: (array([72]), array([50000]))
+2022-07-04 08:29:04,197: DEBUG: (array([73]), array([50000]))
+2022-07-04 08:29:04,199: DEBUG: (array([74]), array([50000]))
+2022-07-04 08:29:04,202: DEBUG: (array([75]), array([50000]))
+2022-07-04 08:29:04,205: DEBUG: (array([76]), array([50000]))
+2022-07-04 08:29:04,207: DEBUG: (array([77]), array([50000]))
+2022-07-04 08:29:04,210: DEBUG: (array([78]), array([50000]))
+2022-07-04 08:29:04,212: DEBUG: (array([79]), array([50000]))
+2022-07-04 08:29:04,215: DEBUG: (array([80]), array([50000]))
+2022-07-04 08:29:04,218: DEBUG: (array([81]), array([50000]))
+2022-07-04 08:29:04,221: DEBUG: (array([82]), array([50000]))
+2022-07-04 08:29:04,225: DEBUG: (array([83]), array([50000]))
+2022-07-04 08:29:04,228: DEBUG: (array([84]), array([50000]))
+2022-07-04 08:29:04,232: DEBUG: (array([85]), array([50000]))
+2022-07-04 08:29:04,235: DEBUG: (array([86]), array([50000]))
+2022-07-04 08:29:04,239: DEBUG: (array([87]), array([50000]))
+2022-07-04 08:29:04,243: DEBUG: (array([88]), array([50000]))
+2022-07-04 08:29:04,246: DEBUG: (array([89]), array([50000]))
+2022-07-04 08:29:04,248: DEBUG: (array([90]), array([50000]))
+2022-07-04 08:29:04,251: DEBUG: (array([91]), array([50000]))
+2022-07-04 08:29:04,253: DEBUG: (array([92]), array([50000]))
+2022-07-04 08:29:04,256: DEBUG: (array([93]), array([50000]))
+2022-07-04 08:29:04,258: DEBUG: (array([94]), array([50000]))
+2022-07-04 08:29:04,261: DEBUG: (array([95]), array([50000]))
+2022-07-04 08:29:04,263: DEBUG: (array([96]), array([50000]))
+2022-07-04 08:29:04,266: DEBUG: (array([97]), array([50000]))
+2022-07-04 08:29:04,268: DEBUG: (array([98]), array([50000]))
+2022-07-04 08:29:04,271: DEBUG: (array([99]), array([50000]))
+2022-07-04 08:29:04,272: DEBUG: best inds shape (1000,)
+2022-07-04 08:29:09,526: INFO: Model Summary
+==========================================================================================
+Layer (type:depth-idx)                   Output Shape              Param #
+==========================================================================================
+├─Sequential: 1-1                        [-1, 1024]                --
+|    └─Conv2d: 2-1                       [-1, 64, 16, 16]          1,792
+|    └─MaxPool2d: 2-2                    [-1, 64, 8, 8]            --
+|    └─ReLU: 2-3                         [-1, 64, 8, 8]            --
+|    └─Conv2d: 2-4                       [-1, 192, 8, 8]           110,784
+|    └─MaxPool2d: 2-5                    [-1, 192, 4, 4]           --
+|    └─ReLU: 2-6                         [-1, 192, 4, 4]           --
+|    └─Conv2d: 2-7                       [-1, 384, 4, 4]           663,936
+|    └─ReLU: 2-8                         [-1, 384, 4, 4]           --
+|    └─Conv2d: 2-9                       [-1, 256, 4, 4]           884,992
+|    └─ReLU: 2-10                        [-1, 256, 4, 4]           --
+|    └─Conv2d: 2-11                      [-1, 256, 4, 4]           590,080
+|    └─MaxPool2d: 2-12                   [-1, 256, 2, 2]           --
+|    └─ReLU: 2-13                        [-1, 256, 2, 2]           --
+|    └─Flatten: 2-14                     [-1, 1024]                --
+├─Sequential: 1-2                        [-1, 100]                 --
+|    └─Dropout: 2-15                     [-1, 1024]                --
+|    └─Linear: 2-16                      [-1, 512]                 524,800
+|    └─ReLU: 2-17                        [-1, 512]                 --
+|    └─Dropout: 2-18                     [-1, 512]                 --
+|    └─Linear: 2-19                      [-1, 256]                 131,328
+|    └─ReLU: 2-20                        [-1, 256]                 --
+|    └─Linear: 2-21                      [-1, 100]                 25,700
+|    └─LogSoftmax: 2-22                  [-1, 100]                 --
+==========================================================================================
+Total params: 2,933,412
+Trainable params: 2,933,412
+Non-trainable params: 0
+Total mult-adds (M): 45.34
+==========================================================================================
+Input size (MB): 0.01
+Forward/backward pass size (MB): 0.33
+Params size (MB): 11.19
+Estimated Total Size (MB): 11.54
+==========================================================================================
+2022-07-04 08:29:13,638: INFO: Epoch[   1] Loss: 16.25	Accuracy: 1.111	Val_Loss: 5.799	Val_Acc: 0.000
+2022-07-04 08:29:13,639: INFO: Epoch[   1] Test Accuracy: 0.850
+2022-07-04 08:29:30,391: INFO: Epoch[  51] Loss: 4.47	Accuracy: 3.889	Val_Loss: 4.423	Val_Acc: 4.000
+2022-07-04 08:29:30,391: INFO: Epoch[  51] Test Accuracy: 2.910
+2022-07-04 08:29:47,424: INFO: Epoch[ 101] Loss: 3.87	Accuracy: 9.778	Val_Loss: 3.884	Val_Acc: 11.000
+2022-07-04 08:29:47,425: INFO: Epoch[ 101] Test Accuracy: 5.780
+2022-07-04 08:30:04,647: INFO: Epoch[ 151] Loss: 3.28	Accuracy: 16.222	Val_Loss: 3.431	Val_Acc: 11.000
+2022-07-04 08:30:04,647: INFO: Epoch[ 151] Test Accuracy: 7.900
+2022-07-04 08:30:21,754: INFO: Epoch[ 201] Loss: 2.82	Accuracy: 23.444	Val_Loss: 3.261	Val_Acc: 14.000
+2022-07-04 08:30:21,754: INFO: Epoch[ 201] Test Accuracy: 8.780
+2022-07-04 08:30:38,755: INFO: Epoch[ 251] Loss: 2.49	Accuracy: 33.556	Val_Loss: 3.195	Val_Acc: 16.000
+2022-07-04 08:30:38,755: INFO: Epoch[ 251] Test Accuracy: 9.470
+2022-07-04 08:30:39,019: INFO: Epoch: 252 Early stopping counter 1 of 12
+2022-07-04 08:30:39,314: INFO: Epoch: 253 Early stopping counter 2 of 12
+2022-07-04 08:30:40,502: INFO: Epoch: 257 Early stopping counter 1 of 12
+2022-07-04 08:30:40,809: INFO: Epoch: 258 Early stopping counter 2 of 12
+2022-07-04 08:30:41,120: INFO: Epoch: 259 Early stopping counter 3 of 12
+2022-07-04 08:30:41,423: INFO: Epoch: 260 Early stopping counter 4 of 12
+2022-07-04 08:30:41,721: INFO: Epoch: 261 Early stopping counter 5 of 12
+2022-07-04 08:30:42,033: INFO: Epoch: 262 Early stopping counter 6 of 12
+2022-07-04 08:30:42,344: INFO: Epoch: 263 Early stopping counter 7 of 12
+2022-07-04 08:30:42,636: INFO: Epoch: 264 Early stopping counter 8 of 12
+2022-07-04 08:30:42,934: INFO: Epoch: 265 Early stopping counter 9 of 12
+2022-07-04 08:30:43,240: INFO: Epoch: 266 Early stopping counter 10 of 12
+2022-07-04 08:30:43,546: INFO: Epoch: 267 Early stopping counter 11 of 12
+2022-07-04 08:30:43,869: INFO: Epoch: 268 Early stopping counter 12 of 12
+2022-07-04 08:30:43,869: INFO: Early stopping
+2022-07-04 08:30:43,913: INFO: Trained for 268 Epochs.
+2022-07-04 08:30:44,456: INFO: ('Accuracy on Train Set', 46.11111283302307)
+2022-07-04 08:30:46,299: INFO: (949, 'correctly labeled out of', 10000)
+2022-07-04 08:30:46,299: INFO: ('Accuracy on Test Set:', 9.49)
+2022-07-04 08:30:46,319: INFO: Saved model at cifar100/n1000/Greedy_Model_1000n_Epochs_1000_Early_Stop_268_Test_Acc_9_perclass.pth
+2022-07-04 08:30:46,319: INFO: Training Complete

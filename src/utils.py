@@ -349,8 +349,8 @@ def get_parser():
     parser.add_argument('--topn', type=int, default=1000, help='Size of Coreset')
     parser.add_argument('--iter', '--num_iter', type=int, default=100, help='Number of iterations for each coreset')
     parser.add_argument('--batch_size', '-bs', type=int, default=500, help='Batch size')
-    parser.add_argument('--val_batch_size', '-vbs', type=int, default=100, help='Validation batch size')
-    parser.add_argument('--epochs', type=int, default=200, help='Number of epochs')
+    parser.add_argument('--val_batch_size', '-vbs', type=int, default=1000, help='Validation batch size')
+    parser.add_argument('--epochs', type=int, default=300, help='Number of epochs')
     parser.add_argument('--r', type=int, default=2, help='Number of workers')
     parser.add_argument('--seed', type=int, default=0, help='Seed')
     # Optimizer and Scheduler parameters
