@@ -14,11 +14,11 @@ import numpy as np
 import torch
 import torch.nn as nn
 import torch.nn.functional as F
-from functorch import grad, make_functional_with_buffers, vmap
+# from functorch import grad, make_functional_with_buffers, vmap
 from torch.utils.data import DataLoader, Subset
 from torchsummary import summary
-from tqdm.auto import trange
-from tqdm.auto import tqdm
+from tqdm import trange
+from tqdm import tqdm
 
 from utils import (
     AlexNet,
@@ -67,62 +67,62 @@ from utils import (
 #     return mean_gradients
 
 
-def get_similarities(model, dataset, batch_size, mean_gradients, use_all_params=False):
-    slmodel, params, buffers = make_functional_with_buffers(
-        model if use_all_params else model.fc
-    )
-    loader = DataLoader(
-        dataset, batch_size, shuffle=True, num_workers=2, pin_memory=True
-    )
+# def get_similarities(model, dataset, batch_size, mean_gradients, use_all_params=False):
+#     slmodel, params, buffers = make_functional_with_buffers(
+#         model if use_all_params else model.fc
+#     )
+#     loader = DataLoader(
+#         dataset, batch_size, shuffle=True, num_workers=2, pin_memory=True
+#     )
 
-    def loss_function(params, buffers, x, y):
-        x = x.unsqueeze(0)
-        y = y.unsqueeze(0)
-        preds = slmodel(params, buffers, x)
-        return F.nll_loss(preds, y)
+#     def loss_function(params, buffers, x, y):
+#         x = x.unsqueeze(0)
+#         y = y.unsqueeze(0)
+#         preds = slmodel(params, buffers, x)
+#         return F.nll_loss(preds, y)
 
-    batched_loss = vmap(
-        grad(loss_function),
-        (None, None, 0, 0),
-    )
+#     batched_loss = vmap(
+#         grad(loss_function),
+#         (None, None, 0, 0),
+#     )
 
-    similarities = []
-    img_indices = []
-    progress_bar = tqdm(
-        enumerate(loader),
-        total=len(loader),
-        desc="Per Sample Gradient Similarity",
-        leave=False,
-        position=2,
-    )
-    for i, batch in progress_bar:
-        imgs, labels, inds = batch
-        torch.cuda.empty_cache()
-        imgs, labels, inds = imgs.to(device), labels.to(device), inds.numpy()
-        with torch.no_grad():  ### TODO: Add if else for if use_all_params
-            hidden_state = model.features(imgs)
-        gradient = batched_loss(params, buffers, hidden_state, labels)
-        gc.collect()
-        torch.cuda.empty_cache()
-        # gradient = torch.autograd.grad(F.nll_loss(model(imgs), labels), model.parameters())
+#     similarities = []
+#     img_indices = []
+#     progress_bar = tqdm(
+#         enumerate(loader),
+#         total=len(loader),
+#         desc="Per Sample Gradient Similarity",
+#         leave=False,
+#         position=2,
+#     )
+#     for i, batch in progress_bar:
+#         imgs, labels, inds = batch
+#         torch.cuda.empty_cache()
+#         imgs, labels, inds = imgs.to(device), labels.to(device), inds.numpy()
+#         with torch.no_grad():  ### TODO: Add if else for if use_all_params
+#             hidden_state = model.features(imgs)
+#         gradient = batched_loss(params, buffers, hidden_state, labels)
+#         gc.collect()
+#         torch.cuda.empty_cache()
+#         # gradient = torch.autograd.grad(F.nll_loss(model(imgs), labels), model.parameters())
 
-        sim = (
-            torch.stack(
-                [
-                    F.cosine_similarity(a.view(a.shape[0], -1), b.view(1, -1))
-                    for a, b in zip(gradient, mean_gradients)
-                ],
-                dim=-1,
-            )
-            .sum(dim=-1)
-            .detach()
-            .cpu()
-            .numpy()
-        )
-        # sim = torch.stack(list(map(lambda, gradient, mean_gradients))).sum()
-        similarities.append(sim)
-        img_indices.append(inds)
-    return np.concatenate(similarities), np.concatenate(img_indices)
+#         sim = (
+#             torch.stack(
+#                 [
+#                     F.cosine_similarity(a.view(a.shape[0], -1), b.view(1, -1))
+#                     for a, b in zip(gradient, mean_gradients)
+#                 ],
+#                 dim=-1,
+#             )
+#             .sum(dim=-1)
+#             .detach()
+#             .cpu()
+#             .numpy()
+#         )
+#         # sim = torch.stack(list(map(lambda, gradient, mean_gradients))).sum()
+#         similarities.append(sim)
+#         img_indices.append(inds)
+#     return np.concatenate(similarities), np.concatenate(img_indices)
 
 
 # def cosinesimilarity(a,b):
@@ -159,7 +159,7 @@ def get_mean_gradients(p, model, loader, criterion, optimizer):
             images, labels = images.to(device), labels.squeeze().to(device)
             output = model(images).requires_grad_(True)
             # logger.info((output.shape, labels.shape, inds.shape))
-            loss = criterion(F.softmax(output, dim=1), labels).sum()
+            loss = criterion(output, labels).sum()
             batch_num = labels.shape[0]
             with torch.no_grad():
                 bias_parameters_grads = torch.autograd.grad(loss, output, retain_graph=True)[0].cpu()
@@ -189,6 +189,7 @@ def train_epoch(
         device (torch.device): device
     """
     model.train()
+    model.no_grad = False
     # losses, accs = [], []
     for (images, labels, _) in loader:
         images, labels = images.to(device), labels.to(device)
@@ -243,7 +244,7 @@ def gradient_mathcing(p, data, logger):
     """
     iterations = p.iter
     logger.debug(len(data))
-    assert len(data) % p.batch_size == 0, "All batches are not of same shape"
+    # assert len(data) % p.batch_size == 0, "All batches are not of same shape"
 
     if p.per_class:
         logger.info("Finding Mean Gradients for each class individually.")
