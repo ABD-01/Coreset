@@ -16,11 +16,10 @@ from easydict import EasyDict
 from torch.utils.data import Dataset
 from torchvision.datasets import CIFAR10, CIFAR100, MNIST
 
-# add import for nets directory just outside the src direcory
-sys.path.append(str(pathlib.Path(__file__).parent.parent))
+# import nets and datasets from the parent's parent directory
+sys.path.append(os.path.join(os.path.dirname(__file__), "..", ".."))
 import nets
 import datasets
-
 
 def seed_everything(seed: int):
     random.seed(seed)

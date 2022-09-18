@@ -14,9 +14,9 @@ import torch.nn as nn
 from torch.utils.data import DataLoader, Subset
 from torchsummary import summary
 
-from train_utils import *
+from utils.train_utils import *
 
-from utils import *
+from utils.common import *
 
 
 # def get_train_val_inds(p, best_inds: torch.Tensor):
@@ -273,8 +273,12 @@ def main(p):
     elif p.per_class:
         all_sim_path = Path(p.dataset.lower()) / f"all_similarities_perclass{'_withtrain' if p.with_train else ''}.npy"
         all_ind_path = Path(p.dataset.lower()) / f"all_imginds_perclass{'_withtrain' if p.with_train else ''}.npy"
-        all_similarities = np.load(all_sim_path).squeeze()
-        all_imginds = np.load(all_ind_path).astype(int)
+        if p.dataset.lower() in ["cifar10", "cifar100"]:
+            all_similarities = np.load(all_sim_path).squeeze()
+            all_imginds = np.load(all_ind_path).astype(int)
+        else:
+            all_similarities = np.load(all_sim_path, allow_pickle=True)
+            all_imginds = np.load(all_ind_path, allow_pickle=True)
         all_similarities = all_similarities.swapaxes(0, 1)
         all_imginds = all_imginds.swapaxes(0, 1)
         logger.info(

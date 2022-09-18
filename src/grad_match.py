@@ -20,7 +20,7 @@ from torchsummary import summary
 from tqdm import trange
 from tqdm import tqdm
 
-from utils import (
+from utils.common import (
     AlexNet,
     DatasetwithIndices,
     create_config,
@@ -251,7 +251,7 @@ def gradient_mathcing(p, data, logger):
         train_labels = torch.as_tensor(data.targets)
         cls_data = [
             Subset(data, torch.argwhere(train_labels == c))
-            for c in data.dataset.class_to_idx.values()
+            for c in range(p.num_classes)
         ]
         logger.debug(f"len datasets: {len(data)}")
     else:
@@ -271,7 +271,7 @@ def gradient_mathcing(p, data, logger):
     optimizer = get_optimizer(p, model)
 
     all_similarities, all_imginds = [], []
-    for k in trange(iterations, desc="Iterations", position=0, leave=False):
+    for k in trange(iterations, desc="Iterations", position=0, leave=True):
         # if p.with_train:
         # moving to the end of loop
         if not p.with_train:
@@ -289,7 +289,7 @@ def gradient_mathcing(p, data, logger):
         elif p.per_class:
             similarities, img_indices = [], []
             for dataset in tqdm(
-                cls_data, desc="Per CLass Gradient Mathcing", position=1, leave=True
+                cls_data, desc="Per CLass Gradient Mathcing", position=1, leave=False
             ):
                 loader = DataLoader(
                     dataset,
@@ -297,17 +297,20 @@ def gradient_mathcing(p, data, logger):
                     shuffle=True,
                     num_workers=2,
                     pin_memory=True,
-                    drop_last=True,
+                    # drop_last=True,
                 )
                 gradients, cls_all_inds = get_mean_gradients(p, model, loader, criterion, optimizer)
                 # cls_all_sims, cls_all_inds = get_similarities(
                 #     model, dataset, p.batch_size, mean_gradients, 
                 # )
-                cls_all_sims = get_sims(gradients).cpu().numpy()
-                cls_all_inds = cls_all_inds.cpu().numpy()
+                cls_all_sims = get_sims(gradients).cpu().numpy().squeeze()
+                cls_all_inds = cls_all_inds.cpu().numpy().squeeze()
                 similarities.append(cls_all_sims)
                 img_indices.append(cls_all_inds)
-            similarities, img_indices = np.stack(similarities), np.stack(img_indices)
+            try:
+                similarities, img_indices = np.stack(similarities), np.stack(img_indices)
+            except ValueError:
+                similarities, img_indices = np.array(similarities, dtype=object), np.array(img_indices, dtype=object)
 
         all_similarities.append(similarities)
         all_imginds.append(img_indices)

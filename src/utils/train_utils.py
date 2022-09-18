@@ -1,4 +1,3 @@
-from cgi import test
 import logging
 
 import matplotlib.pyplot as plt
@@ -6,7 +5,7 @@ import matplotlib.pyplot as plt
 plt.style.use("ggplot")
 
 import numpy as np
-from tqdm.auto import tqdm
+from tqdm import tqdm
 
 
 def get_best_inds(
@@ -28,7 +27,8 @@ def get_best_inds(
     # logging.debug("train labels for all_imginds")
     # logging.debug(np.unique(train_labels[all_imginds], return_counts=True))
     good_inds = []
-    for (sims, inds) in tqdm(zip(all_similarities, all_imginds)):
+    for (sims, inds) in tqdm(zip(all_similarities, all_imginds), total=len(all_similarities), desc="Getting best inds"):
+        inds = inds.astype(int)
         # logging.debug(sims.shape)
         ind = np.argpartition(-sims, topn)[:topn]
         # ind = np.argpartition(sims, topn)[:topn] # for least similar samples
