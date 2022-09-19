@@ -1,0 +1,65 @@
+2022-09-22 09:54:16,501: INFO: Command: src/train.py --topn 500 --scheduler cosineannealingwarmrestarts --T_max 10 --T_mult 2 --epochs 300 --min_lr 0.001 --model ResNet18 --with_train 1 --class_balanced 1
+2022-09-22 09:54:16,502: INFO: Hyperparameters
+{'T_max': 10,
+ 'T_mult': 2,
+ 'augment': False,
+ 'batch_size': 1000,
+ 'class_balanced': True,
+ 'dataset': 'CIFAR10',
+ 'dataset_dir': 'data',
+ 'early_stopping_delta': 0.001,
+ 'early_stopping_min_epochs': 100,
+ 'early_stopping_patience': -1,
+ 'epochs': 300,
+ 'factor': 0.2,
+ 'gamma': 0.1,
+ 'gpu': None,
+ 'iter': 100,
+ 'logdir': PosixPath('cifar10/n500/with_train/logs'),
+ 'lr': 0.01,
+ 'max_lr': 0.005,
+ 'min_lr': 0.001,
+ 'model': 'ResNet18',
+ 'momentum': 0.9,
+ 'nesterov': False,
+ 'optimizer': 'sgd',
+ 'output_dir': PosixPath('cifar10/n500/with_train'),
+ 'patience': 50,
+ 'per_class': False,
+ 'r': 2,
+ 'random': False,
+ 'scheduler': 'cosineannealingwarmrestarts',
+ 'seed': 0,
+ 'step_size': 30,
+ 'temp': False,
+ 'test_model': None,
+ 'topn': 500,
+ 'train': True,
+ 'use_saved_best_inds': None,
+ 'val_batch_size': 1000,
+ 'val_percent': 0.0,
+ 'weight_decay': 0.01,
+ 'with_train': True}
+2022-09-22 09:54:17,534: INFO: Dataset
+Dataset CIFAR10
+    Number of datapoints: 50000
+    Root location: data
+    Split: Train
+    StandardTransform
+Transform: Compose(
+               ToTensor()
+               Normalize(mean=[0.4914, 0.4822, 0.4465], std=[0.247, 0.2435, 0.2616])
+           )
+2022-09-22 09:54:17,534: INFO: Test Dataset
+Dataset CIFAR10
+    Number of datapoints: 10000
+    Root location: data
+    Split: Test
+    StandardTransform
+Transform: Compose(
+               ToTensor()
+               Normalize(mean=[0.4914, 0.4822, 0.4465], std=[0.247, 0.2435, 0.2616])
+           )
+2022-09-22 09:54:17,534: INFO: Loading similarities from cifar10/all_similarities_withtrain.npy
+Loading imginds from cifar10/all_imginds_withtrain.npy
+2022-09-22 09:54:17,581: INFO: all_similarities.shape: (100, 50000), all_imginds.shape: (100, 50000)
