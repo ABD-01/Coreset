@@ -1,0 +1,128 @@
+2022-09-17 08:03:23,350: INFO: Dataset
+DatasetwithIndices MNIST
+    Number of datapoints: 60000
+    Root location: data
+    Split: Train
+    StandardTransform
+Transform: Compose(
+               ToTensor()
+               Normalize(mean=[0.1307], std=[0.3081])
+           )
+2022-09-17 08:03:23,350: INFO: Hyperparameters
+{'T_max': 50,
+ 'T_mult': 1,
+ 'augment': None,
+ 'batch_size': 1000,
+ 'channel': 1,
+ 'class_balanced': None,
+ 'class_names': ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9'],
+ 'dataset': 'MNIST',
+ 'dataset_dir': 'data',
+ 'early_stopping_delta': 0.001,
+ 'early_stopping_min_epochs': 100,
+ 'early_stopping_patience': -1,
+ 'epochs': 300,
+ 'factor': 0.2,
+ 'gamma': 0.1,
+ 'gpu': None,
+ 'im_size': (28, 28),
+ 'iter': 100,
+ 'logdir': PosixPath('mnist/logs'),
+ 'lr': 0.01,
+ 'max_lr': 0.005,
+ 'mean': [0.1307],
+ 'min_lr': 0.0001,
+ 'model': 'ResNet18',
+ 'momentum': 0.9,
+ 'nesterov': False,
+ 'num_classes': 10,
+ 'optimizer': 'sgd',
+ 'output_dir': PosixPath('mnist'),
+ 'patience': 50,
+ 'per_class': False,
+ 'r': 2,
+ 'random': False,
+ 'scheduler': 'reduceonplateau',
+ 'seed': 0,
+ 'std': [0.3081],
+ 'step_size': 30,
+ 'temp': False,
+ 'test_model': None,
+ 'topn': 500,
+ 'train': True,
+ 'val_batch_size': 1000,
+ 'weight_decay': 0.01,
+ 'with_train': True}
+2022-09-17 08:03:23,350: INFO: Finding Mean Gradients for whole dataset at once.
+2022-09-17 08:03:25,938: INFO: Model Summary
+==========================================================================================
+Layer (type:depth-idx)                   Output Shape              Param #
+==========================================================================================
+├─Conv2d: 1-1                            [-1, 64, 28, 28]          576
+├─BatchNorm2d: 1-2                       [-1, 64, 28, 28]          128
+├─Sequential: 1-3                        [-1, 64, 28, 28]          --
+|    └─BasicBlock: 2-1                   [-1, 64, 28, 28]          --
+|    |    └─Conv2d: 3-1                  [-1, 64, 28, 28]          36,864
+|    |    └─BatchNorm2d: 3-2             [-1, 64, 28, 28]          128
+|    |    └─Conv2d: 3-3                  [-1, 64, 28, 28]          36,864
+|    |    └─BatchNorm2d: 3-4             [-1, 64, 28, 28]          128
+|    |    └─Sequential: 3-5              [-1, 64, 28, 28]          --
+|    └─BasicBlock: 2-2                   [-1, 64, 28, 28]          --
+|    |    └─Conv2d: 3-6                  [-1, 64, 28, 28]          36,864
+|    |    └─BatchNorm2d: 3-7             [-1, 64, 28, 28]          128
+|    |    └─Conv2d: 3-8                  [-1, 64, 28, 28]          36,864
+|    |    └─BatchNorm2d: 3-9             [-1, 64, 28, 28]          128
+|    |    └─Sequential: 3-10             [-1, 64, 28, 28]          --
+├─Sequential: 1-4                        [-1, 128, 14, 14]         --
+|    └─BasicBlock: 2-3                   [-1, 128, 14, 14]         --
+|    |    └─Conv2d: 3-11                 [-1, 128, 14, 14]         73,728
+|    |    └─BatchNorm2d: 3-12            [-1, 128, 14, 14]         256
+|    |    └─Conv2d: 3-13                 [-1, 128, 14, 14]         147,456
+|    |    └─BatchNorm2d: 3-14            [-1, 128, 14, 14]         256
+|    |    └─Sequential: 3-15             [-1, 128, 14, 14]         8,448
+|    └─BasicBlock: 2-4                   [-1, 128, 14, 14]         --
+|    |    └─Conv2d: 3-16                 [-1, 128, 14, 14]         147,456
+|    |    └─BatchNorm2d: 3-17            [-1, 128, 14, 14]         256
+|    |    └─Conv2d: 3-18                 [-1, 128, 14, 14]         147,456
+|    |    └─BatchNorm2d: 3-19            [-1, 128, 14, 14]         256
+|    |    └─Sequential: 3-20             [-1, 128, 14, 14]         --
+├─Sequential: 1-5                        [-1, 256, 7, 7]           --
+|    └─BasicBlock: 2-5                   [-1, 256, 7, 7]           --
+|    |    └─Conv2d: 3-21                 [-1, 256, 7, 7]           294,912
+|    |    └─BatchNorm2d: 3-22            [-1, 256, 7, 7]           512
+|    |    └─Conv2d: 3-23                 [-1, 256, 7, 7]           589,824
+|    |    └─BatchNorm2d: 3-24            [-1, 256, 7, 7]           512
+|    |    └─Sequential: 3-25             [-1, 256, 7, 7]           33,280
+|    └─BasicBlock: 2-6                   [-1, 256, 7, 7]           --
+|    |    └─Conv2d: 3-26                 [-1, 256, 7, 7]           589,824
+|    |    └─BatchNorm2d: 3-27            [-1, 256, 7, 7]           512
+|    |    └─Conv2d: 3-28                 [-1, 256, 7, 7]           589,824
+|    |    └─BatchNorm2d: 3-29            [-1, 256, 7, 7]           512
+|    |    └─Sequential: 3-30             [-1, 256, 7, 7]           --
+├─Sequential: 1-6                        [-1, 512, 4, 4]           --
+|    └─BasicBlock: 2-7                   [-1, 512, 4, 4]           --
+|    |    └─Conv2d: 3-31                 [-1, 512, 4, 4]           1,179,648
+|    |    └─BatchNorm2d: 3-32            [-1, 512, 4, 4]           1,024
+|    |    └─Conv2d: 3-33                 [-1, 512, 4, 4]           2,359,296
+|    |    └─BatchNorm2d: 3-34            [-1, 512, 4, 4]           1,024
+|    |    └─Sequential: 3-35             [-1, 512, 4, 4]           132,096
+|    └─BasicBlock: 2-8                   [-1, 512, 4, 4]           --
+|    |    └─Conv2d: 3-36                 [-1, 512, 4, 4]           2,359,296
+|    |    └─BatchNorm2d: 3-37            [-1, 512, 4, 4]           1,024
+|    |    └─Conv2d: 3-38                 [-1, 512, 4, 4]           2,359,296
+|    |    └─BatchNorm2d: 3-39            [-1, 512, 4, 4]           1,024
+|    |    └─Sequential: 3-40             [-1, 512, 4, 4]           --
+├─EmbeddingRecorder: 1-7                 [-1, 512]                 --
+├─Linear: 1-8                            [-1, 10]                  5,130
+==========================================================================================
+Total params: 11,172,810
+Trainable params: 11,172,810
+Non-trainable params: 0
+Total mult-adds (M): 478.30
+==========================================================================================
+Input size (MB): 0.00
+Forward/backward pass size (MB): 7.32
+Params size (MB): 42.62
+Estimated Total Size (MB): 49.95
+==========================================================================================
+2022-09-17 08:50:19,620: INFO: All similarities shape: (100, 60000, 1), All imgindices shape: (100, 60000)

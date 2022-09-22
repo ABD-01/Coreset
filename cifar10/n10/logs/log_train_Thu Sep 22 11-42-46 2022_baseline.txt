@@ -1,0 +1,201 @@
+2022-09-22 11:42:46,456: INFO: Command: src/train.py --topn 10 --scheduler cosineannealingwarmrestarts --T_max 10 --T_mult 2 --epochs 300 --min_lr 0.001 --model ResNet18
+2022-09-22 11:42:46,456: INFO: Hyperparameters
+{'T_max': 10,
+ 'T_mult': 2,
+ 'augment': False,
+ 'batch_size': 1000,
+ 'class_balanced': False,
+ 'dataset': 'CIFAR10',
+ 'dataset_dir': 'data',
+ 'early_stopping_delta': 0.001,
+ 'early_stopping_min_epochs': 100,
+ 'early_stopping_patience': -1,
+ 'epochs': 300,
+ 'factor': 0.2,
+ 'gamma': 0.1,
+ 'gpu': None,
+ 'iter': 100,
+ 'logdir': PosixPath('cifar10/n10/logs'),
+ 'lr': 0.01,
+ 'max_lr': 0.005,
+ 'min_lr': 0.001,
+ 'model': 'ResNet18',
+ 'momentum': 0.9,
+ 'nesterov': False,
+ 'optimizer': 'sgd',
+ 'output_dir': PosixPath('cifar10/n10'),
+ 'patience': 50,
+ 'per_class': False,
+ 'r': 2,
+ 'random': False,
+ 'scheduler': 'cosineannealingwarmrestarts',
+ 'seed': 0,
+ 'step_size': 30,
+ 'temp': False,
+ 'test_model': None,
+ 'topn': 10,
+ 'train': True,
+ 'use_saved_best_inds': None,
+ 'val_batch_size': 1000,
+ 'val_percent': 0.0,
+ 'weight_decay': 0.01,
+ 'with_train': False}
+2022-09-22 11:42:47,496: INFO: Dataset
+Dataset CIFAR10
+    Number of datapoints: 50000
+    Root location: data
+    Split: Train
+    StandardTransform
+Transform: Compose(
+               ToTensor()
+               Normalize(mean=[0.4914, 0.4822, 0.4465], std=[0.247, 0.2435, 0.2616])
+           )
+2022-09-22 11:42:47,496: INFO: Test Dataset
+Dataset CIFAR10
+    Number of datapoints: 10000
+    Root location: data
+    Split: Test
+    StandardTransform
+Transform: Compose(
+               ToTensor()
+               Normalize(mean=[0.4914, 0.4822, 0.4465], std=[0.247, 0.2435, 0.2616])
+           )
+2022-09-22 11:42:47,496: INFO: Loading similarities from cifar10/all_similarities.npy
+Loading imginds from cifar10/all_imginds.npy
+2022-09-22 11:42:47,512: INFO: all_similarities.shape: (100, 50000), all_imginds.shape: (100, 50000)
+2022-09-22 11:42:50,134: INFO: Model Summary
+==========================================================================================
+Layer (type:depth-idx)                   Output Shape              Param #
+==========================================================================================
+├─Conv2d: 1-1                            [-1, 64, 32, 32]          1,728
+├─BatchNorm2d: 1-2                       [-1, 64, 32, 32]          128
+├─Sequential: 1-3                        [-1, 64, 32, 32]          --
+|    └─BasicBlock: 2-1                   [-1, 64, 32, 32]          --
+|    |    └─Conv2d: 3-1                  [-1, 64, 32, 32]          36,864
+|    |    └─BatchNorm2d: 3-2             [-1, 64, 32, 32]          128
+|    |    └─Conv2d: 3-3                  [-1, 64, 32, 32]          36,864
+|    |    └─BatchNorm2d: 3-4             [-1, 64, 32, 32]          128
+|    |    └─Sequential: 3-5              [-1, 64, 32, 32]          --
+|    └─BasicBlock: 2-2                   [-1, 64, 32, 32]          --
+|    |    └─Conv2d: 3-6                  [-1, 64, 32, 32]          36,864
+|    |    └─BatchNorm2d: 3-7             [-1, 64, 32, 32]          128
+|    |    └─Conv2d: 3-8                  [-1, 64, 32, 32]          36,864
+|    |    └─BatchNorm2d: 3-9             [-1, 64, 32, 32]          128
+|    |    └─Sequential: 3-10             [-1, 64, 32, 32]          --
+├─Sequential: 1-4                        [-1, 128, 16, 16]         --
+|    └─BasicBlock: 2-3                   [-1, 128, 16, 16]         --
+|    |    └─Conv2d: 3-11                 [-1, 128, 16, 16]         73,728
+|    |    └─BatchNorm2d: 3-12            [-1, 128, 16, 16]         256
+|    |    └─Conv2d: 3-13                 [-1, 128, 16, 16]         147,456
+|    |    └─BatchNorm2d: 3-14            [-1, 128, 16, 16]         256
+|    |    └─Sequential: 3-15             [-1, 128, 16, 16]         8,448
+|    └─BasicBlock: 2-4                   [-1, 128, 16, 16]         --
+|    |    └─Conv2d: 3-16                 [-1, 128, 16, 16]         147,456
+|    |    └─BatchNorm2d: 3-17            [-1, 128, 16, 16]         256
+|    |    └─Conv2d: 3-18                 [-1, 128, 16, 16]         147,456
+|    |    └─BatchNorm2d: 3-19            [-1, 128, 16, 16]         256
+|    |    └─Sequential: 3-20             [-1, 128, 16, 16]         --
+├─Sequential: 1-5                        [-1, 256, 8, 8]           --
+|    └─BasicBlock: 2-5                   [-1, 256, 8, 8]           --
+|    |    └─Conv2d: 3-21                 [-1, 256, 8, 8]           294,912
+|    |    └─BatchNorm2d: 3-22            [-1, 256, 8, 8]           512
+|    |    └─Conv2d: 3-23                 [-1, 256, 8, 8]           589,824
+|    |    └─BatchNorm2d: 3-24            [-1, 256, 8, 8]           512
+|    |    └─Sequential: 3-25             [-1, 256, 8, 8]           33,280
+|    └─BasicBlock: 2-6                   [-1, 256, 8, 8]           --
+|    |    └─Conv2d: 3-26                 [-1, 256, 8, 8]           589,824
+|    |    └─BatchNorm2d: 3-27            [-1, 256, 8, 8]           512
+|    |    └─Conv2d: 3-28                 [-1, 256, 8, 8]           589,824
+|    |    └─BatchNorm2d: 3-29            [-1, 256, 8, 8]           512
+|    |    └─Sequential: 3-30             [-1, 256, 8, 8]           --
+├─Sequential: 1-6                        [-1, 512, 4, 4]           --
+|    └─BasicBlock: 2-7                   [-1, 512, 4, 4]           --
+|    |    └─Conv2d: 3-31                 [-1, 512, 4, 4]           1,179,648
+|    |    └─BatchNorm2d: 3-32            [-1, 512, 4, 4]           1,024
+|    |    └─Conv2d: 3-33                 [-1, 512, 4, 4]           2,359,296
+|    |    └─BatchNorm2d: 3-34            [-1, 512, 4, 4]           1,024
+|    |    └─Sequential: 3-35             [-1, 512, 4, 4]           132,096
+|    └─BasicBlock: 2-8                   [-1, 512, 4, 4]           --
+|    |    └─Conv2d: 3-36                 [-1, 512, 4, 4]           2,359,296
+|    |    └─BatchNorm2d: 3-37            [-1, 512, 4, 4]           1,024
+|    |    └─Conv2d: 3-38                 [-1, 512, 4, 4]           2,359,296
+|    |    └─BatchNorm2d: 3-39            [-1, 512, 4, 4]           1,024
+|    |    └─Sequential: 3-40             [-1, 512, 4, 4]           --
+├─EmbeddingRecorder: 1-7                 [-1, 512]                 --
+├─Linear: 1-8                            [-1, 10]                  5,130
+==========================================================================================
+Total params: 11,173,962
+Trainable params: 11,173,962
+Non-trainable params: 0
+Total mult-adds (M): 577.92
+==========================================================================================
+Input size (MB): 0.01
+Forward/backward pass size (MB): 9.38
+Params size (MB): 42.63
+Estimated Total Size (MB): 52.01
+==========================================================================================
+2022-09-22 11:43:04,719: INFO: Epoch[   1] Loss: 0.21	Accuracy: 20.000	Val_Loss: 0.002	Val_Acc: 0.103
+2022-09-22 11:43:04,719: INFO: Epoch[   1] Test Accuracy: 10.380
+2022-09-22 11:43:17,710: INFO: Epoch[  11] Loss: 0.00	Accuracy: 100.000	Val_Loss: 0.004	Val_Acc: 0.100
+2022-09-22 11:43:17,710: INFO: Epoch[  11] Test Accuracy: 10.000
+2022-09-22 11:43:30,776: INFO: Epoch[  21] Loss: 0.00	Accuracy: 100.000	Val_Loss: 0.008	Val_Acc: 0.100
+2022-09-22 11:43:30,776: INFO: Epoch[  21] Test Accuracy: 10.000
+2022-09-22 11:43:43,834: INFO: Epoch[  31] Loss: 0.00	Accuracy: 100.000	Val_Loss: 0.008	Val_Acc: 0.099
+2022-09-22 11:43:43,835: INFO: Epoch[  31] Test Accuracy: 9.880
+2022-09-22 11:43:56,927: INFO: Epoch[  41] Loss: 0.00	Accuracy: 100.000	Val_Loss: 0.008	Val_Acc: 0.103
+2022-09-22 11:43:56,927: INFO: Epoch[  41] Test Accuracy: 10.280
+2022-09-22 11:44:09,947: INFO: Epoch[  51] Loss: 0.00	Accuracy: 100.000	Val_Loss: 0.008	Val_Acc: 0.112
+2022-09-22 11:44:09,947: INFO: Epoch[  51] Test Accuracy: 11.100
+2022-09-22 11:44:22,964: INFO: Epoch[  61] Loss: 0.00	Accuracy: 100.000	Val_Loss: 0.008	Val_Acc: 0.120
+2022-09-22 11:44:22,964: INFO: Epoch[  61] Test Accuracy: 12.060
+2022-09-22 11:44:35,993: INFO: Epoch[  71] Loss: 0.00	Accuracy: 100.000	Val_Loss: 0.008	Val_Acc: 0.126
+2022-09-22 11:44:35,993: INFO: Epoch[  71] Test Accuracy: 12.420
+2022-09-22 11:44:49,042: INFO: Epoch[  81] Loss: 0.00	Accuracy: 100.000	Val_Loss: 0.008	Val_Acc: 0.115
+2022-09-22 11:44:49,042: INFO: Epoch[  81] Test Accuracy: 11.560
+2022-09-22 11:45:02,130: INFO: Epoch[  91] Loss: 0.00	Accuracy: 100.000	Val_Loss: 0.008	Val_Acc: 0.114
+2022-09-22 11:45:02,131: INFO: Epoch[  91] Test Accuracy: 11.430
+2022-09-22 11:45:15,167: INFO: Epoch[ 101] Loss: 0.00	Accuracy: 100.000	Val_Loss: 0.008	Val_Acc: 0.115
+2022-09-22 11:45:15,167: INFO: Epoch[ 101] Test Accuracy: 11.480
+2022-09-22 11:45:28,179: INFO: Epoch[ 111] Loss: 0.00	Accuracy: 100.000	Val_Loss: 0.008	Val_Acc: 0.118
+2022-09-22 11:45:28,179: INFO: Epoch[ 111] Test Accuracy: 11.910
+2022-09-22 11:45:41,235: INFO: Epoch[ 121] Loss: 0.00	Accuracy: 100.000	Val_Loss: 0.008	Val_Acc: 0.122
+2022-09-22 11:45:41,235: INFO: Epoch[ 121] Test Accuracy: 12.180
+2022-09-22 11:45:54,317: INFO: Epoch[ 131] Loss: 0.00	Accuracy: 100.000	Val_Loss: 0.008	Val_Acc: 0.127
+2022-09-22 11:45:54,317: INFO: Epoch[ 131] Test Accuracy: 12.410
+2022-09-22 11:46:07,370: INFO: Epoch[ 141] Loss: 0.00	Accuracy: 100.000	Val_Loss: 0.008	Val_Acc: 0.130
+2022-09-22 11:46:07,371: INFO: Epoch[ 141] Test Accuracy: 12.780
+2022-09-22 11:46:20,388: INFO: Epoch[ 151] Loss: 0.00	Accuracy: 100.000	Val_Loss: 0.008	Val_Acc: 0.130
+2022-09-22 11:46:20,388: INFO: Epoch[ 151] Test Accuracy: 12.780
+2022-09-22 11:46:33,450: INFO: Epoch[ 161] Loss: 0.00	Accuracy: 100.000	Val_Loss: 0.008	Val_Acc: 0.118
+2022-09-22 11:46:33,450: INFO: Epoch[ 161] Test Accuracy: 11.910
+2022-09-22 11:46:46,480: INFO: Epoch[ 171] Loss: 0.00	Accuracy: 100.000	Val_Loss: 0.007	Val_Acc: 0.115
+2022-09-22 11:46:46,481: INFO: Epoch[ 171] Test Accuracy: 11.500
+2022-09-22 11:46:59,560: INFO: Epoch[ 181] Loss: 0.00	Accuracy: 100.000	Val_Loss: 0.007	Val_Acc: 0.115
+2022-09-22 11:46:59,560: INFO: Epoch[ 181] Test Accuracy: 11.490
+2022-09-22 11:47:12,625: INFO: Epoch[ 191] Loss: 0.00	Accuracy: 100.000	Val_Loss: 0.007	Val_Acc: 0.116
+2022-09-22 11:47:12,625: INFO: Epoch[ 191] Test Accuracy: 11.570
+2022-09-22 11:47:25,693: INFO: Epoch[ 201] Loss: 0.00	Accuracy: 100.000	Val_Loss: 0.007	Val_Acc: 0.117
+2022-09-22 11:47:25,693: INFO: Epoch[ 201] Test Accuracy: 11.720
+2022-09-22 11:47:38,755: INFO: Epoch[ 211] Loss: 0.00	Accuracy: 100.000	Val_Loss: 0.007	Val_Acc: 0.118
+2022-09-22 11:47:38,755: INFO: Epoch[ 211] Test Accuracy: 11.890
+2022-09-22 11:47:51,770: INFO: Epoch[ 221] Loss: 0.00	Accuracy: 100.000	Val_Loss: 0.007	Val_Acc: 0.120
+2022-09-22 11:47:51,770: INFO: Epoch[ 221] Test Accuracy: 12.100
+2022-09-22 11:48:04,867: INFO: Epoch[ 231] Loss: 0.00	Accuracy: 100.000	Val_Loss: 0.007	Val_Acc: 0.123
+2022-09-22 11:48:04,868: INFO: Epoch[ 231] Test Accuracy: 12.280
+2022-09-22 11:48:17,892: INFO: Epoch[ 241] Loss: 0.00	Accuracy: 100.000	Val_Loss: 0.007	Val_Acc: 0.125
+2022-09-22 11:48:17,892: INFO: Epoch[ 241] Test Accuracy: 12.390
+2022-09-22 11:48:30,915: INFO: Epoch[ 251] Loss: 0.00	Accuracy: 100.000	Val_Loss: 0.007	Val_Acc: 0.127
+2022-09-22 11:48:30,915: INFO: Epoch[ 251] Test Accuracy: 12.550
+2022-09-22 11:48:43,980: INFO: Epoch[ 261] Loss: 0.00	Accuracy: 100.000	Val_Loss: 0.007	Val_Acc: 0.130
+2022-09-22 11:48:43,980: INFO: Epoch[ 261] Test Accuracy: 12.730
+2022-09-22 11:48:57,025: INFO: Epoch[ 271] Loss: 0.00	Accuracy: 100.000	Val_Loss: 0.007	Val_Acc: 0.132
+2022-09-22 11:48:57,025: INFO: Epoch[ 271] Test Accuracy: 12.910
+2022-09-22 11:49:10,002: INFO: Epoch[ 281] Loss: 0.00	Accuracy: 100.000	Val_Loss: 0.007	Val_Acc: 0.134
+2022-09-22 11:49:10,002: INFO: Epoch[ 281] Test Accuracy: 13.090
+2022-09-22 11:49:22,971: INFO: Epoch[ 291] Loss: 0.00	Accuracy: 100.000	Val_Loss: 0.007	Val_Acc: 0.135
+2022-09-22 11:49:22,971: INFO: Epoch[ 291] Test Accuracy: 13.300
+2022-09-22 11:49:23,385: INFO: ('Accuracy on Train Set', 1.0)
+2022-09-22 11:49:25,499: INFO: (1343, 'correctly labeled out of', 10000)
+2022-09-22 11:49:25,499: INFO: ('Accuracy on Test Set:', 13.43)
+2022-09-22 11:49:25,556: INFO: Saved model at cifar10/n10/Greedy_Model_10n_Epochs_300_Early_Stop_300_Test_Acc_13.pth
+2022-09-22 11:49:25,556: INFO: Training Complete
