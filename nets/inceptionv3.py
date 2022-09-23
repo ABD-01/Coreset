@@ -5,7 +5,6 @@ from .nets_utils import EmbeddingRecorder
 
 
 class BasicConv2d(nn.Module):
-
     def __init__(self, input_channels, output_channels, **kwargs):
         super().__init__()
         self.conv = nn.Conv2d(input_channels, output_channels, bias=False, **kwargs)
@@ -22,25 +21,24 @@ class BasicConv2d(nn.Module):
 
 # same naive inception module
 class InceptionA(nn.Module):
-
     def __init__(self, input_channels, pool_features):
         super().__init__()
         self.branch1x1 = BasicConv2d(input_channels, 64, kernel_size=1)
 
         self.branch5x5 = nn.Sequential(
             BasicConv2d(input_channels, 48, kernel_size=1),
-            BasicConv2d(48, 64, kernel_size=5, padding=2)
+            BasicConv2d(48, 64, kernel_size=5, padding=2),
         )
 
         self.branch3x3 = nn.Sequential(
             BasicConv2d(input_channels, 64, kernel_size=1),
             BasicConv2d(64, 96, kernel_size=3, padding=1),
-            BasicConv2d(96, 96, kernel_size=3, padding=1)
+            BasicConv2d(96, 96, kernel_size=3, padding=1),
         )
 
         self.branchpool = nn.Sequential(
             nn.AvgPool2d(kernel_size=3, stride=1, padding=1),
-            BasicConv2d(input_channels, pool_features, kernel_size=3, padding=1)
+            BasicConv2d(input_channels, pool_features, kernel_size=3, padding=1),
         )
 
     def forward(self, x):
@@ -65,7 +63,6 @@ class InceptionA(nn.Module):
 # downsample
 # Factorization into smaller convolutions
 class InceptionB(nn.Module):
-
     def __init__(self, input_channels):
         super().__init__()
 
@@ -74,7 +71,7 @@ class InceptionB(nn.Module):
         self.branch3x3stack = nn.Sequential(
             BasicConv2d(input_channels, 64, kernel_size=1),
             BasicConv2d(64, 96, kernel_size=3, padding=1),
-            BasicConv2d(96, 96, kernel_size=3, stride=2)
+            BasicConv2d(96, 96, kernel_size=3, stride=2),
         )
 
         self.branchpool = nn.MaxPool2d(kernel_size=3, stride=2)
@@ -112,7 +109,7 @@ class InceptionC(nn.Module):
         self.branch7x7 = nn.Sequential(
             BasicConv2d(input_channels, c7, kernel_size=1),
             BasicConv2d(c7, c7, kernel_size=(7, 1), padding=(3, 0)),
-            BasicConv2d(c7, 192, kernel_size=(1, 7), padding=(0, 3))
+            BasicConv2d(c7, 192, kernel_size=(1, 7), padding=(0, 3)),
         )
 
         self.branch7x7stack = nn.Sequential(
@@ -120,7 +117,7 @@ class InceptionC(nn.Module):
             BasicConv2d(c7, c7, kernel_size=(7, 1), padding=(3, 0)),
             BasicConv2d(c7, c7, kernel_size=(1, 7), padding=(0, 3)),
             BasicConv2d(c7, c7, kernel_size=(7, 1), padding=(3, 0)),
-            BasicConv2d(c7, 192, kernel_size=(1, 7), padding=(0, 3))
+            BasicConv2d(c7, 192, kernel_size=(1, 7), padding=(0, 3)),
         )
 
         self.branch_pool = nn.Sequential(
@@ -147,20 +144,19 @@ class InceptionC(nn.Module):
 
 
 class InceptionD(nn.Module):
-
     def __init__(self, input_channels):
         super().__init__()
 
         self.branch3x3 = nn.Sequential(
             BasicConv2d(input_channels, 192, kernel_size=1),
-            BasicConv2d(192, 320, kernel_size=3, stride=2)
+            BasicConv2d(192, 320, kernel_size=3, stride=2),
         )
 
         self.branch7x7 = nn.Sequential(
             BasicConv2d(input_channels, 192, kernel_size=1),
             BasicConv2d(192, 192, kernel_size=(1, 7), padding=(0, 3)),
             BasicConv2d(192, 192, kernel_size=(7, 1), padding=(3, 0)),
-            BasicConv2d(192, 192, kernel_size=3, stride=2)
+            BasicConv2d(192, 192, kernel_size=3, stride=2),
         )
 
         self.branchpool = nn.AvgPool2d(kernel_size=3, stride=2)
@@ -192,12 +188,16 @@ class InceptionE(nn.Module):
 
         self.branch3x3stack_1 = BasicConv2d(input_channels, 448, kernel_size=1)
         self.branch3x3stack_2 = BasicConv2d(448, 384, kernel_size=3, padding=1)
-        self.branch3x3stack_3a = BasicConv2d(384, 384, kernel_size=(1, 3), padding=(0, 1))
-        self.branch3x3stack_3b = BasicConv2d(384, 384, kernel_size=(3, 1), padding=(1, 0))
+        self.branch3x3stack_3a = BasicConv2d(
+            384, 384, kernel_size=(1, 3), padding=(0, 1)
+        )
+        self.branch3x3stack_3b = BasicConv2d(
+            384, 384, kernel_size=(3, 1), padding=(1, 0)
+        )
 
         self.branch_pool = nn.Sequential(
             nn.AvgPool2d(kernel_size=3, stride=1, padding=1),
-            BasicConv2d(input_channels, 192, kernel_size=1)
+            BasicConv2d(input_channels, 192, kernel_size=1),
         )
 
     def forward(self, x):
@@ -212,10 +212,7 @@ class InceptionE(nn.Module):
         # high dimensional representations, as suggested by principle
         # 2 of Section 2."""
         branch3x3 = self.branch3x3_1(x)
-        branch3x3 = [
-            self.branch3x3_2a(branch3x3),
-            self.branch3x3_2b(branch3x3)
-        ]
+        branch3x3 = [self.branch3x3_2a(branch3x3), self.branch3x3_2b(branch3x3)]
         branch3x3 = torch.cat(branch3x3, 1)
 
         # x -> 1x1 -> 3x3 -> 1x3
@@ -225,7 +222,7 @@ class InceptionE(nn.Module):
         branch3x3stack = self.branch3x3stack_2(branch3x3stack)
         branch3x3stack = [
             self.branch3x3stack_3a(branch3x3stack),
-            self.branch3x3stack_3b(branch3x3stack)
+            self.branch3x3stack_3b(branch3x3stack),
         ]
         branch3x3stack = torch.cat(branch3x3stack, 1)
 
@@ -237,10 +234,11 @@ class InceptionE(nn.Module):
 
 
 class InceptionV3_32x32(nn.Module):
-
     def __init__(self, channel, num_classes, record_embedding=False, no_grad=False):
         super().__init__()
-        self.Conv2d_1a_3x3 = BasicConv2d(channel, 32, kernel_size=3, padding=3 if channel == 1 else 1)
+        self.Conv2d_1a_3x3 = BasicConv2d(
+            channel, 32, kernel_size=3, padding=3 if channel == 1 else 1
+        )
         self.Conv2d_2a_3x3 = BasicConv2d(32, 32, kernel_size=3, padding=1)
         self.Conv2d_2b_3x3 = BasicConv2d(32, 64, kernel_size=3, padding=1)
         self.Conv2d_3b_1x1 = BasicConv2d(64, 80, kernel_size=1)
@@ -329,12 +327,20 @@ class InceptionV3_32x32(nn.Module):
 
 
 class InceptionV3_224x224(inception.Inception3):
-    def __init__(self, channel: int, num_classes: int, record_embedding: bool = False,
-                 no_grad: bool = False, **kwargs):
+    def __init__(
+        self,
+        channel: int,
+        num_classes: int,
+        record_embedding: bool = False,
+        no_grad: bool = False,
+        **kwargs
+    ):
         super().__init__(num_classes=num_classes, **kwargs)
         self.embedding_recorder = EmbeddingRecorder(record_embedding)
         if channel != 3:
-            self.Conv2d_1a_3x3 = inception.conv_block(channel, 32, kernel_size=3, stride=2)
+            self.Conv2d_1a_3x3 = inception.conv_block(
+                channel, 32, kernel_size=3, stride=2
+            )
         self.no_grad = no_grad
 
     def get_last_layer(self):
@@ -397,30 +403,59 @@ class InceptionV3_224x224(inception.Inception3):
             return x, aux
 
 
-def InceptionV3(channel: int, num_classes: int, im_size, record_embedding: bool = False, no_grad: bool = False,
-                pretrained: bool = False):
+def InceptionV3(
+    channel: int,
+    num_classes: int,
+    im_size,
+    record_embedding: bool = False,
+    no_grad: bool = False,
+    pretrained: bool = False,
+):
     if pretrained:
         if im_size[0] != 224 or im_size[1] != 224:
-            raise NotImplementedError("torchvison pretrained models only accept inputs with size of 224*224")
-        net = InceptionV3_224x224(channel=3, num_classes=1000, record_embedding=record_embedding, no_grad=no_grad)
+            raise NotImplementedError(
+                "torchvison pretrained models only accept inputs with size of 224*224"
+            )
+        net = InceptionV3_224x224(
+            channel=3,
+            num_classes=1000,
+            record_embedding=record_embedding,
+            no_grad=no_grad,
+        )
 
         from torch.hub import load_state_dict_from_url
-        state_dict = load_state_dict_from_url(inception.model_urls["inception_v3_google"], progress=True)
+
+        state_dict = load_state_dict_from_url(
+            inception.model_urls["inception_v3_google"], progress=True
+        )
         net.load_state_dict(state_dict)
 
         if channel != 3:
-            net.Conv2d_1a_3x3 = inception.conv_block(channel, 32, kernel_size=3, stride=2)
+            net.Conv2d_1a_3x3 = inception.conv_block(
+                channel, 32, kernel_size=3, stride=2
+            )
         if num_classes != 1000:
             net.fc = nn.Linear(net.fc.in_features, num_classes)
 
     elif im_size[0] == 224 and im_size[1] == 224:
-        net = InceptionV3_224x224(channel=channel, num_classes=num_classes, record_embedding=record_embedding,
-                                  no_grad=no_grad)
+        net = InceptionV3_224x224(
+            channel=channel,
+            num_classes=num_classes,
+            record_embedding=record_embedding,
+            no_grad=no_grad,
+        )
     elif (channel == 1 and im_size[0] == 28 and im_size[1] == 28) or (
-            channel == 3 and im_size[0] == 32 and im_size[1] == 32):
-        net = InceptionV3_32x32(channel=channel, num_classes=num_classes, record_embedding=record_embedding,
-                                no_grad=no_grad)
+        channel == 3 and im_size[0] == 32 and im_size[1] == 32
+    ):
+        net = InceptionV3_32x32(
+            channel=channel,
+            num_classes=num_classes,
+            record_embedding=record_embedding,
+            no_grad=no_grad,
+        )
     else:
-        raise NotImplementedError("Network Architecture for current dataset has not been implemented.")
+        raise NotImplementedError(
+            "Network Architecture for current dataset has not been implemented."
+        )
 
     return net

@@ -6,8 +6,12 @@ import os, sys
 sys.path.append(os.path.join(os.path.dirname(__file__), "..", ".."))
 import datasets
 
+
 def get_best_inds(
-    topn: int, all_similarities: np.ndarray, all_imginds: np.ndarray, train_labels: np.ndarray
+    topn: int,
+    all_similarities: np.ndarray,
+    all_imginds: np.ndarray,
+    train_labels: np.ndarray,
 ) -> np.ndarray:
     # from utils import get_train_dataset
     # train_labels = np.array(get_train_dataset(p).targets)
@@ -15,7 +19,11 @@ def get_best_inds(
     print("train labels for all_imginds")
     print(np.unique(train_labels[all_imginds], return_counts=True))
     good_inds = []
-    for (sims, inds) in tqdm(zip(all_similarities, all_imginds), total=len(all_similarities), desc="Getting best inds"):
+    for (sims, inds) in tqdm(
+        zip(all_similarities, all_imginds),
+        total=len(all_similarities),
+        desc="Getting best inds",
+    ):
         inds = inds.astype(int)
         # print(sims.shape)
         ind = np.argpartition(-sims, topn)[:topn]
@@ -39,13 +47,19 @@ def get_best_inds(
     return good_inds[best_inds]
 
 
-all_similarities = np.load('/home/ivlabs/Documents/ABD/Coreset/svhn/all_similarities.npy', allow_pickle=True)#.swapaxes(0, 1)
-all_imgindices = np.load('/home/ivlabs/Documents/ABD/Coreset/svhn/all_imginds.npy', allow_pickle=True)#.swapaxes(0, 1)
+all_similarities = np.load(
+    "/home/ivlabs/Documents/ABD/Coreset/svhn/all_similarities.npy", allow_pickle=True
+)  # .swapaxes(0, 1)
+all_imgindices = np.load(
+    "/home/ivlabs/Documents/ABD/Coreset/svhn/all_imginds.npy", allow_pickle=True
+)  # .swapaxes(0, 1)
 
 all_similarities = all_similarities.squeeze()
 all_imgindices = all_imgindices.astype(int)
 
-channel, im_size, num_classes, class_names, mean, std, data, _ = datasets.__dict__["SVHN"]("/home/ivlabs/Documents/ABD/Coreset/data")
+channel, im_size, num_classes, class_names, mean, std, data, _ = datasets.__dict__[
+    "SVHN"
+]("/home/ivlabs/Documents/ABD/Coreset/data")
 
 train_labels = np.array(data.targets)
 print(train_labels.shape)
