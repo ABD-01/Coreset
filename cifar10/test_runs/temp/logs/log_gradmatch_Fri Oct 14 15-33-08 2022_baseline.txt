@@ -1,0 +1,165 @@
+2022-10-14 15:33:12,048: INFO: Dataset
+DatasetwithIndices CIFAR10
+    Number of datapoints: 50000
+    Root location: data
+    Split: Train
+    StandardTransform
+Transform: Compose(
+               ToTensor()
+               Normalize(mean=[0.4914, 0.4822, 0.4465], std=[0.247, 0.2435, 0.2616])
+           )
+2022-10-14 15:33:12,049: INFO: Hyperparameters
+{'T_max': 50,
+ 'T_mult': 1,
+ 'augment': None,
+ 'batch_size': 1000,
+ 'channel': 3,
+ 'class_balanced': None,
+ 'class_names': ['airplane',
+                 'automobile',
+                 'bird',
+                 'cat',
+                 'deer',
+                 'dog',
+                 'frog',
+                 'horse',
+                 'ship',
+                 'truck'],
+ 'dataset': 'CIFAR10',
+ 'dataset_dir': 'data',
+ 'early_stopping_delta': 0.001,
+ 'early_stopping_min_epochs': 100,
+ 'early_stopping_patience': -1,
+ 'epochs': 1,
+ 'factor': 0.2,
+ 'gamma': 0.1,
+ 'gpu': None,
+ 'im_size': (32, 32),
+ 'iter': 100,
+ 'logdir': PosixPath('cifar10/test_runs/temp/logs'),
+ 'lr': 0.01,
+ 'max_lr': 0.005,
+ 'mean': [0.4914, 0.4822, 0.4465],
+ 'min_lr': 0.0001,
+ 'model': 'ResNet18',
+ 'momentum': 0.9,
+ 'nesterov': False,
+ 'num_classes': 10,
+ 'optimizer': 'sgd',
+ 'output_dir': PosixPath('cifar10/test_runs/temp'),
+ 'patience': 50,
+ 'per_class': False,
+ 'r': 2,
+ 'random': False,
+ 'scheduler': 'reduceonplateau',
+ 'seed': 0,
+ 'std': [0.247, 0.2435, 0.2616],
+ 'step_size': 30,
+ 'temp': True,
+ 'test_model': None,
+ 'topn': 1000,
+ 'train': True,
+ 'val_batch_size': 1000,
+ 'weight_decay': 0.01,
+ 'with_train': False}
+2022-10-14 15:33:12,051: INFO: Finding Mean Gradients for whole dataset at once.
+2022-10-14 15:33:23,223: INFO: Model Summary
+==========================================================================================
+Layer (type:depth-idx)                   Output Shape              Param #
+==========================================================================================
+├─Conv2d: 1-1                            [-1, 64, 32, 32]          1,728
+├─BatchNorm2d: 1-2                       [-1, 64, 32, 32]          128
+├─Sequential: 1-3                        [-1, 64, 32, 32]          --
+|    └─BasicBlock: 2-1                   [-1, 64, 32, 32]          --
+|    |    └─Conv2d: 3-1                  [-1, 64, 32, 32]          36,864
+|    |    └─BatchNorm2d: 3-2             [-1, 64, 32, 32]          128
+|    |    └─Conv2d: 3-3                  [-1, 64, 32, 32]          36,864
+|    |    └─BatchNorm2d: 3-4             [-1, 64, 32, 32]          128
+|    |    └─Sequential: 3-5              [-1, 64, 32, 32]          --
+|    └─BasicBlock: 2-2                   [-1, 64, 32, 32]          --
+|    |    └─Conv2d: 3-6                  [-1, 64, 32, 32]          36,864
+|    |    └─BatchNorm2d: 3-7             [-1, 64, 32, 32]          128
+|    |    └─Conv2d: 3-8                  [-1, 64, 32, 32]          36,864
+|    |    └─BatchNorm2d: 3-9             [-1, 64, 32, 32]          128
+|    |    └─Sequential: 3-10             [-1, 64, 32, 32]          --
+├─Sequential: 1-4                        [-1, 128, 16, 16]         --
+|    └─BasicBlock: 2-3                   [-1, 128, 16, 16]         --
+|    |    └─Conv2d: 3-11                 [-1, 128, 16, 16]         73,728
+|    |    └─BatchNorm2d: 3-12            [-1, 128, 16, 16]         256
+|    |    └─Conv2d: 3-13                 [-1, 128, 16, 16]         147,456
+|    |    └─BatchNorm2d: 3-14            [-1, 128, 16, 16]         256
+|    |    └─Sequential: 3-15             [-1, 128, 16, 16]         8,448
+|    └─BasicBlock: 2-4                   [-1, 128, 16, 16]         --
+|    |    └─Conv2d: 3-16                 [-1, 128, 16, 16]         147,456
+|    |    └─BatchNorm2d: 3-17            [-1, 128, 16, 16]         256
+|    |    └─Conv2d: 3-18                 [-1, 128, 16, 16]         147,456
+|    |    └─BatchNorm2d: 3-19            [-1, 128, 16, 16]         256
+|    |    └─Sequential: 3-20             [-1, 128, 16, 16]         --
+├─Sequential: 1-5                        [-1, 256, 8, 8]           --
+|    └─BasicBlock: 2-5                   [-1, 256, 8, 8]           --
+|    |    └─Conv2d: 3-21                 [-1, 256, 8, 8]           294,912
+|    |    └─BatchNorm2d: 3-22            [-1, 256, 8, 8]           512
+|    |    └─Conv2d: 3-23                 [-1, 256, 8, 8]           589,824
+|    |    └─BatchNorm2d: 3-24            [-1, 256, 8, 8]           512
+|    |    └─Sequential: 3-25             [-1, 256, 8, 8]           33,280
+|    └─BasicBlock: 2-6                   [-1, 256, 8, 8]           --
+|    |    └─Conv2d: 3-26                 [-1, 256, 8, 8]           589,824
+|    |    └─BatchNorm2d: 3-27            [-1, 256, 8, 8]           512
+|    |    └─Conv2d: 3-28                 [-1, 256, 8, 8]           589,824
+|    |    └─BatchNorm2d: 3-29            [-1, 256, 8, 8]           512
+|    |    └─Sequential: 3-30             [-1, 256, 8, 8]           --
+├─Sequential: 1-6                        [-1, 512, 4, 4]           --
+|    └─BasicBlock: 2-7                   [-1, 512, 4, 4]           --
+|    |    └─Conv2d: 3-31                 [-1, 512, 4, 4]           1,179,648
+|    |    └─BatchNorm2d: 3-32            [-1, 512, 4, 4]           1,024
+|    |    └─Conv2d: 3-33                 [-1, 512, 4, 4]           2,359,296
+|    |    └─BatchNorm2d: 3-34            [-1, 512, 4, 4]           1,024
+|    |    └─Sequential: 3-35             [-1, 512, 4, 4]           132,096
+|    └─BasicBlock: 2-8                   [-1, 512, 4, 4]           --
+|    |    └─Conv2d: 3-36                 [-1, 512, 4, 4]           2,359,296
+|    |    └─BatchNorm2d: 3-37            [-1, 512, 4, 4]           1,024
+|    |    └─Conv2d: 3-38                 [-1, 512, 4, 4]           2,359,296
+|    |    └─BatchNorm2d: 3-39            [-1, 512, 4, 4]           1,024
+|    |    └─Sequential: 3-40             [-1, 512, 4, 4]           --
+├─EmbeddingRecorder: 1-7                 [-1, 512]                 --
+├─Linear: 1-8                            [-1, 10]                  5,130
+==========================================================================================
+Total params: 11,173,962
+Trainable params: 11,173,962
+Non-trainable params: 0
+Total mult-adds (M): 577.92
+==========================================================================================
+Input size (MB): 0.01
+Forward/backward pass size (MB): 9.38
+Params size (MB): 42.63
+Estimated Total Size (MB): 52.01
+==========================================================================================
+2022-10-14 15:33:47,156: ERROR: A Error Occurred
+Traceback (most recent call last):
+  File "/mnt/c/Users/abdul/Projects/Coreset/src/grad_match.py", line 421, in <module>
+    main(args, logger)
+  File "/mnt/c/Users/abdul/Projects/Coreset/src/grad_match.py", line 351, in main
+    all_similarities, all_imginds = gradient_mathcing(p, train_data, logger)
+  File "/mnt/c/Users/abdul/Projects/Coreset/src/grad_match.py", line 283, in gradient_mathcing
+    gradients, img_indices = get_mean_gradients(p, model, train_loader, criterion, optimizer)
+  File "/mnt/c/Users/abdul/Projects/Coreset/src/grad_match.py", line 160, in get_mean_gradients
+    output = model(images).requires_grad_(True)
+  File "/home/blackpearl/miniconda3/envs/coreset/lib/python3.10/site-packages/torch/nn/modules/module.py", line 1130, in _call_impl
+    return forward_call(*input, **kwargs)
+  File "/mnt/c/Users/abdul/Projects/Coreset/src/utils/../../nets/resnet.py", line 101, in forward
+    out = self.layer1(out)
+  File "/home/blackpearl/miniconda3/envs/coreset/lib/python3.10/site-packages/torch/nn/modules/module.py", line 1130, in _call_impl
+    return forward_call(*input, **kwargs)
+  File "/home/blackpearl/miniconda3/envs/coreset/lib/python3.10/site-packages/torch/nn/modules/container.py", line 139, in forward
+    input = module(input)
+  File "/home/blackpearl/miniconda3/envs/coreset/lib/python3.10/site-packages/torch/nn/modules/module.py", line 1130, in _call_impl
+    return forward_call(*input, **kwargs)
+  File "/mnt/c/Users/abdul/Projects/Coreset/src/utils/../../nets/resnet.py", line 36, in forward
+    out = self.bn2(self.conv2(out))
+  File "/home/blackpearl/miniconda3/envs/coreset/lib/python3.10/site-packages/torch/nn/modules/module.py", line 1130, in _call_impl
+    return forward_call(*input, **kwargs)
+  File "/home/blackpearl/miniconda3/envs/coreset/lib/python3.10/site-packages/torch/nn/modules/batchnorm.py", line 168, in forward
+    return F.batch_norm(
+  File "/home/blackpearl/miniconda3/envs/coreset/lib/python3.10/site-packages/torch/nn/functional.py", line 2438, in batch_norm
+    return torch.batch_norm(
+RuntimeError: CUDA out of memory. Tried to allocate 250.00 MiB (GPU 0; 4.00 GiB total capacity; 2.98 GiB already allocated; 0 bytes free; 3.23 GiB reserved in total by PyTorch) If reserved memory is >> allocated memory try setting max_split_size_mb to avoid fragmentation.  See documentation for Memory Management and PYTORCH_CUDA_ALLOC_CONF

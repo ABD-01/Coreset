@@ -404,7 +404,10 @@ if __name__ == "__main__":
     parser = get_parser()
 
     args = parser.parse_args()
-    args.output_dir = pathlib.Path(args.dataset.lower())
+    if args.output_dir is not None:
+        args.output_dir = pathlib.Path(args.dataset.lower()) / args.output_dir
+    else:
+        args.output_dir = pathlib.Path(args.dataset.lower())
     if args.temp:
         args.output_dir = args.output_dir / f"temp"
     args.logdir = args.output_dir / "logs"

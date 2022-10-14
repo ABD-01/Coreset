@@ -460,7 +460,10 @@ if __name__ == "__main__":
 
     parser = get_parser()
     args = parser.parse_args()
-    args.output_dir = Path(args.dataset.lower()) / f"n{args.topn}"
+    if args.output_dir is not None:
+        args.output_dir = Path(args.dataset.lower()) / args.output_dir / f"n{args.topn}"
+    else:
+        args.output_dir = Path(args.dataset.lower()) / f"n{args.topn}"
     if args.temp:
         args.output_dir = args.output_dir / f"temp"
     if args.with_train:
