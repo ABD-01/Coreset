@@ -1,0 +1,75 @@
+2022-10-15 11:21:56,912: INFO: Command: src/train.py --output_dir test_runs --topn 500 --scheduler cosineannealingwarmrestarts --T_max 10 --T_mult 2 --epochs 1200 --min_lr 0.001 --model ResNet18 --class_balanced 1
+2022-10-15 11:21:56,912: INFO: Hyperparameters
+{'T_max': 10,
+ 'T_mult': 2,
+ 'augment': False,
+ 'batch_size': 1000,
+ 'class_balanced': True,
+ 'dataset': 'CIFAR10',
+ 'dataset_dir': 'data',
+ 'early_stopping_delta': 0.001,
+ 'early_stopping_min_epochs': 100,
+ 'early_stopping_patience': -1,
+ 'epochs': 1200,
+ 'factor': 0.2,
+ 'gamma': 0.1,
+ 'gpu': None,
+ 'grad_path': PosixPath('cifar10/test_runs'),
+ 'iter': 100,
+ 'logdir': PosixPath('cifar10/test_runs/n500/logs'),
+ 'lr': 0.01,
+ 'max_lr': 0.005,
+ 'min_lr': 0.001,
+ 'model': 'ResNet18',
+ 'momentum': 0.9,
+ 'nesterov': False,
+ 'optimizer': 'sgd',
+ 'output_dir': PosixPath('cifar10/test_runs/n500'),
+ 'patience': 50,
+ 'per_class': False,
+ 'r': 1,
+ 'random': False,
+ 'scheduler': 'cosineannealingwarmrestarts',
+ 'seed': 0,
+ 'step_size': 30,
+ 'temp': False,
+ 'test_model': None,
+ 'topn': 500,
+ 'train': True,
+ 'use_saved_best_inds': None,
+ 'val_batch_size': 1000,
+ 'val_percent': 0.0,
+ 'weight_decay': 0.01,
+ 'with_train': False}
+2022-10-15 11:21:57,936: INFO: Dataset
+Dataset CIFAR10
+    Number of datapoints: 50000
+    Root location: data
+    Split: Train
+    StandardTransform
+Transform: Compose(
+               ToTensor()
+               Normalize(mean=[0.4914, 0.4822, 0.4465], std=[0.247, 0.2435, 0.2616])
+           )
+2022-10-15 11:21:57,937: INFO: Test Dataset
+Dataset CIFAR10
+    Number of datapoints: 10000
+    Root location: data
+    Split: Test
+    StandardTransform
+Transform: Compose(
+               ToTensor()
+               Normalize(mean=[0.4914, 0.4822, 0.4465], std=[0.247, 0.2435, 0.2616])
+           )
+2022-10-15 11:21:57,937: INFO: Loading similarities from cifar10/test_runs/all_similarities.npy
+Loading imginds from cifar10/test_runs/all_imginds.npy
+2022-10-15 11:21:57,937: INFO: all_similarities.shape: (50000,), all_imginds.shape: (1, 50000)
+2022-10-15 11:21:57,939: ERROR: An Error Occurred
+Traceback (most recent call last):
+  File "/home/ivlabs/Documents/ABD/Coreset/src/train.py", line 497, in <module>
+    main(args)
+  File "/home/ivlabs/Documents/ABD/Coreset/src/train.py", line 364, in main
+    best_inds = get_cls_balanced_best_inds(
+  File "/home/ivlabs/Documents/ABD/Coreset/src/utils/train_utils.py", line 78, in get_cls_balanced_best_inds
+    cls_sims = sims[cls_mask]
+IndexError: invalid index to scalar variable.

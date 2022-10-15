@@ -193,7 +193,7 @@ class AlexNet(nn.Module):
         return x  # , h
 
 def get_dataset(p):
-    channel, im_size, num_classes, class_names, mean, std, dst_train, dst_test = datasets.__dict__[p.dataset](p.dataset_dir)
+    channel, im_size, num_classes, class_names, mean, std, dst_train, dst_test = datasets.__dict__[p.dataset](p.dataset_dir, pretrained=p.pretrained)
     p.channel, p.im_size, p.num_classes, p.class_names, p.mean, p.std = channel, im_size, num_classes, class_names, mean, std
     return dst_train, dst_test
 
@@ -341,9 +341,10 @@ def str_to_bool(v):
 def get_parser():
     parser = argparse.ArgumentParser(description="")
     # General parameters
-    parser.add_argument("--output_dir", type=str, default=None, help="Output directory")
+    parser.add_argument("--output_dir", '-o', type=str, default=None, help="Output directory")
     parser.add_argument('--dataset', type=str, default='CIFAR10', help='dataset')
     parser.add_argument('--model', type=str, default='AlexNet', help='model')
+    parser.add_argument('--pretrained', type=str_to_bool, default=False, help='pretrained')
     parser.add_argument('--dataset_dir', type=str, default='data', help='dataset path')
     parser.add_argument('--gpu', type=int, nargs='+', default=None, help='gpu id')
     parser.add_argument('--topn', type=int, default=1000, help='Size of Coreset')
@@ -351,7 +352,7 @@ def get_parser():
     parser.add_argument('--batch_size', '-bs', type=int, default=1000, help='Batch size')
     parser.add_argument('--val_batch_size', '-vbs', type=int, default=1000, help='Validation batch size')
     parser.add_argument('--epochs', type=int, default=300, help='Number of epochs')
-    parser.add_argument('--r', type=int, default=1, help='Number of workers')
+    parser.add_argument('--r', type=int, default=2, help='Number of workers')
     parser.add_argument('--seed', type=int, default=0, help='Seed')
     # Optimizer and Scheduler parameters
     parser.add_argument('--optimizer', type=str, default='sgd', help='optimizer')

@@ -271,7 +271,8 @@ def gradient_mathcing(p, data, logger):
     optimizer = get_optimizer(p, model)
 
     all_similarities, all_imginds = [], []
-    for k in trange(iterations, desc="Iterations", position=0, leave=True):
+    progressbar = trange(iterations, desc="Iterations", position=0, leave=True)
+    for k in progressbar:
         # if p.with_train:
         # moving to the end of loop
         if not p.with_train:
@@ -288,9 +289,8 @@ def gradient_mathcing(p, data, logger):
             img_indices = img_indices.cpu().numpy()
         elif p.per_class:
             similarities, img_indices = [], []
-            for dataset in tqdm(
-                cls_data, desc="Per CLass Gradient Mathcing", position=1, leave=False
-            ):
+            progressbar2 = tqdm(cls_data, desc="Per CLass Gradient Mathcing", position=1, leave=False)
+            for dataset in progressbar2:
                 loader = DataLoader(
                     dataset,
                     p.batch_size,
@@ -320,6 +320,9 @@ def gradient_mathcing(p, data, logger):
             gc.collect()
             torch.cuda.empty_cache()
 
+    if p.per_class:
+        logger.info(progressbar2)
+    logger.info(progressbar)
     all_similarities, all_imginds = np.stack(all_similarities), np.stack(all_imginds)
     return all_similarities, all_imginds
 
