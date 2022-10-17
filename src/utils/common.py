@@ -193,12 +193,12 @@ class AlexNet(nn.Module):
         return x  # , h
 
 def get_dataset(p):
-    channel, im_size, num_classes, class_names, mean, std, dst_train, dst_test = datasets.__dict__[p.dataset](p.dataset_dir, pretrained=p.pretrained)
+    channel, im_size, num_classes, class_names, mean, std, dst_train, dst_test = datasets.__dict__[p.dataset](p.dataset_dir)
     p.channel, p.im_size, p.num_classes, p.class_names, p.mean, p.std = channel, im_size, num_classes, class_names, mean, std
     return dst_train, dst_test
 
 def get_model(p, device):
-    model = nets.__dict__[p.model](p.channel, p.num_classes, im_size=p.im_size).to(device)
+    model = nets.__dict__[p.model](p.channel, p.num_classes, im_size=p.im_size, pretrained=p.pretrained).to(device)
     if device == "cpu":
         print("Using CPU.")
     elif p.gpu is not None:

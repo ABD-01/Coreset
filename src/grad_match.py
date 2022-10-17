@@ -411,6 +411,8 @@ if __name__ == "__main__":
         args.output_dir = pathlib.Path(args.dataset.lower()) / args.output_dir
     else:
         args.output_dir = pathlib.Path(args.dataset.lower())
+    if args.pretrained:
+        args.output_dir = args.output_dir / "pretrained"
     if args.temp:
         args.output_dir = args.output_dir / f"temp"
     args.logdir = args.output_dir / "logs"

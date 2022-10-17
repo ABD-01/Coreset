@@ -1,0 +1,4 @@
+Run1 - Oct 15th
+- Train GradMatch with lr = 0.001 and Adam
+- Train for 1000 epochs
+- Trained GradMatch with Pretrained weights on Imagenet
