@@ -224,7 +224,7 @@ def train_loop(p, best_inds: torch.Tensor, data, test_data) -> None:
 
     model_path = (
         p.output_dir
-        / f"{'random/' if p.random else ''}Greedy_Model_{p.topn}n_Epochs_{p.epochs}_Early_Stop_{epoch+1}_Test_Acc_{int(test_acc)}{suffix}.pth"
+        / f"{'random/' if p.random else ''}Greedy_Model_{p.topn}n_Epochs_{p.epochs}_Test_Acc_{int(test_acc)}{suffix}.pth"
     )
     torch.save(model.state_dict(), model_path)
     logger.info(f"Saved model at {str(model_path)}")
@@ -271,8 +271,8 @@ def main(p):
         ), f"Given best indices shape {best_inds.shape[0]} and no. of best samples {p.topn} does not match."
 
     elif p.per_class:
-        all_sim_path = Path(p.dataset.lower()) / f"all_similarities_perclass{'_withtrain' if p.with_train else ''}.npy"
-        all_ind_path = Path(p.dataset.lower()) / f"all_imginds_perclass{'_withtrain' if p.with_train else ''}.npy"
+        all_sim_path = args.grad_path / f"all_similarities_perclass{'_withtrain' if p.with_train else ''}.npy"
+        all_ind_path = args.grad_path / f"all_imginds_perclass{'_withtrain' if p.with_train else ''}.npy"
         if p.dataset.lower() in ["cifar10", "cifar100"]:
             all_similarities = np.load(all_sim_path).squeeze()
             all_imginds = np.load(all_ind_path).astype(int)
@@ -346,13 +346,13 @@ def main(p):
 
     else:
         all_sim_path = (
-            Path(p.dataset.lower()) / f"all_similarities{'_withtrain' if p.with_train else ''}.npy"
+            args.grad_path / f"all_similarities{'_withtrain' if p.with_train else ''}.npy"
         )
         all_ind_path = (
-            Path(p.dataset.lower()) / f"all_imginds{'_withtrain' if p.with_train else ''}.npy"
+            args.grad_path / f"all_imginds{'_withtrain' if p.with_train else ''}.npy"
         )
         logger.info(
-            f"Loading similarities from {all_sim_path}\nLoading imginds from {all_ind_path}"
+            f"Loading similarities from {all_sim_path} and imginds from {all_ind_path}"
         )
         all_similarities = np.load(all_sim_path).squeeze()
         all_imginds = np.load(all_ind_path).astype(int)
@@ -460,11 +460,18 @@ if __name__ == "__main__":
 
     parser = get_parser()
     args = parser.parse_args()
-    args.output_dir = Path(args.dataset.lower()) / f"n{args.topn}"
+    if args.output_dir is not None:
+        args.output_dir = Path(args.dataset.lower()) / args.output_dir
+    else:
+        args.output_dir = Path(args.dataset.lower())
+    if args.pretrained:
+        args.output_dir = args.output_dir / "pretrained"
     if args.temp:
         args.output_dir = args.output_dir / f"temp"
+    args.grad_path = args.output_dir
     if args.with_train:
         args.output_dir = args.output_dir / f"with_train"
+    args.output_dir = args.output_dir / f"n{args.topn}"
     args.logdir = args.output_dir / "logs"
     args.logdir.mkdir(parents=True, exist_ok=True)
 

@@ -198,7 +198,7 @@ def get_dataset(p):
     return dst_train, dst_test
 
 def get_model(p, device):
-    model = nets.__dict__[p.model](p.channel, p.num_classes, im_size=p.im_size).to(device)
+    model = nets.__dict__[p.model](p.channel, p.num_classes, im_size=p.im_size, pretrained=p.pretrained).to(device)
     if device == "cpu":
         print("Using CPU.")
     elif p.gpu is not None:
@@ -341,8 +341,10 @@ def str_to_bool(v):
 def get_parser():
     parser = argparse.ArgumentParser(description="")
     # General parameters
+    parser.add_argument("--output_dir", '-o', type=str, default=None, help="Output directory")
     parser.add_argument('--dataset', type=str, default='CIFAR10', help='dataset')
     parser.add_argument('--model', type=str, default='AlexNet', help='model')
+    parser.add_argument('--pretrained', type=str_to_bool, default=False, help='pretrained')
     parser.add_argument('--dataset_dir', type=str, default='data', help='dataset path')
     parser.add_argument('--gpu', type=int, nargs='+', default=None, help='gpu id')
     parser.add_argument('--topn', type=int, default=1000, help='Size of Coreset')

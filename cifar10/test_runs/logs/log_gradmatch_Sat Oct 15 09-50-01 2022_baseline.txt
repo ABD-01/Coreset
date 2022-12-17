@@ -1,0 +1,91 @@
+2022-10-15 09:50:02,831: INFO: Dataset
+DatasetwithIndices CIFAR10
+    Number of datapoints: 50000
+    Root location: data
+    Split: Train
+    StandardTransform
+Transform: Compose(
+               ToTensor()
+               Normalize(mean=[0.4914, 0.4822, 0.4465], std=[0.247, 0.2435, 0.2616])
+           )
+2022-10-15 09:50:02,831: INFO: Hyperparameters
+{'T_max': 50,
+ 'T_mult': 1,
+ 'augment': None,
+ 'batch_size': 1000,
+ 'channel': 3,
+ 'class_balanced': None,
+ 'class_names': ['airplane',
+                 'automobile',
+                 'bird',
+                 'cat',
+                 'deer',
+                 'dog',
+                 'frog',
+                 'horse',
+                 'ship',
+                 'truck'],
+ 'dataset': 'CIFAR10',
+ 'dataset_dir': 'data',
+ 'early_stopping_delta': 0.001,
+ 'early_stopping_min_epochs': 100,
+ 'early_stopping_patience': -1,
+ 'epochs': 300,
+ 'factor': 0.2,
+ 'gamma': 0.1,
+ 'gpu': None,
+ 'im_size': (32, 32),
+ 'iter': 1,
+ 'logdir': PosixPath('cifar10/test_runs/logs'),
+ 'lr': 0.01,
+ 'max_lr': 0.005,
+ 'mean': [0.4914, 0.4822, 0.4465],
+ 'min_lr': 0.0001,
+ 'model': 'ResNet18',
+ 'momentum': 0.9,
+ 'nesterov': False,
+ 'num_classes': 10,
+ 'optimizer': 'sgd',
+ 'output_dir': PosixPath('cifar10/test_runs'),
+ 'patience': 50,
+ 'per_class': False,
+ 'r': 1,
+ 'random': False,
+ 'scheduler': 'reduceonplateau',
+ 'seed': 0,
+ 'std': [0.247, 0.2435, 0.2616],
+ 'step_size': 30,
+ 'temp': False,
+ 'test_model': None,
+ 'topn': 500,
+ 'train': True,
+ 'val_batch_size': 1000,
+ 'weight_decay': 0.01,
+ 'with_train': False}
+2022-10-15 09:50:02,831: INFO: Finding Mean Gradients for whole dataset at once.
+2022-10-15 09:50:03,565: ERROR: A Error Occurred
+Traceback (most recent call last):
+  File "/home/ivlabs/anaconda3/envs/coreset/lib/python3.10/site-packages/torchsummary/torchsummary.py", line 140, in summary
+    _ = model.to(device)(*x, *args, **kwargs)  # type: ignore[misc]
+  File "/home/ivlabs/anaconda3/envs/coreset/lib/python3.10/site-packages/torch/nn/modules/module.py", line 1110, in _call_impl
+    return forward_call(*input, **kwargs)
+  File "/home/ivlabs/Documents/ABD/Coreset/src/utils/../../nets/resnet.py", line 100, in forward
+    out = F.relu(self.bn1(self.conv1(x)))
+  File "/home/ivlabs/anaconda3/envs/coreset/lib/python3.10/site-packages/torch/nn/functional.py", line 1442, in relu
+    result = torch.relu(input)
+RuntimeError: CUDA error: no kernel image is available for execution on the device
+CUDA kernel errors might be asynchronously reported at some other API call,so the stacktrace below might be incorrect.
+For debugging consider passing CUDA_LAUNCH_BLOCKING=1.
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/home/ivlabs/Documents/ABD/Coreset/src/grad_match.py", line 421, in <module>
+    main(args, logger)
+  File "/home/ivlabs/Documents/ABD/Coreset/src/grad_match.py", line 351, in main
+    all_similarities, all_imginds = gradient_mathcing(p, train_data, logger)
+  File "/home/ivlabs/Documents/ABD/Coreset/src/grad_match.py", line 264, in gradient_mathcing
+    + str(summary(model, (p.channel, *p.im_size), verbose=0, device=device))
+  File "/home/ivlabs/anaconda3/envs/coreset/lib/python3.10/site-packages/torchsummary/torchsummary.py", line 143, in summary
+    raise RuntimeError(
+RuntimeError: Failed to run torchsummary. See above stack traces for more details. Executed layers up to: [Conv2d: 1-1, BatchNorm2d: 1-2]
