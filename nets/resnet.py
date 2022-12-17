@@ -11,7 +11,9 @@ from torchvision.models import resnet
 
 
 def conv3x3(in_planes, out_planes, stride=1):
-    return nn.Conv2d(in_planes, out_planes, kernel_size=3, stride=stride, padding=1, bias=False)
+    return nn.Conv2d(
+        in_planes, out_planes, kernel_size=3, stride=stride, padding=1, bias=False
+    )
 
 
 class BasicBlock(nn.Module):
@@ -27,8 +29,14 @@ class BasicBlock(nn.Module):
         self.shortcut = nn.Sequential()
         if stride != 1 or in_planes != self.expansion * planes:
             self.shortcut = nn.Sequential(
-                nn.Conv2d(in_planes, self.expansion * planes, kernel_size=1, stride=stride, bias=False),
-                nn.BatchNorm2d(self.expansion * planes)
+                nn.Conv2d(
+                    in_planes,
+                    self.expansion * planes,
+                    kernel_size=1,
+                    stride=stride,
+                    bias=False,
+                ),
+                nn.BatchNorm2d(self.expansion * planes),
             )
 
     def forward(self, x):
@@ -46,16 +54,26 @@ class Bottleneck(nn.Module):
         super(Bottleneck, self).__init__()
         self.conv1 = nn.Conv2d(in_planes, planes, kernel_size=1, bias=False)
         self.bn1 = nn.BatchNorm2d(planes)
-        self.conv2 = nn.Conv2d(planes, planes, kernel_size=3, stride=stride, padding=1, bias=False)
+        self.conv2 = nn.Conv2d(
+            planes, planes, kernel_size=3, stride=stride, padding=1, bias=False
+        )
         self.bn2 = nn.BatchNorm2d(planes)
-        self.conv3 = nn.Conv2d(planes, self.expansion * planes, kernel_size=1, bias=False)
+        self.conv3 = nn.Conv2d(
+            planes, self.expansion * planes, kernel_size=1, bias=False
+        )
         self.bn3 = nn.BatchNorm2d(self.expansion * planes)
 
         self.shortcut = nn.Sequential()
         if stride != 1 or in_planes != self.expansion * planes:
             self.shortcut = nn.Sequential(
-                nn.Conv2d(in_planes, self.expansion * planes, kernel_size=1, stride=stride, bias=False),
-                nn.BatchNorm2d(self.expansion * planes)
+                nn.Conv2d(
+                    in_planes,
+                    self.expansion * planes,
+                    kernel_size=1,
+                    stride=stride,
+                    bias=False,
+                ),
+                nn.BatchNorm2d(self.expansion * planes),
             )
 
     def forward(self, x):
@@ -68,8 +86,15 @@ class Bottleneck(nn.Module):
 
 
 class ResNet_32x32(nn.Module):
-    def __init__(self, block, num_blocks, channel=3, num_classes=10, record_embedding: bool = False,
-                 no_grad: bool = False):
+    def __init__(
+        self,
+        block,
+        num_blocks,
+        channel=3,
+        num_classes=10,
+        record_embedding: bool = False,
+        no_grad: bool = False,
+    ):
         super().__init__()
         self.in_planes = 64
 
@@ -110,12 +135,22 @@ class ResNet_32x32(nn.Module):
 
 
 class ResNet_224x224(resnet.ResNet):
-    def __init__(self, block, layers, channel: int, num_classes: int, record_embedding: bool = False,
-                 no_grad: bool = False, **kwargs):
+    def __init__(
+        self,
+        block,
+        layers,
+        channel: int,
+        num_classes: int,
+        record_embedding: bool = False,
+        no_grad: bool = False,
+        **kwargs
+    ):
         super().__init__(block, layers, **kwargs)
         self.embedding_recorder = EmbeddingRecorder(record_embedding)
         if channel != 3:
-            self.conv1 = nn.Conv2d(channel, 64, kernel_size=7, stride=2, padding=3, bias=False)
+            self.conv1 = nn.Conv2d(
+                channel, 64, kernel_size=7, stride=2, padding=3, bias=False
+            )
         if num_classes != 1000:
             self.fc = nn.Linear(self.fc.in_features, num_classes)
         self.no_grad = no_grad
@@ -144,98 +179,253 @@ class ResNet_224x224(resnet.ResNet):
         return x
 
 
-def ResNet(arch: str, channel: int, num_classes: int, im_size, record_embedding: bool = False, no_grad: bool = False,
-           pretrained: bool = False):
+def ResNet(
+    arch: str,
+    channel: int,
+    num_classes: int,
+    im_size,
+    record_embedding: bool = False,
+    no_grad: bool = False,
+    pretrained: bool = False,
+):
     arch = arch.lower()
     if pretrained:
         if arch == "resnet18":
-            net = ResNet_224x224(resnet.BasicBlock, [2, 2, 2, 2], channel=3, num_classes=1000,
-                                 record_embedding=record_embedding, no_grad=no_grad)
+            net = ResNet_224x224(
+                resnet.BasicBlock,
+                [2, 2, 2, 2],
+                channel=3,
+                num_classes=1000,
+                record_embedding=record_embedding,
+                no_grad=no_grad,
+            )
         elif arch == "resnet34":
-            net = ResNet_224x224(resnet.BasicBlock, [3, 4, 6, 3], channel=3, num_classes=1000,
-                                 record_embedding=record_embedding, no_grad=no_grad)
+            net = ResNet_224x224(
+                resnet.BasicBlock,
+                [3, 4, 6, 3],
+                channel=3,
+                num_classes=1000,
+                record_embedding=record_embedding,
+                no_grad=no_grad,
+            )
         elif arch == "resnet50":
-            net = ResNet_224x224(resnet.Bottleneck, [3, 4, 6, 3], channel=3, num_classes=1000,
-                                 record_embedding=record_embedding, no_grad=no_grad)
+            net = ResNet_224x224(
+                resnet.Bottleneck,
+                [3, 4, 6, 3],
+                channel=3,
+                num_classes=1000,
+                record_embedding=record_embedding,
+                no_grad=no_grad,
+            )
         elif arch == "resnet101":
-            net = ResNet_224x224(resnet.Bottleneck, [3, 4, 23, 3], channel=3, num_classes=1000,
-                                 record_embedding=record_embedding, no_grad=no_grad)
+            net = ResNet_224x224(
+                resnet.Bottleneck,
+                [3, 4, 23, 3],
+                channel=3,
+                num_classes=1000,
+                record_embedding=record_embedding,
+                no_grad=no_grad,
+            )
         elif arch == "resnet152":
-            net = ResNet_224x224(resnet.Bottleneck, [3, 8, 36, 3], channel=3, num_classes=1000,
-                                 record_embedding=record_embedding, no_grad=no_grad)
+            net = ResNet_224x224(
+                resnet.Bottleneck,
+                [3, 8, 36, 3],
+                channel=3,
+                num_classes=1000,
+                record_embedding=record_embedding,
+                no_grad=no_grad,
+            )
         else:
             raise ValueError("Model architecture not found.")
         from torch.hub import load_state_dict_from_url
+
         state_dict = load_state_dict_from_url(resnet.model_urls[arch], progress=True)
         net.load_state_dict(state_dict)
 
         if channel != 3:
-            net.conv1 = nn.Conv2d(channel, 64, kernel_size=7, stride=2, padding=3, bias=False)
+            net.conv1 = nn.Conv2d(
+                channel, 64, kernel_size=7, stride=2, padding=3, bias=False
+            )
         if num_classes != 1000:
             net.fc = nn.Linear(net.fc.in_features, num_classes)
 
     elif im_size[0] == 224 and im_size[1] == 224:
         if arch == "resnet18":
-            net = ResNet_224x224(resnet.BasicBlock, [2, 2, 2, 2], channel=channel, num_classes=num_classes,
-                                 record_embedding=record_embedding, no_grad=no_grad)
+            net = ResNet_224x224(
+                resnet.BasicBlock,
+                [2, 2, 2, 2],
+                channel=channel,
+                num_classes=num_classes,
+                record_embedding=record_embedding,
+                no_grad=no_grad,
+            )
         elif arch == "resnet34":
-            net = ResNet_224x224(resnet.BasicBlock, [3, 4, 6, 3], channel=channel, num_classes=num_classes,
-                                 record_embedding=record_embedding, no_grad=no_grad)
+            net = ResNet_224x224(
+                resnet.BasicBlock,
+                [3, 4, 6, 3],
+                channel=channel,
+                num_classes=num_classes,
+                record_embedding=record_embedding,
+                no_grad=no_grad,
+            )
         elif arch == "resnet50":
-            net = ResNet_224x224(resnet.Bottleneck, [3, 4, 6, 3], channel=channel, num_classes=num_classes,
-                                 record_embedding=record_embedding, no_grad=no_grad)
+            net = ResNet_224x224(
+                resnet.Bottleneck,
+                [3, 4, 6, 3],
+                channel=channel,
+                num_classes=num_classes,
+                record_embedding=record_embedding,
+                no_grad=no_grad,
+            )
         elif arch == "resnet101":
-            net = ResNet_224x224(resnet.Bottleneck, [3, 4, 23, 3], channel=channel, num_classes=num_classes,
-                                 record_embedding=record_embedding, no_grad=no_grad)
+            net = ResNet_224x224(
+                resnet.Bottleneck,
+                [3, 4, 23, 3],
+                channel=channel,
+                num_classes=num_classes,
+                record_embedding=record_embedding,
+                no_grad=no_grad,
+            )
         elif arch == "resnet152":
-            net = ResNet_224x224(resnet.Bottleneck, [3, 8, 36, 3], channel=channel, num_classes=num_classes,
-                                 record_embedding=record_embedding, no_grad=no_grad)
+            net = ResNet_224x224(
+                resnet.Bottleneck,
+                [3, 8, 36, 3],
+                channel=channel,
+                num_classes=num_classes,
+                record_embedding=record_embedding,
+                no_grad=no_grad,
+            )
         else:
             raise ValueError("Model architecture not found.")
     elif (channel == 1 and im_size[0] == 28 and im_size[1] == 28) or (
-            channel == 3 and im_size[0] == 32 and im_size[1] == 32):
+        channel == 3 and im_size[0] == 32 and im_size[1] == 32
+    ):
         if arch == "resnet18":
-            net = ResNet_32x32(BasicBlock, [2, 2, 2, 2], channel=channel, num_classes=num_classes,
-                               record_embedding=record_embedding, no_grad=no_grad)
+            net = ResNet_32x32(
+                BasicBlock,
+                [2, 2, 2, 2],
+                channel=channel,
+                num_classes=num_classes,
+                record_embedding=record_embedding,
+                no_grad=no_grad,
+            )
         elif arch == "resnet34":
-            net = ResNet_32x32(BasicBlock, [3, 4, 6, 3], channel=channel, num_classes=num_classes,
-                               record_embedding=record_embedding, no_grad=no_grad)
+            net = ResNet_32x32(
+                BasicBlock,
+                [3, 4, 6, 3],
+                channel=channel,
+                num_classes=num_classes,
+                record_embedding=record_embedding,
+                no_grad=no_grad,
+            )
         elif arch == "resnet50":
-            net = ResNet_32x32(Bottleneck, [3, 4, 6, 3], channel=channel, num_classes=num_classes,
-                               record_embedding=record_embedding, no_grad=no_grad)
+            net = ResNet_32x32(
+                Bottleneck,
+                [3, 4, 6, 3],
+                channel=channel,
+                num_classes=num_classes,
+                record_embedding=record_embedding,
+                no_grad=no_grad,
+            )
         elif arch == "resnet101":
-            net = ResNet_32x32(Bottleneck, [3, 4, 23, 3], channel=channel, num_classes=num_classes,
-                               record_embedding=record_embedding, no_grad=no_grad)
+            net = ResNet_32x32(
+                Bottleneck,
+                [3, 4, 23, 3],
+                channel=channel,
+                num_classes=num_classes,
+                record_embedding=record_embedding,
+                no_grad=no_grad,
+            )
         elif arch == "resnet152":
-            net = ResNet_32x32(Bottleneck, [3, 8, 36, 3], channel=channel, num_classes=num_classes,
-                               record_embedding=record_embedding, no_grad=no_grad)
+            net = ResNet_32x32(
+                Bottleneck,
+                [3, 8, 36, 3],
+                channel=channel,
+                num_classes=num_classes,
+                record_embedding=record_embedding,
+                no_grad=no_grad,
+            )
         else:
             raise ValueError("Model architecture not found.")
     else:
-        raise NotImplementedError("Network Architecture for current dataset has not been implemented.")
+        raise NotImplementedError(
+            "Network Architecture for current dataset has not been implemented."
+        )
     return net
 
 
-def ResNet18(channel: int, num_classes: int, im_size, record_embedding: bool = False, no_grad: bool = False,
-             pretrained: bool = False):
-    return ResNet("resnet18", channel, num_classes, im_size, record_embedding, no_grad, pretrained)
+def ResNet18(
+    channel: int,
+    num_classes: int,
+    im_size,
+    record_embedding: bool = False,
+    no_grad: bool = False,
+    pretrained: bool = False,
+):
+    return ResNet(
+        "resnet18", channel, num_classes, im_size, record_embedding, no_grad, pretrained
+    )
 
 
-def ResNet34(channel: int, num_classes: int, im_size, record_embedding: bool = False, no_grad: bool = False,
-             pretrained: bool = False):
-    return ResNet("resnet34", channel, num_classes, im_size, record_embedding, no_grad, pretrained)
+def ResNet34(
+    channel: int,
+    num_classes: int,
+    im_size,
+    record_embedding: bool = False,
+    no_grad: bool = False,
+    pretrained: bool = False,
+):
+    return ResNet(
+        "resnet34", channel, num_classes, im_size, record_embedding, no_grad, pretrained
+    )
 
 
-def ResNet50(channel: int, num_classes: int, im_size, record_embedding: bool = False, no_grad: bool = False,
-             pretrained: bool = False):
-    return ResNet("resnet50", channel, num_classes, im_size, record_embedding, no_grad, pretrained)
+def ResNet50(
+    channel: int,
+    num_classes: int,
+    im_size,
+    record_embedding: bool = False,
+    no_grad: bool = False,
+    pretrained: bool = False,
+):
+    return ResNet(
+        "resnet50", channel, num_classes, im_size, record_embedding, no_grad, pretrained
+    )
 
 
-def ResNet101(channel: int, num_classes: int, im_size, record_embedding: bool = False, no_grad: bool = False,
-              pretrained: bool = False):
-    return ResNet("resnet101", channel, num_classes, im_size, record_embedding, no_grad, pretrained)
+def ResNet101(
+    channel: int,
+    num_classes: int,
+    im_size,
+    record_embedding: bool = False,
+    no_grad: bool = False,
+    pretrained: bool = False,
+):
+    return ResNet(
+        "resnet101",
+        channel,
+        num_classes,
+        im_size,
+        record_embedding,
+        no_grad,
+        pretrained,
+    )
 
 
-def ResNet152(channel: int, num_classes: int, im_size, record_embedding: bool = False, no_grad: bool = False,
-              pretrained: bool = False):
-    return ResNet("resnet152", channel, num_classes, im_size, record_embedding, no_grad, pretrained)
+def ResNet152(
+    channel: int,
+    num_classes: int,
+    im_size,
+    record_embedding: bool = False,
+    no_grad: bool = False,
+    pretrained: bool = False,
+):
+    return ResNet(
+        "resnet152",
+        channel,
+        num_classes,
+        im_size,
+        record_embedding,
+        no_grad,
+        pretrained,
+    )

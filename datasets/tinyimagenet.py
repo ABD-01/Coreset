@@ -24,12 +24,18 @@ def TinyImageNet(data_path, downsize=True):
     mean = (0.4802, 0.4481, 0.3975)
     std = (0.2770, 0.2691, 0.2821)
 
-    transform = transforms.Compose([transforms.ToTensor(), transforms.Normalize(mean=mean, std=std)])
+    transform = transforms.Compose(
+        [transforms.ToTensor(), transforms.Normalize(mean=mean, std=std)]
+    )
     if downsize:
         transform = transforms.Compose([transforms.Resize(32), transform])
 
-    dst_train = datasets.ImageFolder(root=os.path.join(data_path, 'tiny-imagenet-200/train'), transform=transform)
-    dst_test = datasets.ImageFolder(root=os.path.join(data_path, 'tiny-imagenet-200/test'), transform=transform)
+    dst_train = datasets.ImageFolder(
+        root=os.path.join(data_path, "tiny-imagenet-200/train"), transform=transform
+    )
+    dst_test = datasets.ImageFolder(
+        root=os.path.join(data_path, "tiny-imagenet-200/test"), transform=transform
+    )
 
     class_names = dst_train.classes
     return channel, im_size, num_classes, class_names, mean, std, dst_train, dst_test
