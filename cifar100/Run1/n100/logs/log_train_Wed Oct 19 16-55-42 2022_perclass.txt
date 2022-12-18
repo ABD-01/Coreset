@@ -1,0 +1,381 @@
+2022-10-19 16:55:42,732: INFO: Command: src/train.py --output_dir Run1 --dataset CIFAR100 --topn 100 --scheduler cosineannealingwarmrestarts --T_max 10 --T_mult 2 --epochs 1200 --min_lr 0.001 --model ResNet18 --per_class 1
+2022-10-19 16:55:42,732: INFO: Hyperparameters
+{'T_max': 10,
+ 'T_mult': 2,
+ 'augment': False,
+ 'batch_size': 1000,
+ 'class_balanced': False,
+ 'dataset': 'CIFAR100',
+ 'dataset_dir': 'data',
+ 'early_stopping_delta': 0.001,
+ 'early_stopping_min_epochs': 100,
+ 'early_stopping_patience': -1,
+ 'epochs': 1200,
+ 'factor': 0.2,
+ 'gamma': 0.1,
+ 'gpu': None,
+ 'grad_path': PosixPath('cifar100/Run1'),
+ 'iter': 100,
+ 'logdir': PosixPath('cifar100/Run1/n100/logs'),
+ 'lr': 0.01,
+ 'max_lr': 0.005,
+ 'min_lr': 0.001,
+ 'model': 'ResNet18',
+ 'momentum': 0.9,
+ 'nesterov': False,
+ 'optimizer': 'sgd',
+ 'output_dir': PosixPath('cifar100/Run1/n100'),
+ 'patience': 50,
+ 'per_class': True,
+ 'pretrained': False,
+ 'r': 2,
+ 'random': False,
+ 'scheduler': 'cosineannealingwarmrestarts',
+ 'seed': 0,
+ 'step_size': 30,
+ 'temp': False,
+ 'test_model': None,
+ 'topn': 100,
+ 'train': True,
+ 'use_saved_best_inds': None,
+ 'val_batch_size': 1000,
+ 'val_percent': 0.0,
+ 'weight_decay': 0.01,
+ 'with_train': False}
+2022-10-19 16:55:43,810: INFO: Dataset
+Dataset CIFAR100
+    Number of datapoints: 50000
+    Root location: data
+    Split: Train
+    StandardTransform
+Transform: Compose(
+               ToTensor()
+               Normalize(mean=[0.5071, 0.4865, 0.4409], std=[0.2673, 0.2564, 0.2762])
+           )
+2022-10-19 16:55:43,810: INFO: Test Dataset
+Dataset CIFAR100
+    Number of datapoints: 10000
+    Root location: data
+    Split: Test
+    StandardTransform
+Transform: Compose(
+               ToTensor()
+               Normalize(mean=[0.5071, 0.4865, 0.4409], std=[0.2673, 0.2564, 0.2762])
+           )
+2022-10-19 16:55:43,827: INFO: all_similarities_perclass.shape: (100, 100, 500), all_imginds_perclass.shape: (100, 100, 500)
+2022-10-19 16:55:46,992: INFO: Model Summary
+==========================================================================================
+Layer (type:depth-idx)                   Output Shape              Param #
+==========================================================================================
+├─Conv2d: 1-1                            [-1, 64, 32, 32]          1,728
+├─BatchNorm2d: 1-2                       [-1, 64, 32, 32]          128
+├─Sequential: 1-3                        [-1, 64, 32, 32]          --
+|    └─BasicBlock: 2-1                   [-1, 64, 32, 32]          --
+|    |    └─Conv2d: 3-1                  [-1, 64, 32, 32]          36,864
+|    |    └─BatchNorm2d: 3-2             [-1, 64, 32, 32]          128
+|    |    └─Conv2d: 3-3                  [-1, 64, 32, 32]          36,864
+|    |    └─BatchNorm2d: 3-4             [-1, 64, 32, 32]          128
+|    |    └─Sequential: 3-5              [-1, 64, 32, 32]          --
+|    └─BasicBlock: 2-2                   [-1, 64, 32, 32]          --
+|    |    └─Conv2d: 3-6                  [-1, 64, 32, 32]          36,864
+|    |    └─BatchNorm2d: 3-7             [-1, 64, 32, 32]          128
+|    |    └─Conv2d: 3-8                  [-1, 64, 32, 32]          36,864
+|    |    └─BatchNorm2d: 3-9             [-1, 64, 32, 32]          128
+|    |    └─Sequential: 3-10             [-1, 64, 32, 32]          --
+├─Sequential: 1-4                        [-1, 128, 16, 16]         --
+|    └─BasicBlock: 2-3                   [-1, 128, 16, 16]         --
+|    |    └─Conv2d: 3-11                 [-1, 128, 16, 16]         73,728
+|    |    └─BatchNorm2d: 3-12            [-1, 128, 16, 16]         256
+|    |    └─Conv2d: 3-13                 [-1, 128, 16, 16]         147,456
+|    |    └─BatchNorm2d: 3-14            [-1, 128, 16, 16]         256
+|    |    └─Sequential: 3-15             [-1, 128, 16, 16]         8,448
+|    └─BasicBlock: 2-4                   [-1, 128, 16, 16]         --
+|    |    └─Conv2d: 3-16                 [-1, 128, 16, 16]         147,456
+|    |    └─BatchNorm2d: 3-17            [-1, 128, 16, 16]         256
+|    |    └─Conv2d: 3-18                 [-1, 128, 16, 16]         147,456
+|    |    └─BatchNorm2d: 3-19            [-1, 128, 16, 16]         256
+|    |    └─Sequential: 3-20             [-1, 128, 16, 16]         --
+├─Sequential: 1-5                        [-1, 256, 8, 8]           --
+|    └─BasicBlock: 2-5                   [-1, 256, 8, 8]           --
+|    |    └─Conv2d: 3-21                 [-1, 256, 8, 8]           294,912
+|    |    └─BatchNorm2d: 3-22            [-1, 256, 8, 8]           512
+|    |    └─Conv2d: 3-23                 [-1, 256, 8, 8]           589,824
+|    |    └─BatchNorm2d: 3-24            [-1, 256, 8, 8]           512
+|    |    └─Sequential: 3-25             [-1, 256, 8, 8]           33,280
+|    └─BasicBlock: 2-6                   [-1, 256, 8, 8]           --
+|    |    └─Conv2d: 3-26                 [-1, 256, 8, 8]           589,824
+|    |    └─BatchNorm2d: 3-27            [-1, 256, 8, 8]           512
+|    |    └─Conv2d: 3-28                 [-1, 256, 8, 8]           589,824
+|    |    └─BatchNorm2d: 3-29            [-1, 256, 8, 8]           512
+|    |    └─Sequential: 3-30             [-1, 256, 8, 8]           --
+├─Sequential: 1-6                        [-1, 512, 4, 4]           --
+|    └─BasicBlock: 2-7                   [-1, 512, 4, 4]           --
+|    |    └─Conv2d: 3-31                 [-1, 512, 4, 4]           1,179,648
+|    |    └─BatchNorm2d: 3-32            [-1, 512, 4, 4]           1,024
+|    |    └─Conv2d: 3-33                 [-1, 512, 4, 4]           2,359,296
+|    |    └─BatchNorm2d: 3-34            [-1, 512, 4, 4]           1,024
+|    |    └─Sequential: 3-35             [-1, 512, 4, 4]           132,096
+|    └─BasicBlock: 2-8                   [-1, 512, 4, 4]           --
+|    |    └─Conv2d: 3-36                 [-1, 512, 4, 4]           2,359,296
+|    |    └─BatchNorm2d: 3-37            [-1, 512, 4, 4]           1,024
+|    |    └─Conv2d: 3-38                 [-1, 512, 4, 4]           2,359,296
+|    |    └─BatchNorm2d: 3-39            [-1, 512, 4, 4]           1,024
+|    |    └─Sequential: 3-40             [-1, 512, 4, 4]           --
+├─EmbeddingRecorder: 1-7                 [-1, 512]                 --
+├─Linear: 1-8                            [-1, 100]                 51,300
+==========================================================================================
+Total params: 11,220,132
+Trainable params: 11,220,132
+Non-trainable params: 0
+Total mult-adds (M): 577.97
+==========================================================================================
+Input size (MB): 0.01
+Forward/backward pass size (MB): 9.38
+Params size (MB): 42.80
+Estimated Total Size (MB): 52.19
+==========================================================================================
+2022-10-19 16:56:01,877: INFO: Epoch[   1] Loss: 0.05	Accuracy: 2.000	Val_Loss: 0.005	Val_Acc: 0.010
+2022-10-19 16:56:01,877: INFO: Epoch[   1] Test Accuracy: 1.020
+2022-10-19 16:56:15,540: INFO: Epoch[  11] Loss: 0.02	Accuracy: 100.000	Val_Loss: 0.005	Val_Acc: 0.010
+2022-10-19 16:56:15,540: INFO: Epoch[  11] Test Accuracy: 1.000
+2022-10-19 16:56:28,987: INFO: Epoch[  21] Loss: 0.00	Accuracy: 100.000	Val_Loss: 0.005	Val_Acc: 0.015
+2022-10-19 16:56:28,987: INFO: Epoch[  21] Test Accuracy: 1.430
+2022-10-19 16:56:42,404: INFO: Epoch[  31] Loss: 0.00	Accuracy: 100.000	Val_Loss: 0.005	Val_Acc: 0.023
+2022-10-19 16:56:42,404: INFO: Epoch[  31] Test Accuracy: 2.400
+2022-10-19 16:56:55,933: INFO: Epoch[  41] Loss: 0.00	Accuracy: 100.000	Val_Loss: 0.005	Val_Acc: 0.040
+2022-10-19 16:56:55,933: INFO: Epoch[  41] Test Accuracy: 4.060
+2022-10-19 16:57:09,457: INFO: Epoch[  51] Loss: 0.00	Accuracy: 100.000	Val_Loss: 0.005	Val_Acc: 0.049
+2022-10-19 16:57:09,458: INFO: Epoch[  51] Test Accuracy: 4.930
+2022-10-19 16:57:23,005: INFO: Epoch[  61] Loss: 0.00	Accuracy: 100.000	Val_Loss: 0.004	Val_Acc: 0.054
+2022-10-19 16:57:23,005: INFO: Epoch[  61] Test Accuracy: 5.380
+2022-10-19 16:57:36,573: INFO: Epoch[  71] Loss: 0.00	Accuracy: 100.000	Val_Loss: 0.004	Val_Acc: 0.055
+2022-10-19 16:57:36,573: INFO: Epoch[  71] Test Accuracy: 5.550
+2022-10-19 16:57:50,128: INFO: Epoch[  81] Loss: 0.00	Accuracy: 100.000	Val_Loss: 0.004	Val_Acc: 0.054
+2022-10-19 16:57:50,128: INFO: Epoch[  81] Test Accuracy: 5.480
+2022-10-19 16:58:03,626: INFO: Epoch[  91] Loss: 0.00	Accuracy: 100.000	Val_Loss: 0.004	Val_Acc: 0.054
+2022-10-19 16:58:03,626: INFO: Epoch[  91] Test Accuracy: 5.520
+2022-10-19 16:58:17,115: INFO: Epoch[ 101] Loss: 0.00	Accuracy: 100.000	Val_Loss: 0.004	Val_Acc: 0.054
+2022-10-19 16:58:17,116: INFO: Epoch[ 101] Test Accuracy: 5.550
+2022-10-19 16:58:30,673: INFO: Epoch[ 111] Loss: 0.00	Accuracy: 100.000	Val_Loss: 0.004	Val_Acc: 0.055
+2022-10-19 16:58:30,673: INFO: Epoch[ 111] Test Accuracy: 5.590
+2022-10-19 16:58:44,235: INFO: Epoch[ 121] Loss: 0.00	Accuracy: 100.000	Val_Loss: 0.004	Val_Acc: 0.056
+2022-10-19 16:58:44,236: INFO: Epoch[ 121] Test Accuracy: 5.590
+2022-10-19 16:58:57,759: INFO: Epoch[ 131] Loss: 0.00	Accuracy: 100.000	Val_Loss: 0.004	Val_Acc: 0.056
+2022-10-19 16:58:57,759: INFO: Epoch[ 131] Test Accuracy: 5.580
+2022-10-19 16:59:11,295: INFO: Epoch[ 141] Loss: 0.00	Accuracy: 100.000	Val_Loss: 0.004	Val_Acc: 0.057
+2022-10-19 16:59:11,296: INFO: Epoch[ 141] Test Accuracy: 5.580
+2022-10-19 16:59:24,835: INFO: Epoch[ 151] Loss: 0.00	Accuracy: 100.000	Val_Loss: 0.004	Val_Acc: 0.057
+2022-10-19 16:59:24,835: INFO: Epoch[ 151] Test Accuracy: 5.590
+2022-10-19 16:59:38,366: INFO: Epoch[ 161] Loss: 0.00	Accuracy: 100.000	Val_Loss: 0.004	Val_Acc: 0.056
+2022-10-19 16:59:38,367: INFO: Epoch[ 161] Test Accuracy: 5.560
+2022-10-19 16:59:51,886: INFO: Epoch[ 171] Loss: 0.00	Accuracy: 100.000	Val_Loss: 0.004	Val_Acc: 0.055
+2022-10-19 16:59:51,887: INFO: Epoch[ 171] Test Accuracy: 5.600
+2022-10-19 17:00:05,287: INFO: Epoch[ 181] Loss: 0.00	Accuracy: 100.000	Val_Loss: 0.004	Val_Acc: 0.054
+2022-10-19 17:00:05,287: INFO: Epoch[ 181] Test Accuracy: 5.580
+2022-10-19 17:00:18,672: INFO: Epoch[ 191] Loss: 0.00	Accuracy: 100.000	Val_Loss: 0.004	Val_Acc: 0.055
+2022-10-19 17:00:18,673: INFO: Epoch[ 191] Test Accuracy: 5.630
+2022-10-19 17:00:32,176: INFO: Epoch[ 201] Loss: 0.00	Accuracy: 100.000	Val_Loss: 0.004	Val_Acc: 0.055
+2022-10-19 17:00:32,176: INFO: Epoch[ 201] Test Accuracy: 5.540
+2022-10-19 17:00:45,700: INFO: Epoch[ 211] Loss: 0.00	Accuracy: 100.000	Val_Loss: 0.004	Val_Acc: 0.056
+2022-10-19 17:00:45,700: INFO: Epoch[ 211] Test Accuracy: 5.610
+2022-10-19 17:00:59,327: INFO: Epoch[ 221] Loss: 0.00	Accuracy: 100.000	Val_Loss: 0.004	Val_Acc: 0.056
+2022-10-19 17:00:59,327: INFO: Epoch[ 221] Test Accuracy: 5.640
+2022-10-19 17:01:12,993: INFO: Epoch[ 231] Loss: 0.00	Accuracy: 100.000	Val_Loss: 0.004	Val_Acc: 0.057
+2022-10-19 17:01:12,994: INFO: Epoch[ 231] Test Accuracy: 5.590
+2022-10-19 17:01:26,600: INFO: Epoch[ 241] Loss: 0.00	Accuracy: 100.000	Val_Loss: 0.004	Val_Acc: 0.057
+2022-10-19 17:01:26,601: INFO: Epoch[ 241] Test Accuracy: 5.500
+2022-10-19 17:01:40,201: INFO: Epoch[ 251] Loss: 0.00	Accuracy: 100.000	Val_Loss: 0.004	Val_Acc: 0.057
+2022-10-19 17:01:40,201: INFO: Epoch[ 251] Test Accuracy: 5.550
+2022-10-19 17:01:53,788: INFO: Epoch[ 261] Loss: 0.00	Accuracy: 100.000	Val_Loss: 0.004	Val_Acc: 0.057
+2022-10-19 17:01:53,788: INFO: Epoch[ 261] Test Accuracy: 5.610
+2022-10-19 17:02:07,432: INFO: Epoch[ 271] Loss: 0.00	Accuracy: 100.000	Val_Loss: 0.004	Val_Acc: 0.058
+2022-10-19 17:02:07,432: INFO: Epoch[ 271] Test Accuracy: 5.540
+2022-10-19 17:02:21,083: INFO: Epoch[ 281] Loss: 0.00	Accuracy: 100.000	Val_Loss: 0.004	Val_Acc: 0.058
+2022-10-19 17:02:21,083: INFO: Epoch[ 281] Test Accuracy: 5.690
+2022-10-19 17:02:34,717: INFO: Epoch[ 291] Loss: 0.00	Accuracy: 100.000	Val_Loss: 0.004	Val_Acc: 0.058
+2022-10-19 17:02:34,717: INFO: Epoch[ 291] Test Accuracy: 5.680
+2022-10-19 17:02:48,355: INFO: Epoch[ 301] Loss: 0.00	Accuracy: 100.000	Val_Loss: 0.004	Val_Acc: 0.057
+2022-10-19 17:02:48,355: INFO: Epoch[ 301] Test Accuracy: 5.650
+2022-10-19 17:03:01,871: INFO: Epoch[ 311] Loss: 0.00	Accuracy: 100.000	Val_Loss: 0.004	Val_Acc: 0.058
+2022-10-19 17:03:01,871: INFO: Epoch[ 311] Test Accuracy: 5.640
+2022-10-19 17:03:15,404: INFO: Epoch[ 321] Loss: 0.00	Accuracy: 100.000	Val_Loss: 0.004	Val_Acc: 0.057
+2022-10-19 17:03:15,404: INFO: Epoch[ 321] Test Accuracy: 5.630
+2022-10-19 17:03:28,928: INFO: Epoch[ 331] Loss: 0.00	Accuracy: 100.000	Val_Loss: 0.004	Val_Acc: 0.056
+2022-10-19 17:03:28,929: INFO: Epoch[ 331] Test Accuracy: 5.560
+2022-10-19 17:03:42,447: INFO: Epoch[ 341] Loss: 0.00	Accuracy: 100.000	Val_Loss: 0.004	Val_Acc: 0.055
+2022-10-19 17:03:42,447: INFO: Epoch[ 341] Test Accuracy: 5.500
+2022-10-19 17:03:55,943: INFO: Epoch[ 351] Loss: 0.00	Accuracy: 100.000	Val_Loss: 0.004	Val_Acc: 0.055
+2022-10-19 17:03:55,943: INFO: Epoch[ 351] Test Accuracy: 5.500
+2022-10-19 17:04:09,479: INFO: Epoch[ 361] Loss: 0.00	Accuracy: 100.000	Val_Loss: 0.004	Val_Acc: 0.056
+2022-10-19 17:04:09,479: INFO: Epoch[ 361] Test Accuracy: 5.500
+2022-10-19 17:04:23,026: INFO: Epoch[ 371] Loss: 0.00	Accuracy: 100.000	Val_Loss: 0.004	Val_Acc: 0.056
+2022-10-19 17:04:23,026: INFO: Epoch[ 371] Test Accuracy: 5.480
+2022-10-19 17:04:36,545: INFO: Epoch[ 381] Loss: 0.00	Accuracy: 100.000	Val_Loss: 0.004	Val_Acc: 0.056
+2022-10-19 17:04:36,546: INFO: Epoch[ 381] Test Accuracy: 5.490
+2022-10-19 17:04:50,059: INFO: Epoch[ 391] Loss: 0.00	Accuracy: 100.000	Val_Loss: 0.004	Val_Acc: 0.056
+2022-10-19 17:04:50,059: INFO: Epoch[ 391] Test Accuracy: 5.530
+2022-10-19 17:05:03,594: INFO: Epoch[ 401] Loss: 0.00	Accuracy: 100.000	Val_Loss: 0.004	Val_Acc: 0.057
+2022-10-19 17:05:03,594: INFO: Epoch[ 401] Test Accuracy: 5.560
+2022-10-19 17:05:17,104: INFO: Epoch[ 411] Loss: 0.00	Accuracy: 100.000	Val_Loss: 0.004	Val_Acc: 0.057
+2022-10-19 17:05:17,104: INFO: Epoch[ 411] Test Accuracy: 5.550
+2022-10-19 17:05:30,630: INFO: Epoch[ 421] Loss: 0.00	Accuracy: 100.000	Val_Loss: 0.004	Val_Acc: 0.057
+2022-10-19 17:05:30,630: INFO: Epoch[ 421] Test Accuracy: 5.530
+2022-10-19 17:05:44,161: INFO: Epoch[ 431] Loss: 0.00	Accuracy: 100.000	Val_Loss: 0.004	Val_Acc: 0.057
+2022-10-19 17:05:44,161: INFO: Epoch[ 431] Test Accuracy: 5.470
+2022-10-19 17:05:57,682: INFO: Epoch[ 441] Loss: 0.00	Accuracy: 100.000	Val_Loss: 0.004	Val_Acc: 0.058
+2022-10-19 17:05:57,682: INFO: Epoch[ 441] Test Accuracy: 5.470
+2022-10-19 17:06:11,233: INFO: Epoch[ 451] Loss: 0.00	Accuracy: 100.000	Val_Loss: 0.004	Val_Acc: 0.058
+2022-10-19 17:06:11,233: INFO: Epoch[ 451] Test Accuracy: 5.520
+2022-10-19 17:06:24,800: INFO: Epoch[ 461] Loss: 0.00	Accuracy: 100.000	Val_Loss: 0.004	Val_Acc: 0.058
+2022-10-19 17:06:24,800: INFO: Epoch[ 461] Test Accuracy: 5.560
+2022-10-19 17:06:38,372: INFO: Epoch[ 471] Loss: 0.00	Accuracy: 100.000	Val_Loss: 0.004	Val_Acc: 0.058
+2022-10-19 17:06:38,372: INFO: Epoch[ 471] Test Accuracy: 5.560
+2022-10-19 17:06:52,061: INFO: Epoch[ 481] Loss: 0.00	Accuracy: 100.000	Val_Loss: 0.004	Val_Acc: 0.059
+2022-10-19 17:06:52,061: INFO: Epoch[ 481] Test Accuracy: 5.590
+2022-10-19 17:07:05,731: INFO: Epoch[ 491] Loss: 0.00	Accuracy: 100.000	Val_Loss: 0.004	Val_Acc: 0.059
+2022-10-19 17:07:05,731: INFO: Epoch[ 491] Test Accuracy: 5.620
+2022-10-19 17:07:19,398: INFO: Epoch[ 501] Loss: 0.00	Accuracy: 100.000	Val_Loss: 0.004	Val_Acc: 0.059
+2022-10-19 17:07:19,398: INFO: Epoch[ 501] Test Accuracy: 5.680
+2022-10-19 17:07:33,009: INFO: Epoch[ 511] Loss: 0.00	Accuracy: 100.000	Val_Loss: 0.004	Val_Acc: 0.059
+2022-10-19 17:07:33,009: INFO: Epoch[ 511] Test Accuracy: 5.690
+2022-10-19 17:07:46,615: INFO: Epoch[ 521] Loss: 0.00	Accuracy: 100.000	Val_Loss: 0.004	Val_Acc: 0.059
+2022-10-19 17:07:46,615: INFO: Epoch[ 521] Test Accuracy: 5.680
+2022-10-19 17:08:00,225: INFO: Epoch[ 531] Loss: 0.00	Accuracy: 100.000	Val_Loss: 0.004	Val_Acc: 0.059
+2022-10-19 17:08:00,225: INFO: Epoch[ 531] Test Accuracy: 5.600
+2022-10-19 17:08:13,768: INFO: Epoch[ 541] Loss: 0.00	Accuracy: 100.000	Val_Loss: 0.004	Val_Acc: 0.059
+2022-10-19 17:08:13,769: INFO: Epoch[ 541] Test Accuracy: 5.620
+2022-10-19 17:08:27,298: INFO: Epoch[ 551] Loss: 0.00	Accuracy: 100.000	Val_Loss: 0.004	Val_Acc: 0.059
+2022-10-19 17:08:27,298: INFO: Epoch[ 551] Test Accuracy: 5.650
+2022-10-19 17:08:40,862: INFO: Epoch[ 561] Loss: 0.00	Accuracy: 100.000	Val_Loss: 0.004	Val_Acc: 0.059
+2022-10-19 17:08:40,862: INFO: Epoch[ 561] Test Accuracy: 5.660
+2022-10-19 17:08:54,468: INFO: Epoch[ 571] Loss: 0.00	Accuracy: 100.000	Val_Loss: 0.004	Val_Acc: 0.059
+2022-10-19 17:08:54,468: INFO: Epoch[ 571] Test Accuracy: 5.670
+2022-10-19 17:09:08,101: INFO: Epoch[ 581] Loss: 0.00	Accuracy: 100.000	Val_Loss: 0.004	Val_Acc: 0.059
+2022-10-19 17:09:08,101: INFO: Epoch[ 581] Test Accuracy: 5.700
+2022-10-19 17:09:21,737: INFO: Epoch[ 591] Loss: 0.00	Accuracy: 100.000	Val_Loss: 0.004	Val_Acc: 0.059
+2022-10-19 17:09:21,737: INFO: Epoch[ 591] Test Accuracy: 5.690
+2022-10-19 17:09:35,348: INFO: Epoch[ 601] Loss: 0.00	Accuracy: 100.000	Val_Loss: 0.004	Val_Acc: 0.059
+2022-10-19 17:09:35,348: INFO: Epoch[ 601] Test Accuracy: 5.720
+2022-10-19 17:09:48,961: INFO: Epoch[ 611] Loss: 0.00	Accuracy: 100.000	Val_Loss: 0.004	Val_Acc: 0.059
+2022-10-19 17:09:48,961: INFO: Epoch[ 611] Test Accuracy: 5.700
+2022-10-19 17:10:02,579: INFO: Epoch[ 621] Loss: 0.00	Accuracy: 100.000	Val_Loss: 0.004	Val_Acc: 0.059
+2022-10-19 17:10:02,579: INFO: Epoch[ 621] Test Accuracy: 5.710
+2022-10-19 17:10:16,211: INFO: Epoch[ 631] Loss: 0.00	Accuracy: 100.000	Val_Loss: 0.004	Val_Acc: 0.059
+2022-10-19 17:10:16,211: INFO: Epoch[ 631] Test Accuracy: 5.680
+2022-10-19 17:10:29,848: INFO: Epoch[ 641] Loss: 0.00	Accuracy: 100.000	Val_Loss: 0.004	Val_Acc: 0.058
+2022-10-19 17:10:29,849: INFO: Epoch[ 641] Test Accuracy: 5.600
+2022-10-19 17:10:43,461: INFO: Epoch[ 651] Loss: 0.00	Accuracy: 100.000	Val_Loss: 0.004	Val_Acc: 0.057
+2022-10-19 17:10:43,461: INFO: Epoch[ 651] Test Accuracy: 5.560
+2022-10-19 17:10:57,081: INFO: Epoch[ 661] Loss: 0.00	Accuracy: 100.000	Val_Loss: 0.004	Val_Acc: 0.057
+2022-10-19 17:10:57,082: INFO: Epoch[ 661] Test Accuracy: 5.480
+2022-10-19 17:11:10,791: INFO: Epoch[ 671] Loss: 0.00	Accuracy: 100.000	Val_Loss: 0.004	Val_Acc: 0.057
+2022-10-19 17:11:10,792: INFO: Epoch[ 671] Test Accuracy: 5.470
+2022-10-19 17:11:24,691: INFO: Epoch[ 681] Loss: 0.00	Accuracy: 100.000	Val_Loss: 0.004	Val_Acc: 0.057
+2022-10-19 17:11:24,691: INFO: Epoch[ 681] Test Accuracy: 5.490
+2022-10-19 17:11:38,609: INFO: Epoch[ 691] Loss: 0.00	Accuracy: 100.000	Val_Loss: 0.004	Val_Acc: 0.057
+2022-10-19 17:11:38,609: INFO: Epoch[ 691] Test Accuracy: 5.470
+2022-10-19 17:11:52,246: INFO: Epoch[ 701] Loss: 0.00	Accuracy: 100.000	Val_Loss: 0.004	Val_Acc: 0.057
+2022-10-19 17:11:52,246: INFO: Epoch[ 701] Test Accuracy: 5.490
+2022-10-19 17:12:05,917: INFO: Epoch[ 711] Loss: 0.00	Accuracy: 100.000	Val_Loss: 0.004	Val_Acc: 0.057
+2022-10-19 17:12:05,917: INFO: Epoch[ 711] Test Accuracy: 5.490
+2022-10-19 17:12:19,586: INFO: Epoch[ 721] Loss: 0.00	Accuracy: 100.000	Val_Loss: 0.004	Val_Acc: 0.058
+2022-10-19 17:12:19,587: INFO: Epoch[ 721] Test Accuracy: 5.500
+2022-10-19 17:12:33,243: INFO: Epoch[ 731] Loss: 0.00	Accuracy: 100.000	Val_Loss: 0.004	Val_Acc: 0.058
+2022-10-19 17:12:33,243: INFO: Epoch[ 731] Test Accuracy: 5.520
+2022-10-19 17:12:46,944: INFO: Epoch[ 741] Loss: 0.00	Accuracy: 100.000	Val_Loss: 0.004	Val_Acc: 0.058
+2022-10-19 17:12:46,944: INFO: Epoch[ 741] Test Accuracy: 5.570
+2022-10-19 17:13:00,614: INFO: Epoch[ 751] Loss: 0.00	Accuracy: 100.000	Val_Loss: 0.004	Val_Acc: 0.058
+2022-10-19 17:13:00,614: INFO: Epoch[ 751] Test Accuracy: 5.580
+2022-10-19 17:13:14,330: INFO: Epoch[ 761] Loss: 0.00	Accuracy: 100.000	Val_Loss: 0.004	Val_Acc: 0.058
+2022-10-19 17:13:14,330: INFO: Epoch[ 761] Test Accuracy: 5.560
+2022-10-19 17:13:28,056: INFO: Epoch[ 771] Loss: 0.00	Accuracy: 100.000	Val_Loss: 0.004	Val_Acc: 0.058
+2022-10-19 17:13:28,056: INFO: Epoch[ 771] Test Accuracy: 5.550
+2022-10-19 17:13:41,775: INFO: Epoch[ 781] Loss: 0.00	Accuracy: 100.000	Val_Loss: 0.004	Val_Acc: 0.058
+2022-10-19 17:13:41,775: INFO: Epoch[ 781] Test Accuracy: 5.540
+2022-10-19 17:13:55,514: INFO: Epoch[ 791] Loss: 0.00	Accuracy: 100.000	Val_Loss: 0.004	Val_Acc: 0.058
+2022-10-19 17:13:55,514: INFO: Epoch[ 791] Test Accuracy: 5.560
+2022-10-19 17:14:09,196: INFO: Epoch[ 801] Loss: 0.00	Accuracy: 100.000	Val_Loss: 0.004	Val_Acc: 0.059
+2022-10-19 17:14:09,196: INFO: Epoch[ 801] Test Accuracy: 5.570
+2022-10-19 17:14:22,894: INFO: Epoch[ 811] Loss: 0.00	Accuracy: 100.000	Val_Loss: 0.004	Val_Acc: 0.059
+2022-10-19 17:14:22,894: INFO: Epoch[ 811] Test Accuracy: 5.620
+2022-10-19 17:14:36,607: INFO: Epoch[ 821] Loss: 0.00	Accuracy: 100.000	Val_Loss: 0.004	Val_Acc: 0.059
+2022-10-19 17:14:36,607: INFO: Epoch[ 821] Test Accuracy: 5.620
+2022-10-19 17:14:50,320: INFO: Epoch[ 831] Loss: 0.00	Accuracy: 100.000	Val_Loss: 0.004	Val_Acc: 0.059
+2022-10-19 17:14:50,320: INFO: Epoch[ 831] Test Accuracy: 5.650
+2022-10-19 17:15:04,075: INFO: Epoch[ 841] Loss: 0.00	Accuracy: 100.000	Val_Loss: 0.004	Val_Acc: 0.059
+2022-10-19 17:15:04,075: INFO: Epoch[ 841] Test Accuracy: 5.640
+2022-10-19 17:15:17,759: INFO: Epoch[ 851] Loss: 0.00	Accuracy: 100.000	Val_Loss: 0.004	Val_Acc: 0.059
+2022-10-19 17:15:17,759: INFO: Epoch[ 851] Test Accuracy: 5.650
+2022-10-19 17:15:31,458: INFO: Epoch[ 861] Loss: 0.00	Accuracy: 100.000	Val_Loss: 0.004	Val_Acc: 0.059
+2022-10-19 17:15:31,458: INFO: Epoch[ 861] Test Accuracy: 5.710
+2022-10-19 17:15:45,145: INFO: Epoch[ 871] Loss: 0.00	Accuracy: 100.000	Val_Loss: 0.004	Val_Acc: 0.059
+2022-10-19 17:15:45,145: INFO: Epoch[ 871] Test Accuracy: 5.720
+2022-10-19 17:15:58,796: INFO: Epoch[ 881] Loss: 0.00	Accuracy: 100.000	Val_Loss: 0.004	Val_Acc: 0.060
+2022-10-19 17:15:58,796: INFO: Epoch[ 881] Test Accuracy: 5.750
+2022-10-19 17:16:12,442: INFO: Epoch[ 891] Loss: 0.00	Accuracy: 100.000	Val_Loss: 0.004	Val_Acc: 0.060
+2022-10-19 17:16:12,442: INFO: Epoch[ 891] Test Accuracy: 5.700
+2022-10-19 17:16:26,110: INFO: Epoch[ 901] Loss: 0.00	Accuracy: 100.000	Val_Loss: 0.004	Val_Acc: 0.060
+2022-10-19 17:16:26,110: INFO: Epoch[ 901] Test Accuracy: 5.740
+2022-10-19 17:16:39,764: INFO: Epoch[ 911] Loss: 0.00	Accuracy: 100.000	Val_Loss: 0.004	Val_Acc: 0.060
+2022-10-19 17:16:39,764: INFO: Epoch[ 911] Test Accuracy: 5.720
+2022-10-19 17:16:53,427: INFO: Epoch[ 921] Loss: 0.00	Accuracy: 100.000	Val_Loss: 0.004	Val_Acc: 0.059
+2022-10-19 17:16:53,427: INFO: Epoch[ 921] Test Accuracy: 5.700
+2022-10-19 17:17:07,060: INFO: Epoch[ 931] Loss: 0.00	Accuracy: 100.000	Val_Loss: 0.004	Val_Acc: 0.060
+2022-10-19 17:17:07,060: INFO: Epoch[ 931] Test Accuracy: 5.640
+2022-10-19 17:17:20,695: INFO: Epoch[ 941] Loss: 0.00	Accuracy: 100.000	Val_Loss: 0.004	Val_Acc: 0.059
+2022-10-19 17:17:20,695: INFO: Epoch[ 941] Test Accuracy: 5.690
+2022-10-19 17:17:34,331: INFO: Epoch[ 951] Loss: 0.00	Accuracy: 100.000	Val_Loss: 0.004	Val_Acc: 0.060
+2022-10-19 17:17:34,332: INFO: Epoch[ 951] Test Accuracy: 5.640
+2022-10-19 17:17:47,973: INFO: Epoch[ 961] Loss: 0.00	Accuracy: 100.000	Val_Loss: 0.004	Val_Acc: 0.059
+2022-10-19 17:17:47,973: INFO: Epoch[ 961] Test Accuracy: 5.660
+2022-10-19 17:18:01,624: INFO: Epoch[ 971] Loss: 0.00	Accuracy: 100.000	Val_Loss: 0.004	Val_Acc: 0.060
+2022-10-19 17:18:01,624: INFO: Epoch[ 971] Test Accuracy: 5.740
+2022-10-19 17:18:15,278: INFO: Epoch[ 981] Loss: 0.00	Accuracy: 100.000	Val_Loss: 0.004	Val_Acc: 0.060
+2022-10-19 17:18:15,278: INFO: Epoch[ 981] Test Accuracy: 5.750
+2022-10-19 17:18:28,928: INFO: Epoch[ 991] Loss: 0.00	Accuracy: 100.000	Val_Loss: 0.004	Val_Acc: 0.060
+2022-10-19 17:18:28,928: INFO: Epoch[ 991] Test Accuracy: 5.730
+2022-10-19 17:18:42,564: INFO: Epoch[1001] Loss: 0.00	Accuracy: 100.000	Val_Loss: 0.004	Val_Acc: 0.060
+2022-10-19 17:18:42,564: INFO: Epoch[1001] Test Accuracy: 5.730
+2022-10-19 17:18:56,186: INFO: Epoch[1011] Loss: 0.00	Accuracy: 100.000	Val_Loss: 0.004	Val_Acc: 0.060
+2022-10-19 17:18:56,187: INFO: Epoch[1011] Test Accuracy: 5.770
+2022-10-19 17:19:09,807: INFO: Epoch[1021] Loss: 0.00	Accuracy: 100.000	Val_Loss: 0.004	Val_Acc: 0.060
+2022-10-19 17:19:09,807: INFO: Epoch[1021] Test Accuracy: 5.770
+2022-10-19 17:19:23,428: INFO: Epoch[1031] Loss: 0.00	Accuracy: 100.000	Val_Loss: 0.004	Val_Acc: 0.060
+2022-10-19 17:19:23,428: INFO: Epoch[1031] Test Accuracy: 5.740
+2022-10-19 17:19:37,053: INFO: Epoch[1041] Loss: 0.00	Accuracy: 100.000	Val_Loss: 0.004	Val_Acc: 0.060
+2022-10-19 17:19:37,053: INFO: Epoch[1041] Test Accuracy: 5.790
+2022-10-19 17:19:50,698: INFO: Epoch[1051] Loss: 0.00	Accuracy: 100.000	Val_Loss: 0.004	Val_Acc: 0.060
+2022-10-19 17:19:50,699: INFO: Epoch[1051] Test Accuracy: 5.790
+2022-10-19 17:20:04,279: INFO: Epoch[1061] Loss: 0.00	Accuracy: 100.000	Val_Loss: 0.004	Val_Acc: 0.059
+2022-10-19 17:20:04,279: INFO: Epoch[1061] Test Accuracy: 5.810
+2022-10-19 17:20:17,899: INFO: Epoch[1071] Loss: 0.00	Accuracy: 100.000	Val_Loss: 0.004	Val_Acc: 0.059
+2022-10-19 17:20:17,899: INFO: Epoch[1071] Test Accuracy: 5.840
+2022-10-19 17:20:31,546: INFO: Epoch[1081] Loss: 0.00	Accuracy: 100.000	Val_Loss: 0.004	Val_Acc: 0.059
+2022-10-19 17:20:31,546: INFO: Epoch[1081] Test Accuracy: 5.800
+2022-10-19 17:20:45,170: INFO: Epoch[1091] Loss: 0.00	Accuracy: 100.000	Val_Loss: 0.004	Val_Acc: 0.059
+2022-10-19 17:20:45,170: INFO: Epoch[1091] Test Accuracy: 5.830
+2022-10-19 17:20:58,746: INFO: Epoch[1101] Loss: 0.00	Accuracy: 100.000	Val_Loss: 0.004	Val_Acc: 0.059
+2022-10-19 17:20:58,746: INFO: Epoch[1101] Test Accuracy: 5.850
+2022-10-19 17:21:12,368: INFO: Epoch[1111] Loss: 0.00	Accuracy: 100.000	Val_Loss: 0.004	Val_Acc: 0.059
+2022-10-19 17:21:12,368: INFO: Epoch[1111] Test Accuracy: 5.850
+2022-10-19 17:21:25,991: INFO: Epoch[1121] Loss: 0.00	Accuracy: 100.000	Val_Loss: 0.004	Val_Acc: 0.060
+2022-10-19 17:21:25,992: INFO: Epoch[1121] Test Accuracy: 5.870
+2022-10-19 17:21:39,622: INFO: Epoch[1131] Loss: 0.00	Accuracy: 100.000	Val_Loss: 0.004	Val_Acc: 0.059
+2022-10-19 17:21:39,623: INFO: Epoch[1131] Test Accuracy: 5.870
+2022-10-19 17:21:53,226: INFO: Epoch[1141] Loss: 0.00	Accuracy: 100.000	Val_Loss: 0.004	Val_Acc: 0.059
+2022-10-19 17:21:53,226: INFO: Epoch[1141] Test Accuracy: 5.890
+2022-10-19 17:22:06,843: INFO: Epoch[1151] Loss: 0.00	Accuracy: 100.000	Val_Loss: 0.004	Val_Acc: 0.059
+2022-10-19 17:22:06,843: INFO: Epoch[1151] Test Accuracy: 5.890
+2022-10-19 17:22:20,445: INFO: Epoch[1161] Loss: 0.00	Accuracy: 100.000	Val_Loss: 0.004	Val_Acc: 0.060
+2022-10-19 17:22:20,445: INFO: Epoch[1161] Test Accuracy: 5.890
+2022-10-19 17:22:34,067: INFO: Epoch[1171] Loss: 0.00	Accuracy: 100.000	Val_Loss: 0.004	Val_Acc: 0.060
+2022-10-19 17:22:34,067: INFO: Epoch[1171] Test Accuracy: 5.900
+2022-10-19 17:22:47,681: INFO: Epoch[1181] Loss: 0.00	Accuracy: 100.000	Val_Loss: 0.004	Val_Acc: 0.060
+2022-10-19 17:22:47,682: INFO: Epoch[1181] Test Accuracy: 5.880
+2022-10-19 17:23:01,292: INFO: Epoch[1191] Loss: 0.00	Accuracy: 100.000	Val_Loss: 0.004	Val_Acc: 0.060
+2022-10-19 17:23:01,292: INFO: Epoch[1191] Test Accuracy: 5.880
+2022-10-19 17:23:02,070: INFO: ('Accuracy on Train Set', 1.0)
+2022-10-19 17:23:04,240: INFO: (587, 'correctly labeled out of', 10000)
+2022-10-19 17:23:04,240: INFO: ('Accuracy on Test Set:', 5.87)
+2022-10-19 17:23:04,294: INFO: Saved model at cifar100/Run1/n100/Greedy_Model_100n_Epochs_1200_Test_Acc_5_perclass.pth
+2022-10-19 17:23:04,294: INFO: Training Complete

@@ -1,0 +1,79 @@
+2022-11-01 00:37:51,662: INFO: Command: src/train.py --output_dir Run1 --topn 10 --dataset SVHN --scheduler cosineannealingwarmrestarts --T_max 10 --T_mult 2 --epochs 1200 --min_lr 0.001 --model ResNet18 --pretrained 1 --per_class 1
+2022-11-01 00:37:51,662: INFO: Hyperparameters
+{'T_max': 10,
+ 'T_mult': 2,
+ 'augment': False,
+ 'batch_size': 1000,
+ 'class_balanced': False,
+ 'dataset': 'SVHN',
+ 'dataset_dir': 'data',
+ 'early_stopping_delta': 0.001,
+ 'early_stopping_min_epochs': 100,
+ 'early_stopping_patience': -1,
+ 'epochs': 1200,
+ 'factor': 0.2,
+ 'gamma': 0.1,
+ 'gpu': None,
+ 'grad_path': PosixPath('svhn/Run1/pretrained'),
+ 'iter': 100,
+ 'logdir': PosixPath('svhn/Run1/pretrained/n10/logs'),
+ 'lr': 0.01,
+ 'max_lr': 0.005,
+ 'min_lr': 0.001,
+ 'model': 'ResNet18',
+ 'momentum': 0.9,
+ 'nesterov': False,
+ 'optimizer': 'sgd',
+ 'output_dir': PosixPath('svhn/Run1/pretrained/n10'),
+ 'patience': 50,
+ 'per_class': True,
+ 'pretrained': True,
+ 'r': 2,
+ 'random': False,
+ 'scheduler': 'cosineannealingwarmrestarts',
+ 'seed': 0,
+ 'step_size': 30,
+ 'temp': False,
+ 'test_model': None,
+ 'topn': 10,
+ 'train': True,
+ 'use_saved_best_inds': None,
+ 'val_batch_size': 1000,
+ 'val_percent': 0.0,
+ 'weight_decay': 0.01,
+ 'with_train': False}
+2022-11-01 00:37:53,458: INFO: Dataset
+Dataset SVHN
+    Number of datapoints: 73257
+    Root location: data
+    Split: train
+    StandardTransform
+Transform: Compose(
+               ToTensor()
+               Normalize(mean=[0.4377, 0.4438, 0.4728], std=[0.198, 0.201, 0.197])
+           )
+2022-11-01 00:37:53,458: INFO: Test Dataset
+Dataset SVHN
+    Number of datapoints: 26032
+    Root location: data
+    Split: test
+    StandardTransform
+Transform: Compose(
+               ToTensor()
+               Normalize(mean=[0.4377, 0.4438, 0.4728], std=[0.198, 0.201, 0.197])
+           )
+2022-11-01 00:37:53,522: INFO: all_similarities_perclass.shape: (10, 100), all_imginds_perclass.shape: (10, 100)
+2022-11-01 00:37:53,526: ERROR: An Error Occurred
+Traceback (most recent call last):
+  File "/home/ivlabs/Documents/ABD/Coreset/src/train.py", line 499, in <module>
+    main(args)
+  File "/home/ivlabs/Documents/ABD/Coreset/src/train.py", line 290, in main
+    inds = get_best_inds(
+  File "/home/ivlabs/Documents/ABD/Coreset/src/utils/train_utils.py", line 44, in get_best_inds
+    best_inds = np.argpartition(-counts, kth=topn)[:topn]
+  File "<__array_function__ internals>", line 5, in argpartition
+  File "/home/ivlabs/anaconda3/envs/NLPenv/lib/python3.9/site-packages/numpy/core/fromnumeric.py", line 839, in argpartition
+    return _wrapfunc(a, 'argpartition', kth, axis=axis, kind=kind, order=order)
+  File "/home/ivlabs/anaconda3/envs/NLPenv/lib/python3.9/site-packages/numpy/core/fromnumeric.py", line 57, in _wrapfunc
+    return bound(*args, **kwds)
+ValueError: kth(=1) out of bounds (1)

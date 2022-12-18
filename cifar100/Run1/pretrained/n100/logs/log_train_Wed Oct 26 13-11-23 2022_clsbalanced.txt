@@ -1,0 +1,74 @@
+2022-10-26 13:11:23,048: INFO: Command: src/train.py --output_dir Run1 --dataset CIFAR100 --topn 100 --scheduler cosineannealingwarmrestarts --T_max 10 --T_mult 2 --epochs 1200 --min_lr 0.001 --model ResNet18 --pretrained 1 --class_balanced 1
+2022-10-26 13:11:23,049: INFO: Hyperparameters
+{'T_max': 10,
+ 'T_mult': 2,
+ 'augment': False,
+ 'batch_size': 1000,
+ 'class_balanced': True,
+ 'dataset': 'CIFAR100',
+ 'dataset_dir': 'data',
+ 'early_stopping_delta': 0.001,
+ 'early_stopping_min_epochs': 100,
+ 'early_stopping_patience': -1,
+ 'epochs': 1200,
+ 'factor': 0.2,
+ 'gamma': 0.1,
+ 'gpu': None,
+ 'grad_path': PosixPath('cifar100/Run1/pretrained'),
+ 'iter': 100,
+ 'logdir': PosixPath('cifar100/Run1/pretrained/n100/logs'),
+ 'lr': 0.01,
+ 'max_lr': 0.005,
+ 'min_lr': 0.001,
+ 'model': 'ResNet18',
+ 'momentum': 0.9,
+ 'nesterov': False,
+ 'optimizer': 'sgd',
+ 'output_dir': PosixPath('cifar100/Run1/pretrained/n100'),
+ 'patience': 50,
+ 'per_class': False,
+ 'pretrained': True,
+ 'r': 2,
+ 'random': False,
+ 'scheduler': 'cosineannealingwarmrestarts',
+ 'seed': 0,
+ 'step_size': 30,
+ 'temp': False,
+ 'test_model': None,
+ 'topn': 100,
+ 'train': True,
+ 'use_saved_best_inds': None,
+ 'val_batch_size': 1000,
+ 'val_percent': 0.0,
+ 'weight_decay': 0.01,
+ 'with_train': False}
+2022-10-26 13:11:24,146: INFO: Dataset
+Dataset CIFAR100
+    Number of datapoints: 50000
+    Root location: data
+    Split: Train
+    StandardTransform
+Transform: Compose(
+               ToTensor()
+               Normalize(mean=[0.5071, 0.4865, 0.4409], std=[0.2673, 0.2564, 0.2762])
+           )
+2022-10-26 13:11:24,147: INFO: Test Dataset
+Dataset CIFAR100
+    Number of datapoints: 10000
+    Root location: data
+    Split: Test
+    StandardTransform
+Transform: Compose(
+               ToTensor()
+               Normalize(mean=[0.5071, 0.4865, 0.4409], std=[0.2673, 0.2564, 0.2762])
+           )
+2022-10-26 13:11:24,147: INFO: Loading similarities from cifar100/Run1/pretrained/all_similarities.npy and imginds from cifar100/Run1/pretrained/all_imginds.npy
+2022-10-26 13:11:24,147: ERROR: An Error Occurred
+Traceback (most recent call last):
+  File "/home/ivlabs/Documents/ABD/Coreset/src/train.py", line 499, in <module>
+    main(args)
+  File "/home/ivlabs/Documents/ABD/Coreset/src/train.py", line 357, in main
+    all_similarities = np.load(all_sim_path).squeeze()
+  File "/home/ivlabs/anaconda3/envs/NLPenv/lib/python3.9/site-packages/numpy/lib/npyio.py", line 417, in load
+    fid = stack.enter_context(open(os_fspath(file), "rb"))
+FileNotFoundError: [Errno 2] No such file or directory: 'cifar100/Run1/pretrained/all_similarities.npy'

@@ -1,0 +1,80 @@
+2022-10-29 12:57:28,979: INFO: Command: src/train.py --output_dir Run1 --topn 10 --dataset SVHN --scheduler cosineannealingwarmrestarts --T_max 10 --T_mult 2 --epochs 70 --min_lr 0.001 --model ResNet18 --temp 1 --class_balanced 1
+2022-10-29 12:57:28,979: INFO: Hyperparameters
+{'T_max': 10,
+ 'T_mult': 2,
+ 'augment': False,
+ 'batch_size': 1000,
+ 'class_balanced': True,
+ 'dataset': 'SVHN',
+ 'dataset_dir': 'data',
+ 'early_stopping_delta': 0.001,
+ 'early_stopping_min_epochs': 100,
+ 'early_stopping_patience': -1,
+ 'epochs': 70,
+ 'factor': 0.2,
+ 'gamma': 0.1,
+ 'gpu': None,
+ 'grad_path': PosixPath('svhn/Run1/temp'),
+ 'iter': 100,
+ 'logdir': PosixPath('svhn/Run1/temp/n10/logs'),
+ 'lr': 0.01,
+ 'max_lr': 0.005,
+ 'min_lr': 0.001,
+ 'model': 'ResNet18',
+ 'momentum': 0.9,
+ 'nesterov': False,
+ 'optimizer': 'sgd',
+ 'output_dir': PosixPath('svhn/Run1/temp/n10'),
+ 'patience': 50,
+ 'per_class': False,
+ 'pretrained': False,
+ 'r': 2,
+ 'random': False,
+ 'scheduler': 'cosineannealingwarmrestarts',
+ 'seed': 0,
+ 'step_size': 30,
+ 'temp': True,
+ 'test_model': None,
+ 'topn': 10,
+ 'train': True,
+ 'use_saved_best_inds': None,
+ 'val_batch_size': 1000,
+ 'val_percent': 0.0,
+ 'weight_decay': 0.01,
+ 'with_train': False}
+2022-10-29 12:57:30,744: INFO: Dataset
+Dataset SVHN
+    Number of datapoints: 73257
+    Root location: data
+    Split: train
+    StandardTransform
+Transform: Compose(
+               ToTensor()
+               Normalize(mean=[0.4377, 0.4438, 0.4728], std=[0.198, 0.201, 0.197])
+           )
+2022-10-29 12:57:30,744: INFO: Test Dataset
+Dataset SVHN
+    Number of datapoints: 26032
+    Root location: data
+    Split: test
+    StandardTransform
+Transform: Compose(
+               ToTensor()
+               Normalize(mean=[0.4377, 0.4438, 0.4728], std=[0.198, 0.201, 0.197])
+           )
+2022-10-29 12:57:30,744: INFO: Loading similarities from svhn/Run1/temp/all_similarities.npy and imginds from svhn/Run1/temp/all_imginds.npy
+2022-10-29 12:57:30,746: INFO: all_similarities.shape: (2, 73257), all_imginds.shape: (2, 73257)
+2022-10-29 12:57:30,751: ERROR: An Error Occurred
+Traceback (most recent call last):
+  File "/home/ivlabs/Documents/ABD/Coreset/src/train.py", line 499, in <module>
+    main(args)
+  File "/home/ivlabs/Documents/ABD/Coreset/src/train.py", line 364, in main
+    best_inds = get_cls_balanced_best_inds(
+  File "/home/ivlabs/Documents/ABD/Coreset/src/utils/train_utils.py", line 91, in get_cls_balanced_best_inds
+    inds = np.argpartition(-counts, kth=topn_per_class)[:topn_per_class]
+  File "<__array_function__ internals>", line 5, in argpartition
+  File "/home/ivlabs/anaconda3/envs/NLPenv/lib/python3.9/site-packages/numpy/core/fromnumeric.py", line 839, in argpartition
+    return _wrapfunc(a, 'argpartition', kth, axis=axis, kind=kind, order=order)
+  File "/home/ivlabs/anaconda3/envs/NLPenv/lib/python3.9/site-packages/numpy/core/fromnumeric.py", line 57, in _wrapfunc
+    return bound(*args, **kwds)
+ValueError: kth(=1) out of bounds (1)

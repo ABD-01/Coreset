@@ -1,0 +1,230 @@
+2022-10-19 10:57:01,994: INFO: Dataset
+DatasetwithIndices CIFAR100
+    Number of datapoints: 50000
+    Root location: data
+    Split: Train
+    StandardTransform
+Transform: Compose(
+               ToTensor()
+               Normalize(mean=[0.5071, 0.4865, 0.4409], std=[0.2673, 0.2564, 0.2762])
+           )
+2022-10-19 10:57:01,995: INFO: Hyperparameters
+{'T_max': 50,
+ 'T_mult': 1,
+ 'augment': None,
+ 'batch_size': 1000,
+ 'channel': 3,
+ 'class_balanced': None,
+ 'class_names': ['apple',
+                 'aquarium_fish',
+                 'baby',
+                 'bear',
+                 'beaver',
+                 'bed',
+                 'bee',
+                 'beetle',
+                 'bicycle',
+                 'bottle',
+                 'bowl',
+                 'boy',
+                 'bridge',
+                 'bus',
+                 'butterfly',
+                 'camel',
+                 'can',
+                 'castle',
+                 'caterpillar',
+                 'cattle',
+                 'chair',
+                 'chimpanzee',
+                 'clock',
+                 'cloud',
+                 'cockroach',
+                 'couch',
+                 'crab',
+                 'crocodile',
+                 'cup',
+                 'dinosaur',
+                 'dolphin',
+                 'elephant',
+                 'flatfish',
+                 'forest',
+                 'fox',
+                 'girl',
+                 'hamster',
+                 'house',
+                 'kangaroo',
+                 'keyboard',
+                 'lamp',
+                 'lawn_mower',
+                 'leopard',
+                 'lion',
+                 'lizard',
+                 'lobster',
+                 'man',
+                 'maple_tree',
+                 'motorcycle',
+                 'mountain',
+                 'mouse',
+                 'mushroom',
+                 'oak_tree',
+                 'orange',
+                 'orchid',
+                 'otter',
+                 'palm_tree',
+                 'pear',
+                 'pickup_truck',
+                 'pine_tree',
+                 'plain',
+                 'plate',
+                 'poppy',
+                 'porcupine',
+                 'possum',
+                 'rabbit',
+                 'raccoon',
+                 'ray',
+                 'road',
+                 'rocket',
+                 'rose',
+                 'sea',
+                 'seal',
+                 'shark',
+                 'shrew',
+                 'skunk',
+                 'skyscraper',
+                 'snail',
+                 'snake',
+                 'spider',
+                 'squirrel',
+                 'streetcar',
+                 'sunflower',
+                 'sweet_pepper',
+                 'table',
+                 'tank',
+                 'telephone',
+                 'television',
+                 'tiger',
+                 'tractor',
+                 'train',
+                 'trout',
+                 'tulip',
+                 'turtle',
+                 'wardrobe',
+                 'whale',
+                 'willow_tree',
+                 'wolf',
+                 'woman',
+                 'worm'],
+ 'dataset': 'CIFAR100',
+ 'dataset_dir': 'data',
+ 'early_stopping_delta': 0.001,
+ 'early_stopping_min_epochs': 100,
+ 'early_stopping_patience': -1,
+ 'epochs': 300,
+ 'factor': 0.2,
+ 'gamma': 0.1,
+ 'gpu': None,
+ 'im_size': (32, 32),
+ 'iter': 100,
+ 'logdir': PosixPath('cifar100/Run1/logs'),
+ 'lr': 0.001,
+ 'max_lr': 0.005,
+ 'mean': [0.5071, 0.4865, 0.4409],
+ 'min_lr': 0.0001,
+ 'model': 'ResNet18',
+ 'momentum': 0.9,
+ 'nesterov': False,
+ 'num_classes': 100,
+ 'optimizer': 'adam',
+ 'output_dir': PosixPath('cifar100/Run1'),
+ 'patience': 50,
+ 'per_class': True,
+ 'pretrained': False,
+ 'r': 2,
+ 'random': False,
+ 'scheduler': 'reduceonplateau',
+ 'seed': 0,
+ 'std': [0.2673, 0.2564, 0.2762],
+ 'step_size': 30,
+ 'temp': False,
+ 'test_model': None,
+ 'topn': 5000,
+ 'train': True,
+ 'val_batch_size': 1000,
+ 'weight_decay': 0.01,
+ 'with_train': True}
+2022-10-19 10:57:01,995: INFO: Finding Mean Gradients for each class individually.
+2022-10-19 10:57:04,699: INFO: Model Summary
+==========================================================================================
+Layer (type:depth-idx)                   Output Shape              Param #
+==========================================================================================
+├─Conv2d: 1-1                            [-1, 64, 32, 32]          1,728
+├─BatchNorm2d: 1-2                       [-1, 64, 32, 32]          128
+├─Sequential: 1-3                        [-1, 64, 32, 32]          --
+|    └─BasicBlock: 2-1                   [-1, 64, 32, 32]          --
+|    |    └─Conv2d: 3-1                  [-1, 64, 32, 32]          36,864
+|    |    └─BatchNorm2d: 3-2             [-1, 64, 32, 32]          128
+|    |    └─Conv2d: 3-3                  [-1, 64, 32, 32]          36,864
+|    |    └─BatchNorm2d: 3-4             [-1, 64, 32, 32]          128
+|    |    └─Sequential: 3-5              [-1, 64, 32, 32]          --
+|    └─BasicBlock: 2-2                   [-1, 64, 32, 32]          --
+|    |    └─Conv2d: 3-6                  [-1, 64, 32, 32]          36,864
+|    |    └─BatchNorm2d: 3-7             [-1, 64, 32, 32]          128
+|    |    └─Conv2d: 3-8                  [-1, 64, 32, 32]          36,864
+|    |    └─BatchNorm2d: 3-9             [-1, 64, 32, 32]          128
+|    |    └─Sequential: 3-10             [-1, 64, 32, 32]          --
+├─Sequential: 1-4                        [-1, 128, 16, 16]         --
+|    └─BasicBlock: 2-3                   [-1, 128, 16, 16]         --
+|    |    └─Conv2d: 3-11                 [-1, 128, 16, 16]         73,728
+|    |    └─BatchNorm2d: 3-12            [-1, 128, 16, 16]         256
+|    |    └─Conv2d: 3-13                 [-1, 128, 16, 16]         147,456
+|    |    └─BatchNorm2d: 3-14            [-1, 128, 16, 16]         256
+|    |    └─Sequential: 3-15             [-1, 128, 16, 16]         8,448
+|    └─BasicBlock: 2-4                   [-1, 128, 16, 16]         --
+|    |    └─Conv2d: 3-16                 [-1, 128, 16, 16]         147,456
+|    |    └─BatchNorm2d: 3-17            [-1, 128, 16, 16]         256
+|    |    └─Conv2d: 3-18                 [-1, 128, 16, 16]         147,456
+|    |    └─BatchNorm2d: 3-19            [-1, 128, 16, 16]         256
+|    |    └─Sequential: 3-20             [-1, 128, 16, 16]         --
+├─Sequential: 1-5                        [-1, 256, 8, 8]           --
+|    └─BasicBlock: 2-5                   [-1, 256, 8, 8]           --
+|    |    └─Conv2d: 3-21                 [-1, 256, 8, 8]           294,912
+|    |    └─BatchNorm2d: 3-22            [-1, 256, 8, 8]           512
+|    |    └─Conv2d: 3-23                 [-1, 256, 8, 8]           589,824
+|    |    └─BatchNorm2d: 3-24            [-1, 256, 8, 8]           512
+|    |    └─Sequential: 3-25             [-1, 256, 8, 8]           33,280
+|    └─BasicBlock: 2-6                   [-1, 256, 8, 8]           --
+|    |    └─Conv2d: 3-26                 [-1, 256, 8, 8]           589,824
+|    |    └─BatchNorm2d: 3-27            [-1, 256, 8, 8]           512
+|    |    └─Conv2d: 3-28                 [-1, 256, 8, 8]           589,824
+|    |    └─BatchNorm2d: 3-29            [-1, 256, 8, 8]           512
+|    |    └─Sequential: 3-30             [-1, 256, 8, 8]           --
+├─Sequential: 1-6                        [-1, 512, 4, 4]           --
+|    └─BasicBlock: 2-7                   [-1, 512, 4, 4]           --
+|    |    └─Conv2d: 3-31                 [-1, 512, 4, 4]           1,179,648
+|    |    └─BatchNorm2d: 3-32            [-1, 512, 4, 4]           1,024
+|    |    └─Conv2d: 3-33                 [-1, 512, 4, 4]           2,359,296
+|    |    └─BatchNorm2d: 3-34            [-1, 512, 4, 4]           1,024
+|    |    └─Sequential: 3-35             [-1, 512, 4, 4]           132,096
+|    └─BasicBlock: 2-8                   [-1, 512, 4, 4]           --
+|    |    └─Conv2d: 3-36                 [-1, 512, 4, 4]           2,359,296
+|    |    └─BatchNorm2d: 3-37            [-1, 512, 4, 4]           1,024
+|    |    └─Conv2d: 3-38                 [-1, 512, 4, 4]           2,359,296
+|    |    └─BatchNorm2d: 3-39            [-1, 512, 4, 4]           1,024
+|    |    └─Sequential: 3-40             [-1, 512, 4, 4]           --
+├─EmbeddingRecorder: 1-7                 [-1, 512]                 --
+├─Linear: 1-8                            [-1, 100]                 51,300
+==========================================================================================
+Total params: 11,220,132
+Trainable params: 11,220,132
+Non-trainable params: 0
+Total mult-adds (M): 577.97
+==========================================================================================
+Input size (MB): 0.01
+Forward/backward pass size (MB): 9.38
+Params size (MB): 42.80
+Estimated Total Size (MB): 52.19
+==========================================================================================
+2022-10-19 12:29:05,827: INFO: Per CLass Gradient Mathcing: 100%|███████████████████████████████████████████████████████████████████████████████| 100/100 [00:55<00:00,  2.95it/s]
+2022-10-19 12:29:05,827: INFO: Iterations: 100%|██████████████████████████████████████████████████████████████████████████████████████████████| 100/100 [1:32:01<00:00, 55.21s/it]
+2022-10-19 12:29:05,837: INFO: All similarities shape: (100, 100, 500), All imgindices shape: (100, 100, 500)
