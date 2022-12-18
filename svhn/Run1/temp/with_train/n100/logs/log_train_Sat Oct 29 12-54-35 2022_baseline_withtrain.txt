@@ -1,0 +1,156 @@
+2022-10-29 12:54:35,075: INFO: Command: src/train.py --output_dir Run1 --topn 100 --dataset SVHN --scheduler cosineannealingwarmrestarts --T_max 10 --T_mult 2 --epochs 70 --min_lr 0.001 --model ResNet18 --temp 1 --with_train 1
+2022-10-29 12:54:35,083: INFO: Hyperparameters
+{'T_max': 10,
+ 'T_mult': 2,
+ 'augment': False,
+ 'batch_size': 1000,
+ 'class_balanced': False,
+ 'dataset': 'SVHN',
+ 'dataset_dir': 'data',
+ 'early_stopping_delta': 0.001,
+ 'early_stopping_min_epochs': 100,
+ 'early_stopping_patience': -1,
+ 'epochs': 70,
+ 'factor': 0.2,
+ 'gamma': 0.1,
+ 'gpu': None,
+ 'grad_path': PosixPath('svhn/Run1/temp'),
+ 'iter': 100,
+ 'logdir': PosixPath('svhn/Run1/temp/with_train/n100/logs'),
+ 'lr': 0.01,
+ 'max_lr': 0.005,
+ 'min_lr': 0.001,
+ 'model': 'ResNet18',
+ 'momentum': 0.9,
+ 'nesterov': False,
+ 'optimizer': 'sgd',
+ 'output_dir': PosixPath('svhn/Run1/temp/with_train/n100'),
+ 'patience': 50,
+ 'per_class': False,
+ 'pretrained': False,
+ 'r': 2,
+ 'random': False,
+ 'scheduler': 'cosineannealingwarmrestarts',
+ 'seed': 0,
+ 'step_size': 30,
+ 'temp': True,
+ 'test_model': None,
+ 'topn': 100,
+ 'train': True,
+ 'use_saved_best_inds': None,
+ 'val_batch_size': 1000,
+ 'val_percent': 0.0,
+ 'weight_decay': 0.01,
+ 'with_train': True}
+2022-10-29 12:54:36,890: INFO: Dataset
+Dataset SVHN
+    Number of datapoints: 73257
+    Root location: data
+    Split: train
+    StandardTransform
+Transform: Compose(
+               ToTensor()
+               Normalize(mean=[0.4377, 0.4438, 0.4728], std=[0.198, 0.201, 0.197])
+           )
+2022-10-29 12:54:36,890: INFO: Test Dataset
+Dataset SVHN
+    Number of datapoints: 26032
+    Root location: data
+    Split: test
+    StandardTransform
+Transform: Compose(
+               ToTensor()
+               Normalize(mean=[0.4377, 0.4438, 0.4728], std=[0.198, 0.201, 0.197])
+           )
+2022-10-29 12:54:36,890: INFO: Loading similarities from svhn/Run1/temp/all_similarities_withtrain.npy and imginds from svhn/Run1/temp/all_imginds_withtrain.npy
+2022-10-29 12:54:36,891: INFO: all_similarities.shape: (2, 73257), all_imginds.shape: (2, 73257)
+2022-10-29 12:54:39,670: INFO: Model Summary
+==========================================================================================
+Layer (type:depth-idx)                   Output Shape              Param #
+==========================================================================================
+├─Conv2d: 1-1                            [-1, 64, 32, 32]          1,728
+├─BatchNorm2d: 1-2                       [-1, 64, 32, 32]          128
+├─Sequential: 1-3                        [-1, 64, 32, 32]          --
+|    └─BasicBlock: 2-1                   [-1, 64, 32, 32]          --
+|    |    └─Conv2d: 3-1                  [-1, 64, 32, 32]          36,864
+|    |    └─BatchNorm2d: 3-2             [-1, 64, 32, 32]          128
+|    |    └─Conv2d: 3-3                  [-1, 64, 32, 32]          36,864
+|    |    └─BatchNorm2d: 3-4             [-1, 64, 32, 32]          128
+|    |    └─Sequential: 3-5              [-1, 64, 32, 32]          --
+|    └─BasicBlock: 2-2                   [-1, 64, 32, 32]          --
+|    |    └─Conv2d: 3-6                  [-1, 64, 32, 32]          36,864
+|    |    └─BatchNorm2d: 3-7             [-1, 64, 32, 32]          128
+|    |    └─Conv2d: 3-8                  [-1, 64, 32, 32]          36,864
+|    |    └─BatchNorm2d: 3-9             [-1, 64, 32, 32]          128
+|    |    └─Sequential: 3-10             [-1, 64, 32, 32]          --
+├─Sequential: 1-4                        [-1, 128, 16, 16]         --
+|    └─BasicBlock: 2-3                   [-1, 128, 16, 16]         --
+|    |    └─Conv2d: 3-11                 [-1, 128, 16, 16]         73,728
+|    |    └─BatchNorm2d: 3-12            [-1, 128, 16, 16]         256
+|    |    └─Conv2d: 3-13                 [-1, 128, 16, 16]         147,456
+|    |    └─BatchNorm2d: 3-14            [-1, 128, 16, 16]         256
+|    |    └─Sequential: 3-15             [-1, 128, 16, 16]         8,448
+|    └─BasicBlock: 2-4                   [-1, 128, 16, 16]         --
+|    |    └─Conv2d: 3-16                 [-1, 128, 16, 16]         147,456
+|    |    └─BatchNorm2d: 3-17            [-1, 128, 16, 16]         256
+|    |    └─Conv2d: 3-18                 [-1, 128, 16, 16]         147,456
+|    |    └─BatchNorm2d: 3-19            [-1, 128, 16, 16]         256
+|    |    └─Sequential: 3-20             [-1, 128, 16, 16]         --
+├─Sequential: 1-5                        [-1, 256, 8, 8]           --
+|    └─BasicBlock: 2-5                   [-1, 256, 8, 8]           --
+|    |    └─Conv2d: 3-21                 [-1, 256, 8, 8]           294,912
+|    |    └─BatchNorm2d: 3-22            [-1, 256, 8, 8]           512
+|    |    └─Conv2d: 3-23                 [-1, 256, 8, 8]           589,824
+|    |    └─BatchNorm2d: 3-24            [-1, 256, 8, 8]           512
+|    |    └─Sequential: 3-25             [-1, 256, 8, 8]           33,280
+|    └─BasicBlock: 2-6                   [-1, 256, 8, 8]           --
+|    |    └─Conv2d: 3-26                 [-1, 256, 8, 8]           589,824
+|    |    └─BatchNorm2d: 3-27            [-1, 256, 8, 8]           512
+|    |    └─Conv2d: 3-28                 [-1, 256, 8, 8]           589,824
+|    |    └─BatchNorm2d: 3-29            [-1, 256, 8, 8]           512
+|    |    └─Sequential: 3-30             [-1, 256, 8, 8]           --
+├─Sequential: 1-6                        [-1, 512, 4, 4]           --
+|    └─BasicBlock: 2-7                   [-1, 512, 4, 4]           --
+|    |    └─Conv2d: 3-31                 [-1, 512, 4, 4]           1,179,648
+|    |    └─BatchNorm2d: 3-32            [-1, 512, 4, 4]           1,024
+|    |    └─Conv2d: 3-33                 [-1, 512, 4, 4]           2,359,296
+|    |    └─BatchNorm2d: 3-34            [-1, 512, 4, 4]           1,024
+|    |    └─Sequential: 3-35             [-1, 512, 4, 4]           132,096
+|    └─BasicBlock: 2-8                   [-1, 512, 4, 4]           --
+|    |    └─Conv2d: 3-36                 [-1, 512, 4, 4]           2,359,296
+|    |    └─BatchNorm2d: 3-37            [-1, 512, 4, 4]           1,024
+|    |    └─Conv2d: 3-38                 [-1, 512, 4, 4]           2,359,296
+|    |    └─BatchNorm2d: 3-39            [-1, 512, 4, 4]           1,024
+|    |    └─Sequential: 3-40             [-1, 512, 4, 4]           --
+├─EmbeddingRecorder: 1-7                 [-1, 512]                 --
+├─Linear: 1-8                            [-1, 10]                  5,130
+==========================================================================================
+Total params: 11,173,962
+Trainable params: 11,173,962
+Non-trainable params: 0
+Total mult-adds (M): 577.92
+==========================================================================================
+Input size (MB): 0.01
+Forward/backward pass size (MB): 9.38
+Params size (MB): 42.63
+Estimated Total Size (MB): 52.01
+==========================================================================================
+2022-10-29 12:55:03,626: INFO: Epoch[   1] Loss: 0.02	Accuracy: 1.000	Val_Loss: 0.002	Val_Acc: 0.188
+2022-10-29 12:55:03,626: INFO: Epoch[   1] Test Accuracy: 19.587
+2022-10-29 12:55:26,701: INFO: Epoch[  11] Loss: 0.00	Accuracy: 100.000	Val_Loss: 0.005	Val_Acc: 0.188
+2022-10-29 12:55:26,702: INFO: Epoch[  11] Test Accuracy: 19.587
+2022-10-29 12:55:49,599: INFO: Epoch[  21] Loss: 0.00	Accuracy: 100.000	Val_Loss: 0.013	Val_Acc: 0.188
+2022-10-29 12:55:49,599: INFO: Epoch[  21] Test Accuracy: 19.587
+2022-10-29 12:56:12,543: INFO: Epoch[  31] Loss: 0.00	Accuracy: 100.000	Val_Loss: 0.018	Val_Acc: 0.188
+2022-10-29 12:56:12,543: INFO: Epoch[  31] Test Accuracy: 19.587
+2022-10-29 12:56:35,445: INFO: Epoch[  41] Loss: 0.00	Accuracy: 100.000	Val_Loss: 0.021	Val_Acc: 0.188
+2022-10-29 12:56:35,445: INFO: Epoch[  41] Test Accuracy: 19.587
+2022-10-29 12:56:58,267: INFO: Epoch[  51] Loss: 0.00	Accuracy: 100.000	Val_Loss: 0.022	Val_Acc: 0.188
+2022-10-29 12:56:58,267: INFO: Epoch[  51] Test Accuracy: 19.587
+2022-10-29 12:57:21,170: INFO: Epoch[  61] Loss: 0.00	Accuracy: 100.000	Val_Loss: 0.023	Val_Acc: 0.188
+2022-10-29 12:57:21,170: INFO: Epoch[  61] Test Accuracy: 19.587
+2022-10-29 12:57:21,980: INFO: ('Accuracy on Train Set', 1.0)
+2022-10-29 12:57:27,831: INFO: (5099, 'correctly labeled out of', 26032)
+2022-10-29 12:57:27,831: INFO: ('Accuracy on Test Set:', 19.587430854333128)
+2022-10-29 12:57:27,879: INFO: Saved model at svhn/Run1/temp/with_train/n100/Greedy_Model_100n_Epochs_70_Test_Acc_19.pth
+2022-10-29 12:57:27,879: INFO: Training Complete
