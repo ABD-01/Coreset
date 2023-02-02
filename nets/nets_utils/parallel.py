@@ -7,6 +7,7 @@ class MyDataParallel(DataParallel):
             return super().__getattr__(name)
         except AttributeError:
             return getattr(self.module, name)
+
     def __setattr__(self, name, value):
         try:
             if name == "no_grad":

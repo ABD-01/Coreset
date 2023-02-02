@@ -4,12 +4,12 @@ from torchvision.models import mobilenetv3
 from .nets_utils import EmbeddingRecorder
 import math
 
-'''MobileNetV3 in PyTorch.
+"""MobileNetV3 in PyTorch.
 Paper： "Inverted Residuals and Linear Bottlenecks:Mobile Networks for Classification, Detection and Segmentation" 
 
 Acknowlegement to:
 https://github.com/d-li14/mobilenetv3.pytorch/blob/master/mobilenetv3.py
-'''
+"""
 
 
 def _make_divisible(v, divisor, min_value=None):
@@ -54,7 +54,7 @@ class SELayer(nn.Module):
             nn.Linear(channel, _make_divisible(channel // reduction, 8)),
             nn.ReLU(inplace=True),
             nn.Linear(_make_divisible(channel // reduction, 8), channel),
-            h_sigmoid()
+            h_sigmoid(),
         )
 
     def forward(self, x):
@@ -68,15 +68,13 @@ def conv_3x3_bn(inp, oup, stride, padding=1):
     return nn.Sequential(
         nn.Conv2d(inp, oup, 3, stride, padding, bias=False),
         nn.BatchNorm2d(oup),
-        h_swish()
+        h_swish(),
     )
 
 
 def conv_1x1_bn(inp, oup):
     return nn.Sequential(
-        nn.Conv2d(inp, oup, 1, 1, 0, bias=False),
-        nn.BatchNorm2d(oup),
-        h_swish()
+        nn.Conv2d(inp, oup, 1, 1, 0, bias=False), nn.BatchNorm2d(oup), h_swish()
     )
 
 
@@ -90,8 +88,15 @@ class InvertedResidual(nn.Module):
         if inp == hidden_dim:
             self.conv = nn.Sequential(
                 # dw
-                nn.Conv2d(hidden_dim, hidden_dim, kernel_size, stride, (kernel_size - 1) // 2, groups=hidden_dim,
-                          bias=False),
+                nn.Conv2d(
+                    hidden_dim,
+                    hidden_dim,
+                    kernel_size,
+                    stride,
+                    (kernel_size - 1) // 2,
+                    groups=hidden_dim,
+                    bias=False,
+                ),
                 nn.BatchNorm2d(hidden_dim),
                 h_swish() if use_hs else nn.ReLU(inplace=True),
                 # Squeeze-and-Excite
@@ -107,8 +112,15 @@ class InvertedResidual(nn.Module):
                 nn.BatchNorm2d(hidden_dim),
                 h_swish() if use_hs else nn.ReLU(inplace=True),
                 # dw
-                nn.Conv2d(hidden_dim, hidden_dim, kernel_size, stride, (kernel_size - 1) // 2, groups=hidden_dim,
-                          bias=False),
+                nn.Conv2d(
+                    hidden_dim,
+                    hidden_dim,
+                    kernel_size,
+                    stride,
+                    (kernel_size - 1) // 2,
+                    groups=hidden_dim,
+                    bias=False,
+                ),
                 nn.BatchNorm2d(hidden_dim),
                 # Squeeze-and-Excite
                 SELayer(hidden_dim) if use_se else nn.Identity(),
@@ -126,33 +138,48 @@ class InvertedResidual(nn.Module):
 
 
 class MobileNetV3_32x32(nn.Module):
-    def __init__(self, cfgs, mode, channel=3, num_classes=1000, record_embedding=False,
-                 no_grad=False, width_mult=1.):
+    def __init__(
+        self,
+        cfgs,
+        mode,
+        channel=3,
+        num_classes=1000,
+        record_embedding=False,
+        no_grad=False,
+        width_mult=1.0,
+    ):
         super(MobileNetV3_32x32, self).__init__()
         # setting of inverted residual blocks
         self.cfgs = cfgs
-        assert mode in ['mobilenet_v3_large', 'mobilenet_v3_small']
+        assert mode in ["mobilenet_v3_large", "mobilenet_v3_small"]
 
         self.embedding_recorder = EmbeddingRecorder(record_embedding)
         self.no_grad = no_grad
 
         # building first layer
         input_channel = _make_divisible(16 * width_mult, 8)
-        layers = [conv_3x3_bn(channel, input_channel, 2, padding=3 if channel == 1 else 1)]
+        layers = [
+            conv_3x3_bn(channel, input_channel, 2, padding=3 if channel == 1 else 1)
+        ]
         # building inverted residual blocks
         block = InvertedResidual
         for k, t, c, use_se, use_hs, s in self.cfgs:
             output_channel = _make_divisible(c * width_mult, 8)
             exp_size = _make_divisible(input_channel * t, 8)
-            layers.append(block(input_channel, exp_size, output_channel, k, s, use_se, use_hs))
+            layers.append(
+                block(input_channel, exp_size, output_channel, k, s, use_se, use_hs)
+            )
             input_channel = output_channel
         self.features = nn.Sequential(*layers)
         # building last several layers
         self.conv = conv_1x1_bn(input_channel, exp_size)
         self.avgpool = nn.AdaptiveAvgPool2d((1, 1))
-        output_channel = {'mobilenet_v3_large': 1280, 'mobilenet_v3_small': 1024}
-        output_channel = _make_divisible(output_channel[mode] * width_mult, 8) if width_mult > 1.0 else output_channel[
-            mode]
+        output_channel = {"mobilenet_v3_large": 1280, "mobilenet_v3_small": 1024}
+        output_channel = (
+            _make_divisible(output_channel[mode] * width_mult, 8)
+            if width_mult > 1.0
+            else output_channel[mode]
+        )
         self.classifier = nn.Sequential(
             nn.Linear(exp_size, output_channel),
             h_swish(),
@@ -176,7 +203,7 @@ class MobileNetV3_32x32(nn.Module):
         for m in self.modules():
             if isinstance(m, nn.Conv2d):
                 n = m.kernel_size[0] * m.kernel_size[1] * m.out_channels
-                m.weight.data.normal_(0, math.sqrt(2. / n))
+                m.weight.data.normal_(0, math.sqrt(2.0 / n))
                 if m.bias is not None:
                     m.bias.data.zero_()
             elif isinstance(m, nn.BatchNorm2d):
@@ -191,10 +218,19 @@ class MobileNetV3_32x32(nn.Module):
 
 
 class MobileNetV3_224x224(mobilenetv3.MobileNetV3):
-    def __init__(self, inverted_residual_setting, last_channel,
-                 channel=3, num_classes=1000, record_embedding=False, no_grad=False, **kwargs):
-        super(MobileNetV3_224x224, self).__init__(inverted_residual_setting, last_channel,
-                                                  num_classes=num_classes, **kwargs)
+    def __init__(
+        self,
+        inverted_residual_setting,
+        last_channel,
+        channel=3,
+        num_classes=1000,
+        record_embedding=False,
+        no_grad=False,
+        **kwargs
+    ):
+        super(MobileNetV3_224x224, self).__init__(
+            inverted_residual_setting, last_channel, num_classes=num_classes, **kwargs
+        )
 
         self.embedding_recorder = EmbeddingRecorder(record_embedding)
 
@@ -216,21 +252,39 @@ class MobileNetV3_224x224(mobilenetv3.MobileNetV3):
             return x
 
 
-def MobileNetV3(arch: str, channel: int, num_classes: int, im_size, record_embedding: bool = False,
-                no_grad: bool = False,
-                pretrained: bool = False, **kwargs):
+def MobileNetV3(
+    arch: str,
+    channel: int,
+    num_classes: int,
+    im_size,
+    record_embedding: bool = False,
+    no_grad: bool = False,
+    pretrained: bool = False,
+    **kwargs
+):
     arch = arch.lower()
     if pretrained:
         if channel != 3:
-            raise NotImplementedError("Network Architecture for current dataset has not been implemented.")
+            raise NotImplementedError(
+                "Network Architecture for current dataset has not been implemented."
+            )
 
         inverted_residual_setting, last_channel = mobilenetv3._mobilenet_v3_conf(arch)
-        net = MobileNetV3_224x224(inverted_residual_setting=inverted_residual_setting, last_channel=last_channel,
-                                  channel=3, num_classes=1000, record_embedding=record_embedding, no_grad=no_grad,
-                                  **kwargs)
+        net = MobileNetV3_224x224(
+            inverted_residual_setting=inverted_residual_setting,
+            last_channel=last_channel,
+            channel=3,
+            num_classes=1000,
+            record_embedding=record_embedding,
+            no_grad=no_grad,
+            **kwargs
+        )
 
         from torch.hub import load_state_dict_from_url
-        state_dict = load_state_dict_from_url(mobilenetv3.model_urls[arch], progress=True)
+
+        state_dict = load_state_dict_from_url(
+            mobilenetv3.model_urls[arch], progress=True
+        )
         net.load_state_dict(state_dict)
 
         if num_classes != 1000:
@@ -239,14 +293,23 @@ def MobileNetV3(arch: str, channel: int, num_classes: int, im_size, record_embed
 
     elif im_size[0] == 224 and im_size[1] == 224:
         if channel != 3:
-            raise NotImplementedError("Network Architecture for current dataset has not been implemented.")
+            raise NotImplementedError(
+                "Network Architecture for current dataset has not been implemented."
+            )
         inverted_residual_setting, last_channel = mobilenetv3._mobilenet_v3_conf(arch)
-        net = MobileNetV3_224x224(inverted_residual_setting=inverted_residual_setting, last_channel=last_channel,
-                                  channel=channel, num_classes=num_classes, record_embedding=record_embedding,
-                                  no_grad=no_grad, **kwargs)
+        net = MobileNetV3_224x224(
+            inverted_residual_setting=inverted_residual_setting,
+            last_channel=last_channel,
+            channel=channel,
+            num_classes=num_classes,
+            record_embedding=record_embedding,
+            no_grad=no_grad,
+            **kwargs
+        )
 
     elif (channel == 1 and im_size[0] == 28 and im_size[1] == 28) or (
-            channel == 3 and im_size[0] == 32 and im_size[1] == 32):
+        channel == 3 and im_size[0] == 32 and im_size[1] == 32
+    ):
         if arch == "mobilenet_v3_large":
             cfgs = [
                 # k, t, c, SE, HS, s
@@ -264,10 +327,16 @@ def MobileNetV3(arch: str, channel: int, num_classes: int, im_size, record_embed
                 [3, 6, 112, 1, 1, 1],
                 [5, 6, 160, 1, 1, 2],
                 [5, 6, 160, 1, 1, 1],
-                [5, 6, 160, 1, 1, 1]
+                [5, 6, 160, 1, 1, 1],
             ]
-            net = MobileNetV3_32x32(cfgs, arch, channel=channel, num_classes=num_classes,
-                                    record_embedding=record_embedding, no_grad=no_grad)
+            net = MobileNetV3_32x32(
+                cfgs,
+                arch,
+                channel=channel,
+                num_classes=num_classes,
+                record_embedding=record_embedding,
+                no_grad=no_grad,
+            )
         elif arch == "mobilenet_v3_small":
             cfgs = [
                 # k, t, c, SE, HS, s
@@ -283,22 +352,60 @@ def MobileNetV3(arch: str, channel: int, num_classes: int, im_size, record_embed
                 [5, 6, 96, 1, 1, 1],
                 [5, 6, 96, 1, 1, 1],
             ]
-            net = MobileNetV3_32x32(cfgs, arch, channel=channel, num_classes=num_classes,
-                                    record_embedding=record_embedding, no_grad=no_grad)
+            net = MobileNetV3_32x32(
+                cfgs,
+                arch,
+                channel=channel,
+                num_classes=num_classes,
+                record_embedding=record_embedding,
+                no_grad=no_grad,
+            )
         else:
             raise ValueError("Model architecture not found.")
     else:
-        raise NotImplementedError("Network Architecture for current dataset has not been implemented.")
+        raise NotImplementedError(
+            "Network Architecture for current dataset has not been implemented."
+        )
     return net
 
 
-def MobileNetV3Large(channel: int, num_classes: int, im_size, record_embedding: bool = False, no_grad: bool = False,
-                     pretrained: bool = False, **kwargs):
-    return MobileNetV3("mobilenet_v3_large", channel, num_classes, im_size, record_embedding, no_grad,
-                       pretrained, **kwargs)
+def MobileNetV3Large(
+    channel: int,
+    num_classes: int,
+    im_size,
+    record_embedding: bool = False,
+    no_grad: bool = False,
+    pretrained: bool = False,
+    **kwargs
+):
+    return MobileNetV3(
+        "mobilenet_v3_large",
+        channel,
+        num_classes,
+        im_size,
+        record_embedding,
+        no_grad,
+        pretrained,
+        **kwargs
+    )
 
 
-def MobileNetV3Small(channel: int, num_classes: int, im_size, record_embedding: bool = False, no_grad: bool = False,
-                     pretrained: bool = False, **kwargs):
-    return MobileNetV3("mobilenet_v3_small", channel, num_classes, im_size, record_embedding, no_grad,
-                       pretrained, **kwargs)
+def MobileNetV3Small(
+    channel: int,
+    num_classes: int,
+    im_size,
+    record_embedding: bool = False,
+    no_grad: bool = False,
+    pretrained: bool = False,
+    **kwargs
+):
+    return MobileNetV3(
+        "mobilenet_v3_small",
+        channel,
+        num_classes,
+        im_size,
+        record_embedding,
+        no_grad,
+        pretrained,
+        **kwargs
+    )
