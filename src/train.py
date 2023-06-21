@@ -48,16 +48,18 @@ from utils.common import *
 #         train_inds, val_inds = best_inds[train_inds], best_inds[val_inds]
 #     return train_inds, val_inds
 
+
 def get_train_val_inds(len_data, best_inds):
     # return best indices and indices which are not in np.arange(len_data) as val_inds
     val_inds = np.setdiff1d(np.arange(len_data), best_inds, assume_unique=True)
     return best_inds, val_inds
 
+
 @torch.inference_mode()
 def test(loader, model, device):
     model.eval()
     correct = 0
-    for (images, labels) in loader:
+    for images, labels in loader:
         images, labels = images.to(device), labels.to(device)
         output = model(images)
         acc = output.argmax(dim=1).eq(labels).sum().item()
@@ -71,7 +73,7 @@ def validate(loader, model, criterion, device):
     model.eval()
     loss = 0
     correct = 0
-    for (images, labels) in loader:
+    for images, labels in loader:
         images, labels = images.to(device), labels.to(device)
         output = model(images)
         loss += criterion(output, labels).item()
@@ -91,12 +93,13 @@ def validate(loader, model, criterion, device):
 #         acc = output.argmax(dim=1).eq(labels).float().mean().item()
 #     return loss, acc
 
+
 # write a function train_one_epoch which takes in a train_loader, val_loader, model, criterion, optimizer, device and trains the model for single epoch
 def train_epoch(train_loader, model, criterion, optimizer, device):
     model.train()
     train_loss = 0
     train_correct = 0
-    for (images, labels) in train_loader:
+    for images, labels in train_loader:
         images, labels = images.to(device), labels.to(device)
         output = model(images)
         loss = criterion(output, labels)
@@ -108,7 +111,6 @@ def train_epoch(train_loader, model, criterion, optimizer, device):
     train_loss /= len(train_loader.dataset)
     train_correct /= len(train_loader.dataset)
     return train_loss, train_correct
-
 
 
 def train_loop(p, best_inds: torch.Tensor, data, test_data) -> None:
@@ -128,9 +130,7 @@ def train_loop(p, best_inds: torch.Tensor, data, test_data) -> None:
     val_loader = None
     # val_inds = None # TODO: remove this line
     if val_inds is not None:
-        val_loader = DataLoader(
-            Subset(data, val_inds), p.val_batch_size, shuffle=False
-        )
+        val_loader = DataLoader(Subset(data, val_inds), p.val_batch_size, shuffle=False)
     test_loader = DataLoader(test_data, p.val_batch_size)
 
     # model
@@ -149,15 +149,17 @@ def train_loop(p, best_inds: torch.Tensor, data, test_data) -> None:
     if p.early_stopping_patience == -1:
         early_stopping = None
     else:
-        early_stopping = EarlyStopping(p.early_stopping_patience, p.early_stopping_delta, p.early_stopping_min_epochs)
+        early_stopping = EarlyStopping(
+            p.early_stopping_patience,
+            p.early_stopping_delta,
+            p.early_stopping_min_epochs,
+        )
     losses, accs, val_losses, val_accs = [], [], [], []
     test_accs = []
     val_loss, val_acc = 0, 0
     lrs = []
     for epoch in trange(p.epochs, position=0, leave=True):
-        loss, acc = train_epoch(
-            train_loader, model, criterion, optimizer, device
-        )
+        loss, acc = train_epoch(train_loader, model, criterion, optimizer, device)
         losses.append(loss)
         accs.append(acc)
 
@@ -206,12 +208,16 @@ def train_loop(p, best_inds: torch.Tensor, data, test_data) -> None:
         val_losses,
         val_accs,
         test_accs,
-        p.output_dir / f"{'random/' if p.random else ''}LearningCurve_{prefix}_n{p.topn}{suffix}",
+        p.output_dir
+        / f"{'random/' if p.random else ''}LearningCurve_{prefix}_n{p.topn}{suffix}",
     )
     if len(lrs) > 0:
-       # plot learning rate wrt epochs
-        plot_lr(lrs, p.output_dir / f"{'random/' if p.random else ''}Learningrate_{p.scheduler}_{prefix}_n{p.topn}{suffix}") 
-
+        # plot learning rate wrt epochs
+        plot_lr(
+            lrs,
+            p.output_dir
+            / f"{'random/' if p.random else ''}Learningrate_{p.scheduler}_{prefix}_n{p.topn}{suffix}",
+        )
 
     # model.eval()
     _, train_acc = validate(train_loader, model, criterion, device)
@@ -220,7 +226,6 @@ def train_loop(p, best_inds: torch.Tensor, data, test_data) -> None:
     logger.info((correct, "correctly labeled out of", len(test_data)))
     test_acc = correct / len(test_data) * 100
     logger.info(("Accuracy on Test Set:", test_acc))
-
 
     model_path = (
         p.output_dir
@@ -233,7 +238,6 @@ def train_loop(p, best_inds: torch.Tensor, data, test_data) -> None:
 
 
 def main(p):
-
     logger.info("Hyperparameters\n" + pformat(vars(p)))
 
     global device
@@ -271,8 +275,14 @@ def main(p):
         ), f"Given best indices shape {best_inds.shape[0]} and no. of best samples {p.topn} does not match."
 
     elif p.per_class:
-        all_sim_path = args.grad_path / f"all_similarities_perclass{'_withtrain' if p.with_train else ''}.npy"
-        all_ind_path = args.grad_path / f"all_imginds_perclass{'_withtrain' if p.with_train else ''}.npy"
+        all_sim_path = (
+            args.grad_path
+            / f"all_similarities_perclass{'_withtrain' if p.with_train else ''}.npy"
+        )
+        all_ind_path = (
+            args.grad_path
+            / f"all_imginds_perclass{'_withtrain' if p.with_train else ''}.npy"
+        )
         if p.dataset.lower() in ["cifar10", "cifar100"]:
             all_similarities = np.load(all_sim_path).squeeze()
             all_imginds = np.load(all_ind_path).astype(int)
@@ -346,7 +356,8 @@ def main(p):
 
     else:
         all_sim_path = (
-            args.grad_path / f"all_similarities{'_withtrain' if p.with_train else ''}.npy"
+            args.grad_path
+            / f"all_similarities{'_withtrain' if p.with_train else ''}.npy"
         )
         all_ind_path = (
             args.grad_path / f"all_imginds{'_withtrain' if p.with_train else ''}.npy"

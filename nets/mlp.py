@@ -8,12 +8,19 @@ from .nets_utils import EmbeddingRecorder
 # https://github.com/BIGBALLON/CIFAR-ZOO,
 
 
-''' MLP '''
+""" MLP """
 
 
 class MLP(nn.Module):
-    def __init__(self, channel, num_classes, im_size, record_embedding: bool = False, no_grad: bool = False,
-                 pretrained: bool = False):
+    def __init__(
+        self,
+        channel,
+        num_classes,
+        im_size,
+        record_embedding: bool = False,
+        no_grad: bool = False,
+        pretrained: bool = False,
+    ):
         if pretrained:
             raise NotImplementedError("torchvison pretrained models not available.")
         super(MLP, self).__init__()

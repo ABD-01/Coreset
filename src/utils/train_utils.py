@@ -27,7 +27,11 @@ def get_best_inds(
     # logging.debug("train labels for all_imginds")
     # logging.debug(np.unique(train_labels[all_imginds], return_counts=True))
     good_inds = []
-    for (sims, inds) in tqdm(zip(all_similarities, all_imginds), total=len(all_similarities), desc="Getting best inds"):
+    for sims, inds in tqdm(
+        zip(all_similarities, all_imginds),
+        total=len(all_similarities),
+        desc="Getting best inds",
+    ):
         inds = inds.astype(int)
         # logging.debug(sims.shape)
         ind = np.argpartition(-sims, topn)[:topn]
@@ -71,7 +75,7 @@ def get_cls_balanced_best_inds(
     """
     topn_per_class = topn // num_classes
     cls_good_inds = [[] for i in range(num_classes)]
-    for (sims, inds) in tqdm(zip(all_similarities, all_imginds)):
+    for sims, inds in tqdm(zip(all_similarities, all_imginds)):
         shuffled_labels = labels[inds]
         for i in range(num_classes):
             cls_mask = np.where(shuffled_labels == i)[0]
@@ -162,6 +166,7 @@ class EarlyStopping:
 # write a function to plot the epoch loss and accuracry along with validation loss and accuracy wrt epochs np.araneg(len(loss))
 # update function to include test_accs
 
+
 def plot_loss_acc(
     train_loss: list,
     train_acc: list,
@@ -184,7 +189,11 @@ def plot_loss_acc(
     plt.subplot(2, 1, 1)
     plt.plot(np.arange(len(train_loss)), train_loss, label="train")
     if val_loss:
-        plt.plot(np.arange(0, len(train_loss), len(train_loss) / len(val_loss)), val_loss, label="val")
+        plt.plot(
+            np.arange(0, len(train_loss), len(train_loss) / len(val_loss)),
+            val_loss,
+            label="val",
+        )
     plt.xlabel("Epochs")
     plt.ylabel("Loss")
     plt.legend()
@@ -194,11 +203,15 @@ def plot_loss_acc(
     plt.plot(np.arange(len(train_acc)), train_acc, label="train")
     if len(val_acc) > 0:
         plt.plot(
-            np.arange(0, len(train_acc), len(train_acc) / len(val_acc)), val_acc, label="val"
+            np.arange(0, len(train_acc), len(train_acc) / len(val_acc)),
+            val_acc,
+            label="val",
         )
     if len(test_acc) > 0:
         plt.plot(
-            np.arange(0, len(train_acc), len(train_acc) / len(test_acc)), test_acc, label="test"
+            np.arange(0, len(train_acc), len(train_acc) / len(test_acc)),
+            test_acc,
+            label="test",
         )
     plt.xlabel("Epochs")
     plt.ylabel("Accuracy")
@@ -206,6 +219,7 @@ def plot_loss_acc(
     plt.grid(linestyle="--")
     plt.savefig(path)
     # plt.show()
+
 
 # define plot_lr function to plot the learning rate wrt epochs
 def plot_lr(lrs: list, path) -> None:
